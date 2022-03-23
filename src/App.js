@@ -1,20 +1,20 @@
-
 import React from "react";
-import { hot } from 'react-hot-loader/root';
-import Button from '@material-ui/core/Button';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Home from "./page/home"
+import Documentation from "./page/documentation"
+import About from "./page/about"
 
-class App extends React.Component {
-  render() {
-    const { name } = this.props;
-    return (
-      <>
-        <h1>
-          {name} web app
-        </h1>
-        <Button variant="contained">this is a material UI button</Button>
-      </>
-    );
-  }
+export default function App() {
+  return (
+    <>
+      <Home/>
+      <Router>
+          <Routes>
+            <Route exact path={"/"} component={<Home />} />
+            <Route exact path={"/documentation"} component={<Documentation />} />
+            <Route exact path={"/about"} component={<About />} />
+          </Routes>            
+      </Router>
+    </>
+  );  
 }
-
-export default hot(App);

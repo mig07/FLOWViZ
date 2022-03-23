@@ -3,4 +3,4 @@ import ReactDOM from "react-dom";
 import App from "./App";
 
 var mountNode = document.getElementById("app");
-ReactDOM.render(<App name={document.title} />, mountNode);
+ReactDOM.render(<App />, mountNode);

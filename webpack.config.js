@@ -5,7 +5,7 @@ const appName = "FLOWViZ";
 
 const config = {
   entry: [
-    'react-hot-loader/patch',
+    //'react-hot-loader/patch',
     './src/index.js'
   ],
   output: {
@@ -14,6 +14,11 @@ const config = {
   },
   module: {
     rules: [
+      {
+        test: /\.js$/,
+        include: /node_modules\/react-dom/,
+        use: ['react-hot-loader/webpack']
+      },
       {
         test: /\.(js|jsx)$/,
         use: 'babel-loader',
@@ -43,7 +48,7 @@ const config = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: './app/index.html',
+      template: './public/index.html',
     })
   ],
   optimization: {
