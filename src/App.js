@@ -7,12 +7,11 @@ import About from "./page/about"
 export default function App() {
   return (
     <>
-      <Home/>
       <Router>
           <Routes>
-            <Route exact path={"/"} component={<Home />} />
-            <Route exact path={"/documentation"} component={<Documentation />} />
-            <Route exact path={"/about"} component={<About />} />
+            <Route exact path={"/"} element={<Home />} />
+            <Route exact path={"/documentation"} element={<Documentation />} />
+            <Route exact path={"/about"} element={<About />} />
           </Routes>            
       </Router>
     </>

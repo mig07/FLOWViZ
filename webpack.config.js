@@ -42,9 +42,8 @@ const config = {
     ]
   },
   devServer: {
-    'static': {
-      directory: './dist'
-    }
+    publicPath: './public',
+    historyApiFallback: true
   },
   plugins: [
     new HtmlWebpackPlugin({

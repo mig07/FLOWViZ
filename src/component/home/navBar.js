@@ -11,10 +11,11 @@ export default function NavBar() {
       <AppBar position="static" color="default">
         <Toolbar variant="regular">
         <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {pages.map((page) => (
+            { pages.map((page) => (
               <Button
                 key={page}
-                sx={{ my: 2, color: 'white', display: 'block' }}>
+                sx={{ my: 2, color: 'white', display: 'block' }}
+                href={page === "Home" ? "/": "/" + page.trim().toLowerCase()}>
                 {page}
               </Button>
             ))}
