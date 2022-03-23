@@ -42,7 +42,6 @@ const config = {
     ]
   },
   devServer: {
-    publicPath: './public',
     historyApiFallback: true
   },
   plugins: [
