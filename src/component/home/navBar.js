@@ -7,9 +7,13 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from "@material-ui/icons/Menu";
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
+import CssBaseline from '@mui/material/CssBaseline';
 import { Typography, useMediaQuery } from '@material-ui/core';
 import { useTheme } from '@material-ui/core/styles';
 import { useNavigate } from 'react-router-dom';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+
+const theme = createTheme();
 
 const pageButtonsGroups = [
   {
@@ -59,8 +63,60 @@ const NavBar = props => {
     setAnchor(null);
   };  
 
+  const mobileInterface = {
+    /* <>
+    <IconButton onClick={onPageMenuOpen}>
+      <MenuIcon />
+    </IconButton>
+    <Menu
+      id="menu-appbar"
+      anchor={anchor}
+      anchorOrigin={{
+        vertical: "top",
+        horizontal: "right"
+      }}
+      transformOrigin={{
+        vertical: "top",
+        horizontal: "right"
+      }}
+      open={open}
+      onClose={() => setAnchor(null)}
+    >
+      { 
+      pageButtonsGroups.map(pageButtonsGroup =>                 
+       pageButtonsGroup.pageButtons.map(pageButton => {
+         const { name, url } = pageButton;
+         return (
+           <MenuItem onClick={() => onPageMenuItemClick(url)}>
+             {name}
+           </MenuItem>
+         );
+       })
+     )}
+    </Menu>
+  </> */
+  }
+
+  const pcInterface = 
+    pageButtonsGroups.map((pageButtonsGroup) => (
+      <Box sx={{ flexGrow: 1,
+        display: { xs: 'none', md: 'flex' }, 
+        justifyContent: pageButtonsGroup.position }}>
+            { pageButtonsGroup.pageButtons.map((pageButton) => (
+              <Button
+                key={pageButton.name}
+                sx={{ my: 2, display: 'block' }}
+                onClick={() => navigate(pageButton.url) }>
+                {pageButton.name}
+              </Button>
+            ))}
+        </Box> 
+    ))  
+
   return (
-      <AppBar position="fixed" color="default">
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <AppBar position="static" color="default">
         <Toolbar variant="regular"> 
           <Box sx={{ flexGrow: 1,
               display: { xs: 'none', md: 'flex' }, 
@@ -69,56 +125,10 @@ const NavBar = props => {
               FLOWViZ
             </Typography>
           </Box>
-          { isMobile ? ( // Mobile code
-             {/* <>
-             <IconButton onClick={onPageMenuOpen}>
-               <MenuIcon />
-             </IconButton>
-             <Menu
-               id="menu-appbar"
-               anchor={anchor}
-               anchorOrigin={{
-                 vertical: "top",
-                 horizontal: "right"
-               }}
-               transformOrigin={{
-                 vertical: "top",
-                 horizontal: "right"
-               }}
-               open={open}
-               onClose={() => setAnchor(null)}
-             >
-               { 
-               pageButtonsGroups.map(pageButtonsGroup =>                 
-                pageButtonsGroup.pageButtons.map(pageButton => {
-                  const { name, url } = pageButton;
-                  return (
-                    <MenuItem onClick={() => onPageMenuItemClick(url)}>
-                      {name}
-                    </MenuItem>
-                  );
-                })
-              )}
-             </Menu>
-           </> */ TODO}
-          ) : ( // PC code
-            pageButtonsGroups.map((pageButtonsGroup) => (
-              <Box sx={{ flexGrow: 1,
-                display: { xs: 'none', md: 'flex' }, 
-                justifyContent: pageButtonsGroup.position }}>
-                    { pageButtonsGroup.pageButtons.map((pageButton) => (
-                      <Button
-                        key={pageButton.name}
-                        sx={{ my: 2, display: 'block' }}
-                        onClick={() => navigate(pageButton.url) }>
-                        {pageButton.name}
-                      </Button>
-                    ))}
-                </Box> 
-            ))
-          )}
+          { isMobile ? mobileInterface : pcInterface }
         </Toolbar>
       </AppBar>    
+    </ThemeProvider>
   );  
 }
 

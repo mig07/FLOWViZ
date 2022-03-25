@@ -7,6 +7,7 @@ import Login from "./page/login"
 import Register from "./page/register"
 import { makeStyles } from "@material-ui/core/styles";
 import NavBar from "./component/home/navBar";
+import Copyright from "./component/common/copyright";
 
 const useStyles = makeStyles({});
 
@@ -23,6 +24,7 @@ export default function App() {
             <Route exact path={"/login"} element={<Login />} />
             <Route exact path={"/register"} element={<Register />} />
           </Routes>            
+          <Copyright sx={{ mt: 8, mb: 4 }} />        
       </Router>
     </>
   );  
