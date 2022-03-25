@@ -6,6 +6,7 @@ import About from "./page/about"
 import Login from "./page/login"
 import Register from "./page/register"
 import { makeStyles } from "@material-ui/core/styles";
+import NavBar from "./component/home/navBar";
 
 const useStyles = makeStyles({});
 
@@ -14,6 +15,7 @@ export default function App() {
   return (
     <>
       <Router>
+        <NavBar/>
           <Routes>
             <Route exact path={"/"} element={<Home />} />
             <Route exact path={"/documentation"} element={<Documentation />} />

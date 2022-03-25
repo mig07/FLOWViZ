@@ -5,10 +5,6 @@ import Typography from '@material-ui/core/Typography';
 export default function Login() {
     return (
         <>
-            <NavBar />
-            <Typography variant="h2">
-                    TODO
-            </Typography> 
         </>
     )
 }

@@ -4,11 +4,7 @@ import Typography from '@material-ui/core/Typography';
 
 export default function About() {
     return (
-        <>
-            <NavBar />
-            <Typography variant="h2">
-                    TODO
-            </Typography> 
+        <>            
         </>
     )
 }

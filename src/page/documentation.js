@@ -4,7 +4,6 @@ import NavBar from '../component/home/navBar';
 export default function Documentation() {
     return (
         <>
-            <NavBar/>
         </>
     )
 }
