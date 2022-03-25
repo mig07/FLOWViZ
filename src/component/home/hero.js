@@ -1,13 +1,20 @@
 import * as React from 'react';
-import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
+import Grid from '@mui/material/Grid';
+import Card from '@mui/material/Card';
+import CardActionArea from '@mui/material/CardActionArea';
+import CardContent from '@mui/material/CardContent';
 
-export default function Hero() {
-    return (
-        <>
-            <h1>
-            web app
-            </h1>
-            <Button variant="contained">this is a material UI button</Button>
-        </>
-    );
+export default class Hero extends React.Component {
+    render() {
+        return (
+            <Card sx={{ display: 'flex' , textAlign: "center"}}>
+                <CardContent sx={{ flex: 1 }}>
+                    <Typography variant="h1">
+                        FLOWViZ
+                    </Typography>                            
+                </CardContent>                         
+              </Card>
+        )
+    }
   }
