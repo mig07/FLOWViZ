@@ -7,8 +7,8 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
-function createData(name, calories, fat, carbs, protein) {
-    return { name, calories, fat, carbs, protein };
+function createData(name, description, creationDate, finishDate, state) {
+    return { name, description, creationDate, finishDate, state };
 }
 
 const rows = [
@@ -17,16 +17,16 @@ const rows = [
     createData('TrimmomaticPipeline', "A trimmomatic pipeline", new Date().toDateString(), "-", "Executing"),
 ];
 
-const tableStyle={
+const componentStyle={
   TableCell: {
-    align: "left"
+    align: "center"
   }
 }
 
 export default function WorkflowList() {
     return (
-      <div style={tableStyle}>
-        <TableContainer sx={{marginTop:5}} component={Paper}>
+      <div style={componentStyle}>
+        <TableContainer style={componentStyle} sx={{marginTop:5}} component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead>
           <TableRow>
@@ -45,10 +45,10 @@ export default function WorkflowList() {
               <TableCell component="th" scope="row">
                 {row.name}
               </TableCell>
-              <TableCell>{row.calories}</TableCell>
-              <TableCell>{row.fat}</TableCell>
-              <TableCell>{row.carbs}</TableCell>
-              <TableCell>{row.protein}</TableCell>
+              <TableCell>{row.description}</TableCell>
+              <TableCell>{row.creationDate}</TableCell>
+              <TableCell>{row.finishDate}</TableCell>
+              <TableCell>{row.state}</TableCell>
             </TableRow>
           ))}
         </TableBody>
