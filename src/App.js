@@ -5,6 +5,7 @@ import Documentation from "./page/documentation"
 import About from "./page/about"
 import Login from "./page/login"
 import Register from "./page/register"
+import WorkflowList from "./page/workflowList"
 import { makeStyles } from "@material-ui/core/styles";
 import NavBar from "./component/home/navBar";
 import Copyright from "./component/common/copyright";
@@ -23,6 +24,7 @@ export default function App() {
             <Route exact path={"/about"} element={<About />} />
             <Route exact path={"/login"} element={<Login />} />
             <Route exact path={"/register"} element={<Register />} />
+            <Route exact path={"/workflow"} element={<WorkflowList />} />
           </Routes>            
           <Copyright sx={{ mt: 8, mb: 4 }} />        
       </Router>
