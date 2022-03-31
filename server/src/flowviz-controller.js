@@ -1,4 +1,4 @@
-module.exports = (service) => {
+module.exports = (service, validator) => {
     
     function getLibraries(req, res) {
         service.getLibraries()
@@ -28,7 +28,17 @@ module.exports = (service) => {
     }
 
     function addLibrary(req, res) {
-        
+        const isContractValid = validator.isValid(
+            JSON.stringify(req.body),
+            require('./schema/library-schema.json')
+        )
+
+        if (!isContractValid) {
+            res.statusCode = 400
+            res.end("This library contract is not valid!")
+            return
+        }
+
         service.addLibrary(req.body)
             .then(data => {
                 res.statusCode = 201

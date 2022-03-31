@@ -12,6 +12,8 @@
   "dependencies": {
     "body-parser": "^1.19.2",
     "express": "^4.17.3",
+    "json-schema": "^0.4.0",
+    "jsonschema": "^1.4.0",
     "node-fetch": "^2.6.7"
   }
 }

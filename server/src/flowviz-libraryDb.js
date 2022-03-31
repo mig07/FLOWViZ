@@ -29,8 +29,7 @@ module.exports = (libraryDataSource, fetch) => {
             "POST",
             { 'Content-Type': 'application/json' },
             JSON.stringify(body)
-        )
-        console.log(options)
+        )        
         return fetch(uri, options).catch(err => { throw err })
     }
 
@@ -43,8 +42,7 @@ module.exports = (libraryDataSource, fetch) => {
             "method": method,
             "headers": headers,
             "body": requestBody
-        }
-        console.log(request)
+        }        
         return request
     }
 
