@@ -5,7 +5,7 @@ module.exports = (service, validator) => {
             .then(data => {
                 res.statusCode = 200
                 res.setHeader('content-type', 'application/json')
-                res.end(JSON.stringify(data))
+                res.end(JSON.stringify(data.hits.hits))
             })
             .catch(err => {
                 res.statusCode = err.number;
@@ -19,7 +19,7 @@ module.exports = (service, validator) => {
             .then(data => {                
                 res.statusCode = 200
                 res.setHeader('content-type', 'application/json')
-                res.end(JSON.stringify(data))
+                res.end(JSON.stringify(data.hits.hits))
             })
             .catch(err => {
                 res.statusCode = err.number;

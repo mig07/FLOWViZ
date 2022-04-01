@@ -7,9 +7,13 @@ const express = require('express');
 const bodyParser = require('body-parser')
 const fetch = require('node-fetch');
 const libraryValidator = require('./util/library-validator');
+const cors = require('cors')
 
 // Initializing express server
 const app = express()
+
+// Cross-Origin Request
+app.use(cors())
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.json());
