@@ -9,7 +9,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 export default function Documentation(props) {
 
     const theme = createTheme()
-    const uri = `http://${props.config.address}:${props.config.port}/library`
+    const uri = `${props.config.appProtocol}://${props.config.address}:${props.config.port}/library`
 
     console.log(uri)
 

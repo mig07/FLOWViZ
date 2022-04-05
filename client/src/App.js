@@ -21,7 +21,7 @@ export default function App() {
         <NavBar/>
           <Routes>
             <Route exact path={"/"} element={<Home />} />
-            <Route exact path={"/documentation"} element={<Documentation config={Config} />} />
+            <Route exact path={"/documentation"} element={<Documentation config={Config.server} />} />
             <Route exact path={"/about"} element={<About />} />
             <Route exact path={"/login"} element={<Login />} />
             <Route exact path={"/register"} element={<Register />} />

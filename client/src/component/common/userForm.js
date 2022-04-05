@@ -15,7 +15,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 const theme = createTheme();
 
-function loginForm() {
+function LoginForm() {
     return (
         <>
             <TextField
@@ -26,7 +26,7 @@ function loginForm() {
                 label="Email Address"
                 name="email"
                 autoComplete="email"
-                autoFocus
+                //autoFocus
             />
             <TextField
                 margin="normal"
@@ -42,7 +42,7 @@ function loginForm() {
     )
 }
 
-function registerForm() {
+function RegisterForm() {
     return (
         <>
             <TextField
@@ -53,7 +53,7 @@ function registerForm() {
                 label="Name"
                 name="name"
                 autoComplete="name"
-                autoFocus
+                //autoFocus
             />
             <TextField
                 margin="normal"
@@ -63,9 +63,8 @@ function registerForm() {
                 label="Surname"
                 name="Surname"
                 autoComplete="Surname"
-                autoFocus
             />
-            { loginForm() }
+            { LoginForm() }
         </>
     )
 }
@@ -80,7 +79,7 @@ export default function UserForm(props) {
           password: data.get('password'),
         });
       };
-    
+
     return (
     <ThemeProvider theme={theme}>
         <Container component="main" maxWidth="xs">
@@ -98,28 +97,16 @@ export default function UserForm(props) {
             </Avatar>
             <Typography component="h1" variant="h5">
                 {props.operationName}
-            </Typography>
+            </Typography>    
+
             <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-                <TextField
-                    margin="normal"
-                    required
-                    fullWidth
-                    id="email"
-                    label="Email Address"
-                    name="email"
-                    autoComplete="email"
-                    autoFocus
-                />
-                <TextField
-                    margin="normal"
-                    required
-                    fullWidth
-                    name="password"
-                    label="Password"
-                    type="password"
-                    id="password"
-                    autoComplete="current-password"
-                />
+            { (() => {
+                switch(props.operationName) {
+                    case "Register": return <RegisterForm/>
+                    case "Login": return <LoginForm/>
+                }
+                })()
+            }
             <FormControlLabel
                 control={<Checkbox value="remember" color="primary" />}
                 label="Remember me"
@@ -140,7 +127,7 @@ export default function UserForm(props) {
                 </Grid>
                 <Grid item>
                 <Link href="#" variant="body2">
-                    {"Don't have an account? Sign Up"}
+                    {(() => {if (props.operationName === "Login") return "Don't have an account? Sign Up"})()}
                 </Link>
                 </Grid>
             </Grid>
