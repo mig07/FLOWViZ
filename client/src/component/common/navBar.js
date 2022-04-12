@@ -3,17 +3,13 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from "@material-ui/icons/Menu";
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
 import CssBaseline from '@mui/material/CssBaseline';
 import { Typography, useMediaQuery } from '@material-ui/core';
-import { useTheme } from '@material-ui/core/styles';
+import Theme from '../../config/theme'
+import { makeStyles } from '@material-ui/core/styles';
 import { useNavigate } from 'react-router-dom';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-
-const theme = createTheme();
+import { useLocation } from 'react-router-dom';
+import { ThemeProvider } from '@mui/material/styles';
 
 const pageButtonsGroups = [
   {
@@ -21,15 +17,18 @@ const pageButtonsGroups = [
     pageButtons: [
       {
         name: "Home",
-        url: "/", 
+        url: "/",
+        isDefault: true
       },
       {
         name: "Documentation",
         url: "/documentation", 
+        isDefault: false
       },
       {
         name: "About",
         url: "/about", 
+        isDefault: false
       },
     ],
   },
@@ -38,30 +37,28 @@ const pageButtonsGroups = [
     pageButtons: [
       {
         name: "Login",
-        url: "/login", 
+        url: "/login",
+        isDefault: false 
       },
       {
         name: "Register",
         url: "/register", 
+        isDefault: false
       }
     ]
   }
 ]
 
-const NavBar = props => {
-  const theme = useTheme();
+const NavBar = () => {
   const navigate = useNavigate();
-  const [anchor, setAnchor] = React.useState(null);
-  const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
-  
-  const onPageMenuOpen = event => {
-    setAnchor(event.currentTarget);
-  };
+  const location = useLocation();
+  const isMobile = useMediaQuery(Theme.breakpoints.down("xs"));
 
-  const onPageMenuItemClick = url => {
-    navigate(url);
-    setAnchor(null);
-  };  
+  const useStyles = makeStyles(() => ({
+    appBar: { backgroundColor: Theme.palette.light.background.paper }
+  }));
+  
+  const classes = useStyles()
 
   const mobileInterface = {
     /* <>
@@ -102,28 +99,32 @@ const NavBar = props => {
       <Box sx={{ flexGrow: 1,
         display: { xs: 'none', md: 'flex' }, 
         justifyContent: pageButtonsGroup.position }}>
-            { pageButtonsGroup.pageButtons.map((pageButton) => (
+            { pageButtonsGroup.pageButtons.map((pageButton) => ( 
               <Button
                 key={pageButton.name}
                 sx={{ my: 2, display: 'block' }}
+                variant={location.pathname === pageButton.url ? 'outlined' : ''}
                 onClick={() => navigate(pageButton.url) }>
-                {pageButton.name}
-              </Button>
+                { pageButton.name }
+            </Button>
             ))}
         </Box> 
     ))  
 
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={Theme}>
       <CssBaseline />
-      <AppBar position="static" color="default">
+      <AppBar className={classes.appBar} position="static">
         <Toolbar variant="regular"> 
           <Box sx={{ flexGrow: 1,
               display: { xs: 'none', md: 'flex' }, 
-              justifyContent: "left" }}>
-            <Typography variant="h5">
-              FLOWViZ
-            </Typography>
+              justifyContent: "left" }}>              
+              <Button
+                key={"FLOWViZ"}
+                sx={{ my: 2, display: 'block' }}
+                onClick={() => navigate("/") }>
+                <Typography variant="h5">FLOWViZ</Typography>
+              </Button>
           </Box>
           { isMobile ? mobileInterface : pcInterface }
         </Toolbar>
