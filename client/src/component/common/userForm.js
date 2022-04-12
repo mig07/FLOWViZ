@@ -12,6 +12,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import Theme from '../../config/theme';
 
 const theme = createTheme();
 
@@ -81,7 +82,7 @@ export default function UserForm(props) {
       };
 
     return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={Theme}>
         <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
@@ -92,7 +93,7 @@ export default function UserForm(props) {
             alignItems: 'center',
             }}
         >
-            <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+            <Avatar sx={{ m: 1, bgcolor: Theme.palette.secondary.main }}>
             <LockOutlinedIcon />
             </Avatar>
             <Typography component="h1" variant="h5">
@@ -115,7 +116,7 @@ export default function UserForm(props) {
                 type="submit"
                 fullWidth
                 variant="contained"
-                sx={{ mt: 3, mb: 2 }}
+                sx={{ mt: 3, mb: 2, bgcolor: Theme.palette.primary.dark }}
             >
                 {props.operationName}
             </Button>

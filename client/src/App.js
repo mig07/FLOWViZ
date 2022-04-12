@@ -5,20 +5,19 @@ import Documentation from "./page/documentation"
 import About from "./page/about"
 import Login from "./page/login"
 import Register from "./page/register"
+import NotFound from "./page/notFound";
 import WorkflowList from "./page/workflowList"
-import { makeStyles } from "@material-ui/core/styles";
+import { createTheme, ThemeProvider, styled } from '@mui/material/styles';
+import { Theme } from "./config/theme";
 import NavBar from "./component/common/navBar";
 import Copyright from "./component/common/copyright";
 import Config from "./config/dev-config.json";
 
-const useStyles = makeStyles({});
-
 export default function App() {
-  const classes = useStyles();
   return (
-    <>
+    <ThemeProvider theme={Theme}>
       <Router>
-        <NavBar/>
+        <NavBar />
           <Routes>
             <Route exact path={"/"} element={<Home />} />
             <Route exact path={"/documentation"} element={<Documentation config={Config.server} />} />
@@ -26,9 +25,10 @@ export default function App() {
             <Route exact path={"/login"} element={<Login />} />
             <Route exact path={"/register"} element={<Register />} />
             <Route exact path={"/workflow"} element={<WorkflowList />} />
+            <Route path="*" element={<NotFound />} />
           </Routes>            
           <Copyright sx={{ mt: 8, mb: 4 }} />        
       </Router>
-    </>
+    </ThemeProvider>
   );  
 }
