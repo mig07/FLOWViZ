@@ -1,14 +1,19 @@
 import * as React from 'react';
 import Hero from '../component/home/hero';
+import FeaturedCardGrid from '../component/home/featuredCardGrid';
+import { Box } from '@material-ui/core';
 import { Container } from '@material-ui/core';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { createTheme } from '@mui/material/styles';
 
 const theme = createTheme();
 
 export default function Home() {
     return (
-        <>
-            <Hero/>
-        </>
+        <Container maxWidth="xl">
+            <Box sx={{m: 5}}>
+                <Hero />
+                <FeaturedCardGrid />
+            </Box>        
+        </Container>
     )
 }

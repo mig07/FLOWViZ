@@ -25,7 +25,7 @@ const config = {
         exclude: /node_modules/
       },
       {
-        test: /\.svg$/,
+        test: /\.(svg|jpg)$/,
         use: 'file-loader'
       },
       {
