@@ -1,25 +1,24 @@
-'use strict'
-
 module.exports = (libraryDataSource, fetch) => {
     const dataSourceOperations = new DataSourceOperations();
 
     function DataSourceOperations() {
         const baseUri = `http://${libraryDataSource.address}:${libraryDataSource.port}/${libraryDataSource.librariesIndex}`
+        const _doc = `${baseUri}/_doc`
         this.getLibraries = () => `${baseUri}/_search/`
-        this.getLibrary = (libraryName) => `${baseUri}/_doc/${libraryName}`
+        this.getLibrary = (libraryName) => `${_doc}/${libraryName}`
         this.addLibrary = (libraryName) => `${baseUri}/_create/${libraryName}`
-        this.updateLibrary = (libraryName) => `${baseUri}/_doc/${libraryName}`
+        this.updateLibrary = (libraryName) => `${_doc}/${libraryName}`
     }
 
     function getLibraries() {
         return fetch(dataSourceOperations.getLibraries())
-            .then(body => body.json())
+            .then(body => body.json().hits.hits)
             .catch(err => { throw err })
     }
 
     function getLibrary(libraryName) {
         return fetch(dataSourceOperations.getLibrary(libraryName))
-            .then(body => body.json())
+            .then(body => body.json().hits.hits)
             .catch(err => { throw err })
     }
 

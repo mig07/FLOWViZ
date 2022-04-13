@@ -1,36 +1,40 @@
+const toolContract = require('./schema/library-schema.json');
+
 module.exports = (service, validator) => {
     
-    function getLibraries(req, res) {
+    function getLibraries(req, res, next) {
         service.getLibraries()
             .then(data => {
                 res.statusCode = 200
                 res.setHeader('content-type', 'application/json')
-                res.end(JSON.stringify(data.hits.hits))
+                res.end(JSON.stringify(data))
             })
             .catch(err => {
-                res.statusCode = err.number;
-                res.end(err.message);
+                if (err) {
+                    next(err)
+                }
             })        
     }
 
     function getLibrary(req, res) {
-        const libraryName = req.path.split("/")[2];
+        const libraryName = req.params.name;
         service.getLibrary(libraryName)
             .then(data => {                
                 res.statusCode = 200
                 res.setHeader('content-type', 'application/json')
-                res.end(JSON.stringify(data.hits.hits))
+                res.end(JSON.stringify(data))
             })
             .catch(err => {
-                res.statusCode = err.number;
-                res.end(err.message);
+                if (err) {
+                    next(err)
+                }
             })        
     }
 
     function addLibrary(req, res) {
         const isContractValid = validator.isValid(
             JSON.stringify(req.body),
-            require('./schema/library-schema.json')
+            toolContract
         )
 
         if (!isContractValid) {
@@ -46,8 +50,9 @@ module.exports = (service, validator) => {
                 res.end(JSON.stringify(data))
             })
             .catch(err => {
-                res.statusCode = err.number;
-                res.end(err.message);
+                if (err) {
+                    next(err)
+                }
             })        
     }
 
