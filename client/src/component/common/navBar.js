@@ -55,7 +55,7 @@ const NavBar = () => {
   const isMobile = useMediaQuery(Theme.breakpoints.down("xs"));
 
   const useStyles = makeStyles(() => ({
-    appBar: { backgroundColor: Theme.palette.light.background.paper }
+    appBar: { backgroundColor: 'white' }
   }));
   
   const classes = useStyles()
@@ -102,7 +102,7 @@ const NavBar = () => {
             { pageButtonsGroup.pageButtons.map((pageButton) => ( 
               <Button
                 key={pageButton.name}
-                sx={{ my: 2, display: 'block' }}
+                sx={{ my: 2, display: 'block' }}                
                 variant={location.pathname === pageButton.url ? 'outlined' : ''}
                 onClick={() => navigate(pageButton.url) }>
                 { pageButton.name }

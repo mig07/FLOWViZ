@@ -15,7 +15,7 @@ import Config from "./config/dev-config.json";
 
 export default function App() {
   return (
-    <ThemeProvider theme={Theme}>
+    <ThemeProvider theme={ Theme }>
       <Router>
         <NavBar />
           <Routes>

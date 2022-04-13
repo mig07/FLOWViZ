@@ -1,7 +1,8 @@
-import { createTheme, ThemeProvider, styled } from '@mui/material/styles';
+import { createTheme } from '@mui/material/styles';
 
 export const Theme = createTheme({
     palette: {
+        type: "dark",
         primary: {
             main: '#37c0fb',
             light: '#5FCCFB',
