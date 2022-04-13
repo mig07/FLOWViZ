@@ -1,12 +1,13 @@
 // Server config
-const config = require('./flowviz-server-dev-config.json')
+const config = require('./config/flowviz-server-dev-config.json')
 const serverConfig = config.server
+const port = serverConfig.port
 
 // Libraries
 const express = require('express');
 const bodyParser = require('body-parser')
 const fetch = require('node-fetch');
-const libraryValidator = require('./util/library-validator');
+const morgan = require('morgan')
 const cors = require('cors')
 
 // Initializing express server
@@ -15,24 +16,26 @@ const app = express()
 // Cross-Origin Request
 app.use(cors())
 
+// Express middleware config
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.json());
+app.use(morgan('dev'));
 
 // Validator for JSON contracts
 const validator = require('./util/library-validator.js')()
 
-// Initializing server modules
-const libraryDb = require('./flowviz-libraryDb.js')(config.dataSource, fetch)
-const service = require('./flowviz-service.js')(libraryDb)
+// Server modules
+const libraryDb = require('./datasource/flowviz-libraryElasticDb.js')(config.dataSource, fetch)
+const service = require('./service/flowviz-service.js')(libraryDb)
 const controller = require('./flowviz-controller.js')(service, validator)
-const endpoints = require('./flowviz-endpoints.js')(app, controller)
+const endpoints = require('./flowviz-routes.js')(app, controller)
 
-const port = serverConfig.port
-
+// Server initialization
 app.listen(port, (err) => {
-  console.log(`Booting ${serverConfig.name}...`)
+  console.log(`Booting ${serverConfig.name}...`)  
   if (err) {
-      console.log("Error!", err)
+    console.log("Error!", err)
   }
+  morgan('tiny')
   console.log(`Listening to port ${port}`)
 })
