@@ -25,10 +25,10 @@ app.use(morgan('dev'));
 const validator = require('./util/library-validator.js')()
 
 /* Server modules */
-const libraryDb = require('./datasource/libraryElasticDb.js')(config.dataSource, fetch)
+const libraryDb = require('./datasource/libraryDbDataSource.js')(config.dataSource, fetch)
 const service = require('./service/libraryService.js')(libraryDb)
-const controller = require('./flowviz-controller.js')(service, validator)
-const endpoints = require('./flowviz-routes.js')(app, controller)
+const controller = require('./controller.js')(service, validator)
+const endpoints = require('./routes.js')(app, controller)
 
 /* Server initialization */
 app.listen(port, (err) => {
@@ -36,6 +36,5 @@ app.listen(port, (err) => {
   if (err) {
     console.log("Error!", err)
   }
-  morgan('tiny')
   console.log(`Listening to port ${port}`)
 })
