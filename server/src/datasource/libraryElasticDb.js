@@ -12,13 +12,13 @@ module.exports = (libraryDataSource, fetch) => {
 
     function getLibraries() {
         return fetch(dataSourceOperations.getLibraries())
-            .then(body => body.json().hits.hits)
+            .then(body => body.json())
             .catch(err => { throw err })
     }
 
     function getLibrary(libraryName) {
         return fetch(dataSourceOperations.getLibrary(libraryName))
-            .then(body => body.json().hits.hits)
+            .then(body => body.json())
             .catch(err => { throw err })
     }
 

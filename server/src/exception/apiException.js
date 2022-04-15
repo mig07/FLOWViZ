@@ -6,11 +6,15 @@ class ApiException {
     }
   
     static badRequest(msg) {
-      return new ApiError(400, msg);
+      return new ApiException(400, msg);
+    }
+
+    static notFound(msg) {
+      return new ApiException(404, msg);
     }
   
     static internal(msg) {
-      return new ApiError(500, msg);
+      return new ApiException(500, msg);
     }
   }
   

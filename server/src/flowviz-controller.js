@@ -3,57 +3,50 @@ const toolContract = require('./schema/library-schema.json');
 module.exports = (service, validator) => {
     
     function getLibraries(req, res, next) {
+
         service.getLibraries()
             .then(data => {
                 res.statusCode = 200
                 res.setHeader('content-type', 'application/json')
                 res.end(JSON.stringify(data))
             })
-            .catch(err => {
-                if (err) {
-                    next(err)
-                }
-            })        
+            .catch(err => next(err))        
     }
 
-    function getLibrary(req, res) {
+    function getLibrary(req, res, next) {
+
         const libraryName = req.params.name;
+
         service.getLibrary(libraryName)
             .then(data => {                
                 res.statusCode = 200
                 res.setHeader('content-type', 'application/json')
                 res.end(JSON.stringify(data))
             })
-            .catch(err => {
-                if (err) {
-                    next(err)
-                }
-            })        
+            .catch(err => next(err))       
     }
 
-    function addLibrary(req, res) {
-        const isContractValid = validator.isValid(
-            JSON.stringify(req.body),
-            toolContract
-        )
+    function addLibrary(req, res, next) {        
 
-        if (!isContractValid) {
+        const body = req.body    
+
+        if (!isContractValid(body)) {
             res.statusCode = 400
             res.end("This library contract is not valid!")
             return
         }
-
-        service.addLibrary(req.body)
+        
+        service.addLibrary(body)
             .then(data => {
                 res.statusCode = 201
                 res.setHeader('content-type', 'application/json')
                 res.end(JSON.stringify(data))
             })
-            .catch(err => {
-                if (err) {
-                    next(err)
-                }
-            })        
+            .catch(err => next(err))                
+    }
+
+    function isContractValid(body) {
+        return validator.isValid(JSON.stringify(body), toolContract)
     }
 
     return {

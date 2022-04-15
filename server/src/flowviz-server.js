@@ -1,36 +1,36 @@
-// Server config
+/* Server config */
 const config = require('./config/flowviz-server-dev-config.json')
 const serverConfig = config.server
 const port = serverConfig.port
 
-// Libraries
+/* Libraries */
 const express = require('express');
 const bodyParser = require('body-parser')
 const fetch = require('node-fetch');
 const morgan = require('morgan')
 const cors = require('cors')
 
-// Initializing express server
+/* Initializing express server */
 const app = express()
 
-// Cross-Origin Request
+/* Cross-Origin Request */
 app.use(cors())
 
-// Express middleware config
+/* Express middleware config */
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(morgan('dev'));
 
-// Validator for JSON contracts
+/* Validator for JSON contracts */
 const validator = require('./util/library-validator.js')()
 
-// Server modules
-const libraryDb = require('./datasource/flowviz-libraryElasticDb.js')(config.dataSource, fetch)
-const service = require('./service/flowviz-service.js')(libraryDb)
+/* Server modules */
+const libraryDb = require('./datasource/libraryElasticDb.js')(config.dataSource, fetch)
+const service = require('./service/libraryService.js')(libraryDb)
 const controller = require('./flowviz-controller.js')(service, validator)
 const endpoints = require('./flowviz-routes.js')(app, controller)
 
-// Server initialization
+/* Server initialization */
 app.listen(port, (err) => {
   console.log(`Booting ${serverConfig.name}...`)  
   if (err) {
