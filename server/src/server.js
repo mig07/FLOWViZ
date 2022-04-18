@@ -27,7 +27,7 @@ const validator = require('./util/library-validator.js')()
 /* Server modules */
 const libraryDb = require('./datasource/libraryDbDataSource.js')(config.dataSource, fetch)
 const service = require('./service/libraryService.js')(libraryDb)
-const controller = require('./controller.js')(service, validator)
+const controller = require('./controller/libraryController.js')(service, validator)
 const endpoints = require('./routes.js')(app, controller)
 
 /* Server initialization */
