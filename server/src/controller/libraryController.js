@@ -1,4 +1,5 @@
-const toolContract = require('./schema/library-schema.json');
+const ToolContract = require('../schema/library-schema.json');
+const ApiException = require('../exception/apiException')
 
 module.exports = (service, validator) => {
     
@@ -31,9 +32,7 @@ module.exports = (service, validator) => {
         const body = req.body    
 
         if (!isContractValid(body)) {
-            res.statusCode = 400
-            res.end("This library contract is not valid!")
-            return
+            next(ApiException.badRequest("This library contract is not valid!"))
         }
         
         service.addLibrary(body)
@@ -46,7 +45,7 @@ module.exports = (service, validator) => {
     }
 
     function isContractValid(body) {
-        return validator.isValid(JSON.stringify(body), toolContract)
+        return validator.isValid(JSON.stringify(body), ToolContract)
     }
 
     return {
