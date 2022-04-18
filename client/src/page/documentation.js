@@ -28,8 +28,8 @@ export default function Documentation(props) {
             <div align='center'>
                 <Grid container item  marginTop={5} justifyContent="center" spacing={3}>
                     {list.map(item => { 
-                        const name = item._source.name;
-                        const description = item._source.description;
+                        const name = item.name;
+                        const description = item.description;
                         return (
                             <Grid item>
                                 <ToolCard name={name} description={description} />
