@@ -14,7 +14,7 @@ module.exports = (libraryDb) => {
 
     async function getLibrary(libraryName) {
         const library = await libraryDb.getLibrary(libraryName)
-        if (!library.found) {
+        if (library.found === false) {
             throw ApiException.notFound(`The library ${libraryName} does not exist.`)
         }
         return library._source            
