@@ -22,13 +22,25 @@ app.use(express.json());
 app.use(morgan('dev'));
 
 /* Validator for JSON contracts */
-const validator = require('./util/library-validator.js')()
+const validator = require('./util/validator.js')
+
+/* Server custom exception object */
+const ApiException = require('./exception/apiException');
 
 /* Server modules */
+
+// Library
 const libraryDb = require('./datasource/libraryDbDataSource.js')(config.dataSource, fetch)
-const service = require('./service/libraryService.js')(libraryDb)
-const controller = require('./controller/libraryController.js')(service, validator)
-const endpoints = require('./routes.js')(app, controller)
+const libraryService = require('./service/libraryService.js')(libraryDb, validator, ApiException)
+const libraryController = require('./controller/libraryController.js')(libraryService)
+
+// Workflow
+const workflowDb = require('./datasource/workflowDbDataSource.js')(fetch)
+const workflowService = require('./service/workflowService.js')(workflowDb, validator, ApiException)
+const workflowController = require('./controller/workflowController')(workflowService);
+
+// API's endpoints
+require('./routes.js')(app, libraryController, workflowController)
 
 /* Server initialization */
 app.listen(port, (err) => {

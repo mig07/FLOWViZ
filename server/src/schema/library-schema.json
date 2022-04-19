@@ -62,6 +62,12 @@
       "library": {
         "type": "object",
         "properties": {
+          "address": {
+            "type": "string"
+          },
+          "port": {
+            "type": "string"
+          },
           "callCommand": {
             "type": "string"
           },
@@ -134,6 +140,8 @@
           }
         },
         "required": [
+          "address",
+          "port",
           "callCommand"
         ]
       }
