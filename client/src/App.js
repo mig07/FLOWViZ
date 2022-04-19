@@ -16,17 +16,14 @@ import Library from "./page/library";
 
 export default function App() {
 
-  const libraryName = useParams()
-
-  console.log(libraryName)
   return (
     <ThemeProvider theme={ Theme }>
       <Router>
         <NavBar />
           <Routes>
             <Route exact path={"/"} element={<Home />} />
-            <Route path={"/documentation"} element={<Documentation config={Config.server} />} />
-            {/* <Route exact path={"/documentation/:libraryName"} element={<Library libraryName={libraryName} />} /> */}
+            <Route exact path={"/documentation"} element={<Documentation config={Config.server} />} />
+            <Route exact path={"/documentation/:libraryName"} element={<Library config={Config.server} />} />
             <Route exact path={"/about"} element={<About />} />
             <Route exact path={"/login"} element={<Login />} />
             <Route exact path={"/register"} element={<Register />} />
