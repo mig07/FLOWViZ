@@ -62,10 +62,13 @@
       "library": {
         "type": "object",
         "properties": {
-          "address": {
+          "machineAddress": {
             "type": "string"
           },
-          "port": {
+          "machinePort": {
+            "type": "string"
+          },
+          "image": {
             "type": "string"
           },
           "callCommand": {
@@ -140,8 +143,9 @@
           }
         },
         "required": [
-          "address",
-          "port",
+          "machineAddress",
+          "machinePort",
+          "image",
           "callCommand"
         ]
       }
