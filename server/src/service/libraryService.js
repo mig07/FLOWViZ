@@ -1,39 +1,41 @@
-const ToolContract = require('../schema/library-schema.json');
+const ToolContract = require('../schema/toolContract/ToolContract');
 
-module.exports = (libraryDb, validator, ApiException) => {
+module.exports = (libraryDb, ApiException) => {
     
     async function getLibraries() {
 
-        const libraries = await libraryDb.getLibraries()
-
-        return libraries.hits.hits.map(library => {             
-            return {
-                'name': `${library._source.name}`,
-                'description': `${library._source.description}`,
-            }
-        })
+        return await libraryDb.getLibraries()
     }
 
     async function getLibrary(libraryName) {
 
         const library = await libraryDb.getLibrary(libraryName)
 
-        if (library.found === false) {
-            throw ApiException.notFound(`The library ${libraryName} does not exist.`)
+        if (!library) {
+            throw ApiException.notFound(`The library with name ${libraryName} does not exist.`)
         }
-        
-        return library._source
+
+        return await libraryDb.getLibrary(libraryName)
     }
 
     async function addLibrary(library) {
 
-        const isLibraryValid = validator.isValid(library, ToolContract)
+        const name = library.name
 
-        if (!isLibraryValid) {
-            throw ApiException.badRequest("This library contract is not valid!")
+        const lib = getLibrary(name)
+
+        if (lib) {
+            throw ApiException.conflict(`The library with name ${name} already exists.`)
         }
 
-        return await libraryDb.addLibrary(library)
+        const contract = new ToolContract({
+            name: library.name,
+            description: library.description,
+            api: library.api,
+            library: library.library
+        })
+
+        return await libraryDb.addLibrary(contract)
     }
 
     return {

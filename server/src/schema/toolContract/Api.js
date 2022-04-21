@@ -1,13 +1,18 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema
 
-const Endpoint = new Schema({
+const EndpointSchema = new Schema({
     name: { type: String, required: true },
     description: { type: String, required: true },
     path: { type: String, required: true },
     method: { type: String, required: true },
-    headers: { type: Object },
+    headers: { type: Object, required: true },
     body: { type: Object }
 })
 
-module.exports = mongoose.model(Endpoint)
+const ApiSchema = new Schema({
+    address: { type: String, required: true },
+    endpoints: [EndpointSchema]
+})
+
+module.exports = ApiSchema

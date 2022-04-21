@@ -1,3 +1,5 @@
+const process = require('../schema/process-schema.json')
+
 module.exports = (workflowDb, validator, ApiException) => {
 
     async function getWorkflows() {
@@ -10,7 +12,7 @@ module.exports = (workflowDb, validator, ApiException) => {
 
     async function postWorkflow(workflow) {
         
-        const isWorkflowValid = validator.isValid(workflow, ToolContract)
+        const isWorkflowValid = validator.isValid(workflow, ProcessContract)
 
         if (!isWorkflowValid) {
             throw ApiException.badRequest("This workflow request is not valid!")

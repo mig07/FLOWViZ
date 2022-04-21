@@ -1,7 +1,9 @@
 const apiExceptionHandler = require('./exception/apiExceptionHandler')
 
-module.exports = (app, libraryController, workflowController) => {
+module.exports = (app, libraryController, workflowController, dev) => {
     
+    const apiExceptionHandler = require('./exception/apiExceptionHandler')(dev)
+
     /* Library Endpoints */
 
     // GETs
@@ -21,5 +23,5 @@ module.exports = (app, libraryController, workflowController) => {
     app.post('/workflow', workflowController.postWorkflow)
 
     /* Express middleware error handler */
-    app.use(apiExceptionHandler) 
+    app.use(apiExceptionHandler.interceptor) 
 }

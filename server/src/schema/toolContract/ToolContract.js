@@ -1,13 +1,15 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema
-const ObjectId = mongoose.ObjectId
 
+const SimpleToolContractSchema = require('./SimpleToolContract')
+const ApiSchema = require('./Api')
+const LibrarySchema = require('./Library')
 
-const ToolContract = new Schema({
-    name: { type: String, required: true },
+const ToolContractSchema = new Schema({
+    name: { type: String, required: true, unique: true },
     description: { type: String, required: true },
-    api: { type: ObjectId },
-    library: { type: ObjectId }
+    api: ApiSchema,
+    library: LibrarySchema
 })
 
-module.exports = mongoose.model('ToolContract',ToolContract)
+module.exports = mongoose.model('ToolContract',ToolContractSchema)

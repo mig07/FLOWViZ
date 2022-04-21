@@ -1,12 +1,22 @@
 const ApiException = require('./apiException')
 
-function apiExceptionHandler(err, req, res, next) {
+module.exports = (dev) => {
+    
+    function interceptor(err, req, res, next) {
 
-    if (err instanceof ApiException) {
-        res.status(err.statusCode).json(err.message)
+        if (dev) {
+            console.log(err)
+        }
+    
+        if (err instanceof ApiException) {
+            res.status(err.statusCode).json(err.message)
+            return
+        }
+    
+        res.status(500).json('Something went wrong');
     }
 
-    res.status(500).json('Something went wrong');
+    return {
+        'interceptor': interceptor
+    }
 }
-
-module.exports = apiExceptionHandler

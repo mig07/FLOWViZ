@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start": "node ./src/server.js",
+    "start": "nodemon ./src/server.js",
     "test": "mocha ./src/test"
   },
   "keywords": [],
@@ -20,6 +20,7 @@
     "mocha": "^9.2.2",
     "mongoose": "^6.3.0",
     "morgan": "^1.10.0",
-    "node-fetch": "^2.6.7"
+    "node-fetch": "^2.6.7",
+    "nodemon": "^2.0.15"
   }
 }

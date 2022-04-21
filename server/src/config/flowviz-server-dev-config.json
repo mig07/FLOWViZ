@@ -1,11 +1,12 @@
 {
+    "dev": true,
     "server": {
         "name": "FLOWViZ Server",
         "port": 3000
     },    
     "dataSource" : {
 		"address" : "localhost",
-		"port" : 9200,
+		"port" : 27017,
 		"librariesIndex" : "library"
 	}
 }
