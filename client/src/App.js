@@ -13,6 +13,7 @@ import NavBar from "./component/common/navBar";
 import Copyright from "./component/common/copyright";
 import Config from "./config/dev-config.json";
 import Library from "./page/library";
+import WorkflowCreation from "./page/workflowCreation";
 
 export default function App() {
 
@@ -28,6 +29,7 @@ export default function App() {
             <Route exact path={"/login"} element={<Login />} />
             <Route exact path={"/register"} element={<Register />} />
             <Route exact path={"/workflow"} element={<WorkflowList />} />
+            <Route exact path={"/whiteboard"} element={<WorkflowCreation />} />
             <Route path="*" element={<NotFound />} />
           </Routes>            
           <Copyright sx={{ mt: 8, mb: 4 }} />        
