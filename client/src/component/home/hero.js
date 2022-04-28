@@ -2,7 +2,7 @@ import * as React from 'react';
 import Typography from '@material-ui/core/Typography';
 import { Box, Button } from '@material-ui/core';
 import { Paper } from '@material-ui/core';
-import heroBackground from '../../../public/assets/heroBackground.jpg'
+import heroBackground from '../../images/heroBackground.jpg'
 
 const styles = {
     paperContainer: {

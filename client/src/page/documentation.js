@@ -23,7 +23,7 @@ export default function Documentation(props) {
     }, []);
 
     return (
-        <ThemeProvider theme={theme}>
+        <>
             <Typography variant='h3' marginTop={5} align='center'>Available Libraries</Typography>
             <div align='center'>
                 <Grid container item  marginTop={5} justifyContent="center" spacing={3}>
@@ -38,8 +38,7 @@ export default function Documentation(props) {
                     })}
                 </Grid>
             </div>
-
             <Typography variant='h3' marginTop={5} align='center'>Available APIs</Typography>
-        </ThemeProvider>
+        </>        
     )
 }
