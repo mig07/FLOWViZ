@@ -15,17 +15,17 @@ module.exports = (libraryDb, ApiException) => {
             throw ApiException.notFound(`The library with name ${libraryName} does not exist.`)
         }
 
-        return await libraryDb.getLibrary(libraryName)
+        return library
     }
 
     async function addLibrary(library) {
 
         const name = library.name
 
-        const lib = getLibrary(name)
+        const lib = await libraryDb.getLibrary(name)
 
         if (lib) {
-            throw ApiException.conflict(`The library with name ${name} already exists.`)
+            throw ApiException.conflict(`A library with name ${name} already exists.`)
         }
 
         const contract = new ToolContract({
