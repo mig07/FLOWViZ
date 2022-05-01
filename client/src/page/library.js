@@ -19,8 +19,7 @@ export default function Library(props) {
         description: "",
         library: { 
             name: "",
-            arguments: [],
-            options: []
+            commandGroups: [],
         },
         api: []
     })
@@ -30,10 +29,6 @@ export default function Library(props) {
             .then(response => response.json())
             .then(setTool)
     }, []);
-
-
-    const isApi = tool.library === true
-    const type = isApi ? "API" : "Library"
 
     return (
         <ThemeProvider theme={theme}>

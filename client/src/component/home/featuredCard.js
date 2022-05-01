@@ -15,7 +15,7 @@ export default function FeaturedCard(props) {
                 </Typography>
             </CardContent>
             <CardActions>
-                <Button size="small">{props.buttonText}</Button>
+                <Button href="/documentation" size="small">{props.buttonText}</Button>
             </CardActions>
         </Card>
     )
