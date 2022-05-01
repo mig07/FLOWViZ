@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 import ReactFlow, {
     Background,
     ReactFlowProvider,
@@ -27,6 +27,7 @@ const initialNodes = [
 ];
 
 export default function Workflow() {
+    const reactFlowWrapper = useRef(null);
     const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
     const [edges, setEdges, onEdgesChange] = useEdgesState([]);
     const [reactFlowInstance, setReactFlowInstance] = useState(null);
@@ -71,10 +72,41 @@ export default function Workflow() {
         [reactFlowInstance]
     );
 
+    const onDrop = useCallback(
+        (event) => {
+          event.preventDefault();
+    
+          const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
+          const type = event.dataTransfer.getData('application/reactflow');
+    
+          // check if the dropped element is valid
+          if (typeof type === 'undefined' || !type) {
+            return;
+          }
+    
+          const position = reactFlowInstance.project({
+            x: event.clientX - reactFlowBounds.left,
+            y: event.clientY - reactFlowBounds.top,
+          });
+          const newNode = {
+            id: getId(),
+            type,
+            position,
+            data: { label: `${type} node` },
+          };
+    
+          setNodes((nds) => nds.concat(newNode));
+        },
+        [reactFlowInstance]
+      );
+
     return (
         <div className="workflow">
         <ReactFlowProvider>
-            <div style={{ height: '100vh', width: '100vw' }}>
+            <div 
+                className="reactflow-wrapper"
+                ref={reactFlowWrapper}
+                style={{ height: '100vh', width: '100vw' }}>
             <ReactFlow
                 nodes={nodes}
                 edges={edges}
@@ -84,6 +116,7 @@ export default function Workflow() {
                 onInit={setReactFlowInstance}
                 onPaneClick={onPaneClick}
                 onDragOver={onDragOver}
+                onDrop={onDrop}
                 onEdgeUpdate={onEdgeUpdate}
                 deleteKeyCode={'Delete'}
                 fitView

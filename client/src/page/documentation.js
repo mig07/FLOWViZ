@@ -11,8 +11,6 @@ export default function Documentation(props) {
     const theme = createTheme()
     const uri = `${props.config.appProtocol}://${props.config.address}:${props.config.port}/library`
 
-    console.log(uri)
-
     // Libraries and APIs state hook
     const [list, setList] = useState([])
     

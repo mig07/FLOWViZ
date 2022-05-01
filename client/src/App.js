@@ -29,7 +29,7 @@ export default function App() {
             <Route exact path={"/login"} element={<Login />} />
             <Route exact path={"/register"} element={<Register />} />
             <Route exact path={"/workflow"} element={<WorkflowList />} />
-            <Route exact path={"/whiteboard"} element={<Whiteboard />} />
+            <Route exact path={"/whiteboard"} element={<Whiteboard config={Config.server} />} />
             <Route path="*" element={<NotFound />} />
           </Routes>            
           <Copyright sx={{ mt: 8, mb: 4 }} />        
