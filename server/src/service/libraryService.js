@@ -4,7 +4,14 @@ module.exports = (libraryDb, ApiException) => {
     
     async function getLibraries() {
 
-        return await libraryDb.getLibraries()
+        const libraries = await libraryDb.getLibraries()
+
+        return libraries.map(library => {
+            return {
+                name: library.name,
+                description: library.description,
+            }
+        })
     }
 
     async function getLibrary(libraryName) {
