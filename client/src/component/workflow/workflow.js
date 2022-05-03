@@ -9,6 +9,7 @@ import ReactFlow, {
     Controls,
     MiniMap,
 } from 'react-flow-renderer';
+import ToolNode from '../whiteboard/toolNode';
 
 let id = -1;
 const getId = () => `node${++id}`;
@@ -16,19 +17,11 @@ const getId = () => `node${++id}`;
 const nodeWidth = 150;
 const nodeHeight = 40;
 
-const initialNodes = [
-  {
-    id: getId(),
-    type: 'default',
-    data: { label: `Node ${id}` },
-    style: { width: nodeWidth, height: nodeHeight },
-    position: { x: 250, y: 5 },
-  },
-];
+const nodeTypes = { tool: ToolNode };
 
 export default function Workflow() {
     const reactFlowWrapper = useRef(null);
-    const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
+    const [nodes, setNodes, onNodesChange] = useNodesState([]);
     const [edges, setEdges, onEdgesChange] = useEdgesState([]);
     const [reactFlowInstance, setReactFlowInstance] = useState(null);
 
@@ -77,22 +70,18 @@ export default function Workflow() {
           event.preventDefault();
     
           const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
-          const type = event.dataTransfer.getData('application/reactflow');
-    
-          // check if the dropped element is valid
-          if (typeof type === 'undefined' || !type) {
-            return;
-          }
-    
+          const toolName = event.dataTransfer.getData('application/reactflow');
+
           const position = reactFlowInstance.project({
             x: event.clientX - reactFlowBounds.left,
             y: event.clientY - reactFlowBounds.top,
           });
+
           const newNode = {
             id: getId(),
-            type,
-            position,
-            data: { label: `${type} node` },
+            type: 'tool',
+            position: position,
+            data: { label: toolName },
           };
     
           setNodes((nds) => nds.concat(newNode));
@@ -114,11 +103,12 @@ export default function Workflow() {
                 onEdgesChange={onEdgesChange}
                 onConnect={onConnect}
                 onInit={setReactFlowInstance}
-                onPaneClick={onPaneClick}
+                /* onPaneClick={onPaneClick} */
                 onDragOver={onDragOver}
                 onDrop={onDrop}
                 onEdgeUpdate={onEdgeUpdate}
                 deleteKeyCode={'Delete'}
+                nodeTypes={nodeTypes}
                 fitView
             >
                 <MiniMap />

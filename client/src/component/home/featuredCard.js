@@ -1,9 +1,13 @@
 import * as React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardActions } from "@mui/material";
 import { Typography } from "@material-ui/core";
 import { Button } from "@material-ui/core";
 
 export default function FeaturedCard(props) {
+
+    const navigate = useNavigate()
+
     return (
         <Card>
             <CardContent>
@@ -15,7 +19,11 @@ export default function FeaturedCard(props) {
                 </Typography>
             </CardContent>
             <CardActions>
-                <Button href="/documentation" size="small">{props.buttonText}</Button>
+                <Button
+                onClick={() => navigate(props.buttonUrl)} 
+                size="small">
+                    {props.buttonText}
+                </Button>
             </CardActions>
         </Card>
     )

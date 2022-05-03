@@ -9,7 +9,6 @@ import ToolFunctions from '../component/documentation/toolFunctions';
 
 export default function Library(props) {
 
-    const theme = createTheme()
     let { libraryName } = useParams();
     const uri = `${props.config.appProtocol}://${props.config.address}:${props.config.port}/library/${libraryName}`
 
@@ -31,11 +30,9 @@ export default function Library(props) {
     }, []);
 
     return (
-        <ThemeProvider theme={theme}>
-            <Container>                
-                <ToolTitle tool={tool}/>
-                <ToolFunctions tool={tool}/>
-            </Container>
-        </ThemeProvider>
+        <Container>                
+            <ToolTitle tool={tool}/>
+            <ToolFunctions tool={tool}/>
+        </Container>
     )
 }

@@ -20,6 +20,7 @@ export default function FeaturedCardGrid() {
                         description="Provide new tools to build 
                         your custom workflow, along with the available ones."
                         buttonText="Learn more"
+                        buttonUrl="/whiteboard"
                     />
                 </Grid>
                 <Grid item xs={4}>
@@ -27,6 +28,7 @@ export default function FeaturedCardGrid() {
                         title="What we have" 
                         description="Check the documentation to see the available tools."
                         buttonText="Learn more"
+                        buttonUrl="/documentation"
                     />
                 </Grid>
             </Grid>                    

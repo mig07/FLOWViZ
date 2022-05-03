@@ -8,7 +8,6 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 export default function Documentation(props) {
 
-    const theme = createTheme()
     const uri = `${props.config.appProtocol}://${props.config.address}:${props.config.port}/library`
 
     // Libraries and APIs state hook

@@ -5,8 +5,6 @@ import { Box } from '@material-ui/core';
 import { Container } from '@material-ui/core';
 import { createTheme } from '@mui/material/styles';
 
-const theme = createTheme();
-
 export default function Home() {
     return (
         <Container maxWidth="xl">

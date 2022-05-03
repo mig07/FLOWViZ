@@ -9,8 +9,9 @@ const drawerWidth = 240;
 
 
 export default function ToolDrawer(props) {
+  
     const onDragStart = (event) => {
-        event.dataTransfer.setData('application/reactflow', 'default');
+        event.dataTransfer.setData('application/reactflow', event.target.textContent);
         event.dataTransfer.effectAllowed = 'move';
     };
 
