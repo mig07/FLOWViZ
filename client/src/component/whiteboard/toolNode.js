@@ -1,7 +1,9 @@
+import * as React from 'react';
 import { useState, useEffect, useCallback } from 'react';
 import { Handle, Position } from 'react-flow-renderer';
 import config from '../../config/dev-config.json'
-import { Button, Container, Typography, TextField } from '@mui/material';
+import { Button, Container, Typography, TextField, Popover, Box } from '@mui/material';
+import PopoverButton from './popover';
 import './toolNode.css';
 
 export default function ToolNode({ data }) {
@@ -19,23 +21,12 @@ export default function ToolNode({ data }) {
         },
         api: []
     })
+    
 
     useEffect(()=>{
         fetch(uri)
           .then(response => response.json())
           .then(setTool);
-    }, []);
-
-    const librarySetup = () => {
-
-    }    
-
-    const apiSetup = () => {
-
-    }
-
-    const onChange = useCallback((evt) => {
-        console.log(evt.target.value);
     }, []);
 
     return (
@@ -46,12 +37,8 @@ export default function ToolNode({ data }) {
                 <TextField id="standard-basic" label="Step name" variant="outlined"/>
                 <Typography variant='body1'>Setup</Typography>
                 <Container>
-                    <Button onClick={() => apiSetup() }>
-                        API
-                    </Button>
-                    <Button onClick={() => librarySetup() }>
-                        Library
-                    </Button>
+                    <PopoverButton type="api" tool={tool} width={250}/>
+                    <PopoverButton type="library" tool={tool} width={250}/>
                 </Container>
             </Container>
             <Handle position={Position.Bottom} />      
