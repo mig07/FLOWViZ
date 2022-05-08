@@ -2,7 +2,7 @@ import * as React from 'react';
 import {useState, useEffect} from 'react';
 import { useParams } from 'react-router-dom';
 import { Container } from '@material-ui/core';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { Toolbar } from '@mui/material';
 import ToolTitle from '../component/documentation/toolTitle';
 import ToolFunctions from '../component/documentation/toolFunctions';
 
@@ -31,6 +31,7 @@ export default function Library(props) {
 
     return (
         <Container>                
+            <Toolbar />
             <ToolTitle tool={tool}/>
             <ToolFunctions tool={tool}/>
         </Container>

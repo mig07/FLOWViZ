@@ -3,8 +3,7 @@ import {useState, useEffect} from 'react';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import ToolCard from '../component/toolCard'
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-
+import { Toolbar } from '@mui/material';
 
 export default function Documentation(props) {
 
@@ -23,7 +22,8 @@ export default function Documentation(props) {
 
     return (
         <>
-            <Typography variant='h3' marginTop={5} align='center'>Available Libraries</Typography>
+            <Toolbar />
+            <Typography variant='h3' align='center'>Available Libraries</Typography>
             <div align='center'>
                 <Grid container item  marginTop={5} justifyContent="center" spacing={3}>
                     {list.map(item => { 

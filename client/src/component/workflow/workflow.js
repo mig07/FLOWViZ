@@ -99,7 +99,7 @@ export default function Workflow(props) {
       );
 
     return (
-        <div className="workflow">
+        <div>
         <ReactFlowProvider>
             <div 
                 className="reactflow-wrapper"

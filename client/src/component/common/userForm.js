@@ -12,6 +12,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { Toolbar } from '@mui/material';
 import Theme from '../../config/theme';
 
 const theme = createTheme();
@@ -85,9 +86,9 @@ export default function UserForm(props) {
     <ThemeProvider theme={Theme}>
         <Container component="main" maxWidth="xs">
         <CssBaseline />
+        <Toolbar />
         <Box
             sx={{
-            marginTop: 8,
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',

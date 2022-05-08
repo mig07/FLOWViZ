@@ -17,7 +17,7 @@ const styles = {
 export default function Hero() {
     return (
         <Paper style={styles.paperContainer}>                    
-            <Box sx={{m: 5, direction: 'column', justifyContent: 'center'}}>
+            <Box sx={{p: 2, direction: 'column', justifyContent: 'center'}}>
                 <Typography variant='h2'>
                     FLOWViZ
                 </Typography>

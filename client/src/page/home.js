@@ -3,15 +3,18 @@ import Hero from '../component/home/hero';
 import FeaturedCardGrid from '../component/home/featuredCardGrid';
 import { Box } from '@material-ui/core';
 import { Container } from '@material-ui/core';
-import { createTheme } from '@mui/material/styles';
+import { Toolbar } from '@mui/material';
 
 export default function Home() {
     return (
-        <Container maxWidth="xl">
-            <Box sx={{m: 5}}>
-                <Hero />
-                <FeaturedCardGrid />
-            </Box>        
-        </Container>
+        <>
+            <Toolbar />
+            <Container maxWidth="xl">
+                <Box >
+                    <Hero />
+                    <FeaturedCardGrid />
+                </Box>        
+            </Container>        
+        </>
     )
 }

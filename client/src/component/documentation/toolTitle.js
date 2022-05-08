@@ -6,7 +6,7 @@ export default function ToolTitle(props) {
 
     return (
         <>
-            <Typography variant='h3' marginTop={5} align='left'>{props.tool.name}</Typography>
+            <Typography variant='h3' align='left'>{props.tool.name}</Typography>
             <Divider />
             <Typography variant='h5' marginTop={5} align='left'>{props.tool.type}</Typography>
             <Typography variant='body1' marginTop={5} align='left'>{props.tool.description}</Typography>            

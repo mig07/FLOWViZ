@@ -1,11 +1,21 @@
 import * as React from "react";
+import { styled, useTheme } from '@mui/material/styles';
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
 import CssBaseline from "@mui/material/CssBaseline";
-import { List, ListItem } from "@mui/material";
+import { List, ListItem, Toolbar } from "@mui/material";
 import ListItemText from "@mui/material/ListItemText";
 
 const drawerWidth = 240;
+
+const DrawerHeader = styled("div")(({ theme }) => ({
+  display: "flex",
+  alignItems: "center",
+  padding: theme.spacing(0, 1),
+  // necessary for content to be below app bar
+  ...theme.mixins.toolbar,
+  justifyContent: "flex-start",
+}));
 
 export default function ToolDrawer(props) {
   const onDragStart = (event) => {
@@ -18,7 +28,7 @@ export default function ToolDrawer(props) {
 
   return (
     <Box sx={{ display: "flex" }}>
-      <CssBaseline />
+      <CssBaseline />      
       <Drawer
         sx={{
           width: drawerWidth,
@@ -31,6 +41,7 @@ export default function ToolDrawer(props) {
         variant="permanent"
         anchor="left"
       >
+        <DrawerHeader><Toolbar/></DrawerHeader>
         <List>
           {props.tools.map((tool) => {
             const name = tool.name;

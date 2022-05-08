@@ -26,7 +26,7 @@ const componentStyle={
 export default function WorkflowList() {
     return (
       <div style={componentStyle}>
-        <TableContainer style={componentStyle} sx={{marginTop:5}} component={Paper}>
+        <TableContainer style={componentStyle} component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead>
           <TableRow>

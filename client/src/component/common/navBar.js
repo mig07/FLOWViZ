@@ -53,8 +53,6 @@ export default function NavBar() {
 
   const useStyles = makeStyles(() => ({
     appBar: {
-      position: "relative",
-      zIndex: 1400,
       backgroundColor: "white",
     },
   }));
@@ -86,7 +84,7 @@ export default function NavBar() {
   return (
     <>
       <CssBaseline />
-      <AppBar className={classes.appBar} position="static">
+      <AppBar className={classes.appBar}>
         <Toolbar variant="regular">
           <Box
             sx={{
@@ -109,4 +107,4 @@ export default function NavBar() {
       <Toolbar />
     </>
   );
-};
+}
