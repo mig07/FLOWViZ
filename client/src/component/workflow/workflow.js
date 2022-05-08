@@ -19,11 +19,14 @@ const nodeHeight = 40;
 
 const nodeTypes = { tool: ToolNode };
 
-export default function Workflow() {
+export default function Workflow(props) {
+
+    const serverConf = props.config
+
     const reactFlowWrapper = useRef(null);
     const [nodes, setNodes, onNodesChange] = useNodesState([]);
     const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-    const [reactFlowInstance, setReactFlowInstance] = useState(null);
+    const [reactFlowInstance, setReactFlowInstance] = useState(null);    
 
     // Set edges
     const onConnect = useCallback((params) => setEdges((eds) => addEdge(params, eds)), []);
@@ -63,10 +66,11 @@ export default function Workflow() {
         setNodes((nds) => nds.concat(newNode));
         },
         [reactFlowInstance]
+        
     );
 
     const onDrop = useCallback(
-        (event) => {
+        async (event) => {
           event.preventDefault();
     
           const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
@@ -77,11 +81,16 @@ export default function Workflow() {
             y: event.clientY - reactFlowBounds.top,
           });
 
+          // TODO - change for a requester class
+          const uri = `${serverConf.appProtocol}://${serverConf.address}:${serverConf.port}/library/${toolName}`
+          const request = await fetch(uri)
+          const response = await request.json()
+
           const newNode = {
             id: getId(),
             type: 'tool',
             position: position,
-            data: { label: toolName },
+            data: { label: toolName, tool: response },
           };
     
           setNodes((nds) => nds.concat(newNode));
