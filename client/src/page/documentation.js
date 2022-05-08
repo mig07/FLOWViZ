@@ -19,6 +19,8 @@ export default function Documentation(props) {
           .then(setList);
     }, []);
 
+    console.log(list)
+
     return (
         <>
             <Typography variant='h3' marginTop={5} align='center'>Available Libraries</Typography>
@@ -28,7 +30,7 @@ export default function Documentation(props) {
                         const name = item.name;
                         const description = item.description;
                         return (
-                            <Grid item>
+                            <Grid key={name} item>
                                 <ToolCard name={name} description={description} />
                             </Grid>
                         );
