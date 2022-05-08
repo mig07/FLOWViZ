@@ -41,7 +41,7 @@ export default function ToolDrawer(props) {
         variant="permanent"
         anchor="left"
       >
-        <DrawerHeader><Toolbar/></DrawerHeader>
+        <DrawerHeader />
         <List>
           {props.tools.map((tool) => {
             const name = tool.name;
