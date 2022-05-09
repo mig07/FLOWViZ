@@ -4,37 +4,52 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@mui/material/CssBaseline";
-import { Container, Tab, Tabs, Typography } from "@material-ui/core";
+import { Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
-const tabs = [
+const pageButtonsGroups = [
   {
-    name: "Home",
-    url: "/",
+    position: "center",
+    pageButtons: [
+      {
+        name: "Home",
+        url: "/",
+        isDefault: true,
+      },
+      {
+        name: "Documentation",
+        url: "/documentation",
+        isDefault: false,
+      },
+      {
+        name: "About",
+        url: "/about",
+        isDefault: false,
+      },
+    ],
   },
   {
-    name: "Documentation",
-    url: "/documentation",
-  },
-  {
-    name: "About",
-    url: "/about",
-  },
-  {
-    name: "Login",
-    url: "/login",
-  },
-  {
-    name: "Register",
-    url: "/register",
+    position: "right",
+    pageButtons: [
+      {
+        name: "Login",
+        url: "/login",
+        isDefault: false,
+      },
+      {
+        name: "Register",
+        url: "/register",
+        isDefault: false,
+      },
+    ],
   },
 ];
 
 export default function NavBar() {
   const navigate = useNavigate();
-
-  const [page, setPage] = React.useState("Home");
+  const location = useLocation();
 
   const useStyles = makeStyles(() => ({
     appBar: {
@@ -44,36 +59,49 @@ export default function NavBar() {
 
   const classes = useStyles();
 
+  const pcInterface = pageButtonsGroups.map((pageButtonsGroup) => (
+    <Box
+      key={pageButtonsGroup.position}
+      sx={{
+        flexGrow: 1,
+        display: { xs: "none", md: "flex" },
+        justifyContent: pageButtonsGroup.position,
+      }}
+    >
+      {pageButtonsGroup.pageButtons.map((pageButton) => (
+        <Button
+          key={pageButton.name}
+          color="secondary"
+          variant={location.pathname === pageButton.url ? "outlined" : "string"}
+          onClick={() => navigate(pageButton.url)}
+        >
+          {pageButton.name}
+        </Button>
+      ))}
+    </Box>
+  ));
+
   return (
     <>
       <CssBaseline />
       <AppBar className={classes.appBar}>
-        <Toolbar variant="dense">
-          <Button onClick={() => navigate("/")}>
-            <Typography style={{ color: "black" }} variant="h5">
-              FLOWViZ
-            </Typography>
-          </Button>
-          <Container>
-            <Tabs
-              centered
-              value={tabs.find(tab => (location.pathname === tab.url)).name}
-              onChange={(event, newPage) => setPage(newPage)}
-              textColor="secondary"
-              variant="fullWidth"
-              indicatorColor="secondary"
-              aria-label="secondary tabs example"
+        <Toolbar variant="regular">
+          <Box
+            sx={{
+              flexGrow: 1,
+              display: { xs: "none", md: "flex" },
+              justifyContent: "left",
+            }}
+          >
+            <Button
+              key={"FLOWViZ"}
+              sx={{ my: 2, display: "block" }}
+              onClick={() => navigate("/")}
             >
-              {tabs.map((tab) => (
-                <Tab
-                  key={`${tab.name}-key`}
-                  value={tab.name}
-                  label={tab.name}
-                  onClick={() => navigate(tab.url)}
-                ></Tab>
-              ))}
-            </Tabs>
-          </Container>
+              <Typography variant="h5">FLOWViZ</Typography>
+            </Button>
+          </Box>
+          {pcInterface}
         </Toolbar>
       </AppBar>
       <Toolbar />
