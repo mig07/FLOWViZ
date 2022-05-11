@@ -4,6 +4,14 @@ import { Stack, TextField } from "@mui/material";
 import TextFieldMultiInput from "./textFieldMultiInput";
 
 export default function PostToolLibraryCommand() {
+  const [commandName, setCommandName] = React.useState("");
+
+
+  const onChangeCommandName = (event) => {
+    const name = event.target.value;
+    setCommandName(name);
+  };
+
   return (
     <SettingsAccordion>
       <Stack sx={{ m: 2 }}>
@@ -12,26 +20,23 @@ export default function PostToolLibraryCommand() {
           id="commandName"
           name="commandName"
           label="Command name"
+          onChange={onChangeCommandName}
         />
         <TextFieldMultiInput
           name="invocation"
           label="Invocation"
-          onButtonClick={() => {}}
         />
         <TextFieldMultiInput
           name="allowedValues"
           label="Values"
-          onButtonClick={() => {}}
         />
         <TextFieldMultiInput
           name="allowedCommands"
           label="Allowed sub-commands"
-          onButtonClick={() => {}}
         />
         <TextFieldMultiInput
           name="allowedCommandSets"
           label="Allowed sub-command sets"
-          onButtonClick={() => {}}
         />
       </Stack>
     </SettingsAccordion>

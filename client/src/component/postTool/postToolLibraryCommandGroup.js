@@ -1,6 +1,6 @@
 import * as React from "react";
 import SettingsAccordion from "./settingsAccordion";
-import { Stack, TextField } from "@mui/material";
+import { Divider, Stack, TextField, Typography } from "@mui/material";
 import Switch from "@mui/material/Switch";
 import TextFieldMultiInput from "./textFieldMultiInput";
 import { FormControlLabel } from "@mui/material";
@@ -22,7 +22,7 @@ export default function PostToolLibraryCommandGroup() {
 
   return (
     <SettingsAccordion>
-      <Stack sx={{ m: 2 }}>
+      <Stack sx={{p:2}} spacing={2}>
         <TextField
           margin="normal"
           id="groupName"
@@ -43,6 +43,8 @@ export default function PostToolLibraryCommandGroup() {
           defaultValue={numberOfCmds}
           onValueChange={onValueChange}
         />
+        <Typography variant="h6">Commands</Typography>
+        <Divider/>
         {Array(numberOfCmds).fill(
           <PostToolLibraryCommand />
         )}
