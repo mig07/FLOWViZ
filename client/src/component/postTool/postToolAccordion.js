@@ -3,8 +3,23 @@ import { Container } from "@mui/material";
 import { Stack } from "@mui/material";
 import { TextField } from "@mui/material";
 import SettingsAccordion from "./settingsAccordion";
+import { ToolContext } from "../../page/postTool";
 
-export default function PostToolAccordion(props) {
+function PostToolAccordion(props) {
+  const toolCtx = React.useContext(ToolContext);
+  const tool = toolCtx.state;
+  const cb = tool.cb;
+  const type = props.type;
+
+  const mainProp = type === "api" ? tool.api : tool.library;
+
+  const onPropChange = (event, changePropAction) => {
+    const value = event.target.value;
+    let mProp = mainProp;
+    changePropAction(value, mProp);
+    {() => cb(mProp)}
+  };
+
   return (
     <Container sx={{ p: 2 }}>
       <Stack spacing={2}>
@@ -17,6 +32,11 @@ export default function PostToolAccordion(props) {
               label="Tool name"
               name="name"
               autoComplete="name"
+              onChange={(event) => {
+                onPropChange(event, (value, mProp) => {
+                  mProp.general.name = value;
+                });
+              }}
             />
             <TextField
               margin="normal"
@@ -25,6 +45,11 @@ export default function PostToolAccordion(props) {
               label="Tool description"
               name="description"
               autoComplete="description"
+              onChange={(event) => {
+                onPropChange(event, (value, mProp) => {
+                  mProp.general.description = value;
+                });
+              }}
             />
           </Stack>
         </SettingsAccordion>
@@ -38,6 +63,11 @@ export default function PostToolAccordion(props) {
               label="Host IP"
               name="ip"
               autoComplete="ip"
+              onChange={(event) => {
+                onPropChange(event, (value, mProp) => {
+                  mProp.access.address = value;
+                });
+              }}
             />
             <TextField
               margin="normal"
@@ -45,6 +75,11 @@ export default function PostToolAccordion(props) {
               label="Host port"
               name="port"
               autoComplete="port"
+              onChange={(event) => {
+                onPropChange(event, (value, mProp) => {
+                  mProp.access.port = value;
+                });
+              }}
             />
           </Container>
         </SettingsAccordion>
@@ -53,3 +88,5 @@ export default function PostToolAccordion(props) {
     </Container>
   );
 }
+
+export default PostToolAccordion
