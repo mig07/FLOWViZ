@@ -1,57 +1,24 @@
 import * as React from "react";
-import { Container, Divider, Toolbar, Typography, Button } from "@mui/material";
+import {
+  Container,
+  Divider,
+  Toolbar,
+  Typography,
+  Button,
+  Paper,
+} from "@mui/material";
 import { Stack } from "@mui/material";
 import SettingsAccordion from "../component/postTool/settingsAccordion";
-import PostToolLibrary from "../component/postTool/postToolLibrary";
-import PostToolAccordion from "../component/postTool/postToolAccordion";
+import CommandGroups from "../component/postTool/commandGroups";
+import BaseToolAccordion from "../component/postTool/baseToolAccordion";
+import SendIcon from "@mui/icons-material/Send";
+import { Box } from "@mui/system";
+import toolSetupInitialState from "../util/constants";
 
 export const ToolContext = React.createContext();
 
 export default function PostTool() {
-  const initialState = {
-    api: {
-      general: {
-        name: "",
-        description: "",
-      },
-      access: {
-        address: "",
-        port: "",
-      },
-    },
-    library: {
-      general: {
-        name: "",
-        description: "",
-      },
-      access: {
-        address: "",
-        port: "",
-      },
-      commandGroups: {
-        numberOfGroups: 1,
-        groups: [
-          {
-            name: "",
-            invocation: [],
-            order: 0,
-            number: 1,
-            commands: [
-              {
-                name: "",
-                invocation: [],
-                values: [],
-                subCommands: [],
-                subCommandSets: [],
-              },
-            ],
-          },
-        ],
-      },
-    },
-  };
-
-  const [tool, setTool] = React.useState(initialState);
+  const [tool, setTool] = React.useState(toolSetupInitialState);
 
   const onApiChange = React.useCallback((updatedApi) => {
     setTool({ api: updatedApi });
@@ -61,51 +28,48 @@ export default function PostTool() {
     setTool({ library: updatedLib });
   }, []);
 
-  const onCommandGroupsChange = (updatedCmdGroups) => {
+  const onCommandGroupsUpdate = React.useCallback((updatedCmdGroups) => {
     setTool({ library: { commandGroups: updatedCmdGroups } });
-  };
+  }, []);
 
   return (
     <Container component="main" maxWidth="lg">
       <Toolbar />
-      <Stack spacing={2}>
-        <>
-          <Typography variant="h2">Add a tool</Typography>
-          <Divider />
-        </>
-        <div>
-          <ToolContext.Provider
-            value={{
-              state: tool,
-              onApiChange: onApiChange,
-              onLibraryChange: onLibraryChange,
-            }}
-          >
+      <>
+        <Typography variant="h2">Add a tool</Typography>
+        <Divider />
+      </>
+      <Paper elevation={0} sx={{ p: 2, maxHeight: 800, overflow: "auto" }}>
+        <Stack spacing={2}>
+          <ToolContext.Provider value={{ state: tool }}>
             <SettingsAccordion
-              id="API"
+              name="API"
               description="Describe your tool's endpoints"
             >
-              <PostToolAccordion cb={onApiChange} type="api" />
+              <BaseToolAccordion onToolUpdate={onApiChange} type="api" />
             </SettingsAccordion>
             <SettingsAccordion
-              id="Library"
+              name="Library"
               description="Describe your tool's library commands"
             >
-              <PostToolAccordion cb={onLibraryChange} type="library">
-                <PostToolLibrary cb={onCommandGroupsChange} />
-              </PostToolAccordion>
+              <BaseToolAccordion onToolUpdate={onLibraryChange} type="library">
+                <CommandGroups onCommandGroupsUpdate={onCommandGroupsUpdate} />
+              </BaseToolAccordion>
             </SettingsAccordion>
           </ToolContext.Provider>
-        </div>
-      </Stack>
-      <Button
-        alignSelf="right"
-        onClick={() => {
-          console.log(tool);
-        }}
-      >
-        Submit
-      </Button>
+        </Stack>
+      </Paper>
+      <Box sx={{ mt: 2 }} textAlign="right">
+        <Button
+          variant="outlined"
+          endIcon={<SendIcon />}
+          onClick={() => {
+            console.log(tool);
+          }}
+        >
+          Submit
+        </Button>
+      </Box>
     </Container>
   );
 }

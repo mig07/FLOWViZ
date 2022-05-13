@@ -7,7 +7,7 @@ import {
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 export default function SettingsAccordion(props) {
-  const name = props.id;
+  const name = props.name;
   const id = `${name}-accordion`;
   const description = props.description;
 

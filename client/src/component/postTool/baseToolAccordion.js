@@ -5,7 +5,7 @@ import { TextField } from "@mui/material";
 import SettingsAccordion from "./settingsAccordion";
 import { ToolContext } from "../../page/postTool";
 
-function PostToolAccordion(props) {
+function BaseToolAccordion(props) {
   const toolCtx = React.useContext(ToolContext);
   const tool = toolCtx.state;
   const cb = tool.cb;
@@ -23,7 +23,7 @@ function PostToolAccordion(props) {
   return (
     <Container sx={{ p: 2 }}>
       <Stack spacing={2}>
-        <SettingsAccordion id="General">
+        <SettingsAccordion name="General">
           <Stack sx={{ p: 2 }}>
             <TextField
               margin="normal"
@@ -54,7 +54,7 @@ function PostToolAccordion(props) {
           </Stack>
         </SettingsAccordion>
 
-        <SettingsAccordion id="Access">
+        <SettingsAccordion name="Access">
           <Container sx={{ p: 2 }}>
             <TextField
               margin="normal"
@@ -89,4 +89,4 @@ function PostToolAccordion(props) {
   );
 }
 
-export default PostToolAccordion
+export default BaseToolAccordion

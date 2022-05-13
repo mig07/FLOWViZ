@@ -50,12 +50,19 @@ const pageButtonsGroups = [
 export default function NavBar() {
   const navigate = useNavigate();
   const location = useLocation();
+  const currentPage = location.pathname
 
   const useStyles = makeStyles(() => ({
     appBar: {
       backgroundColor: "white",
     },
   }));
+
+  const navigateTo = (page) => {
+    // Avoid current page rerender
+    if (page === currentPage) return
+    navigate(page)
+  }
 
   const classes = useStyles();
 
@@ -72,8 +79,8 @@ export default function NavBar() {
         <Button
           key={pageButton.name}
           color="secondary"
-          variant={location.pathname === pageButton.url ? "outlined" : "string"}
-          onClick={() => navigate(pageButton.url)}
+          variant={currentPage === pageButton.url ? "outlined" : "string"}
+          onClick={() => navigateTo(pageButton.url)}
         >
           {pageButton.name}
         </Button>
@@ -96,7 +103,7 @@ export default function NavBar() {
             <Button
               key={"FLOWViZ"}
               sx={{ my: 2, display: "block" }}
-              onClick={() => navigate("/")}
+              onClick={() => navigateTo("/")}
             >
               <Typography variant="h5">FLOWViZ</Typography>
             </Button>
