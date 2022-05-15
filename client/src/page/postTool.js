@@ -13,12 +13,44 @@ import CommandGroups from "../component/postTool/commandGroups";
 import BaseToolAccordion from "../component/postTool/baseToolAccordion";
 import SendIcon from "@mui/icons-material/Send";
 import { Box } from "@mui/system";
-import toolSetupInitialState from "../util/constants";
 
 export default function PostTool() {
-  const [tool, setTool] = React.useState(toolSetupInitialState);
-  const [api, setApi] = React.useState(toolSetupInitialState);
-  const [library, setLibrary] = React.useState(toolSetupInitialState);
+  const [api, setApi] = React.useState({
+    general: {
+      name: "",
+      description: "",
+    },
+    access: {
+      address: "",
+      port: "",
+    },
+  });
+  const [library, setLibrary] = React.useState({
+    general: {
+      name: "",
+      description: "",
+    },
+    access: {
+      address: "",
+      port: "",
+    },
+    groups: [
+      {
+        name: "Command Set 0",
+        invocation: [],
+        order: 0,
+        commands: [
+          {
+            name: "Command 0",
+            invocation: [],
+            values: [],
+            subCommands: [],
+            subCommandSets: [],
+          },
+        ],
+      },
+    ],
+  });
 
   const onApiChange = (updatedApi) => {
     setApi(updatedApi);
@@ -39,16 +71,16 @@ export default function PostTool() {
         <Stack spacing={2}>
           <SettingsAccordion
             name="API"
-            description="Describe your tool's endpoints"            
+            description="Describe your tool's endpoints"
           >
-            <BaseToolAccordion onToolUpdate={onApiChange} data={api} />
+            <BaseToolAccordion onParentUpdate={onApiChange} data={api} />
           </SettingsAccordion>
           <SettingsAccordion
             name="Library"
             description="Describe your tool's library commands"
           >
-            <BaseToolAccordion onToolUpdate={onLibraryChange} data={library}>
-              <CommandGroups onCommandGroupsUpdate={onLibraryChange} />
+            <BaseToolAccordion onParentUpdate={onLibraryChange} data={library}>
+              <CommandGroups onParentUpdate={onLibraryChange} data={library}/>
             </BaseToolAccordion>
           </SettingsAccordion>
         </Stack>
@@ -58,7 +90,7 @@ export default function PostTool() {
           variant="outlined"
           endIcon={<SendIcon />}
           onClick={() => {
-            console.log(tool);
+            console.log({ "api": api, "library": library });
           }}
         >
           Submit

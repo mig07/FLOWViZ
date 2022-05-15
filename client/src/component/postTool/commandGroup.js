@@ -1,6 +1,5 @@
 import * as React from "react";
 import SettingsAccordion from "./settingsAccordion";
-import { useState, useCallback } from "react";
 import {
   Stack,
   TextField,
@@ -16,7 +15,10 @@ import Command from "./command";
 
 function CommandGroup(props) {
   const index = props.index;
-  const onCommandGroupUpdate = props.onCommandGroupUpdate;
+  const group = props.data;
+  const onGroupsUpdate = props.onParentUpdate;
+
+  const [count, setCount] = React.useState(1)
 
   const freshCommand = (index) => {
     return {
@@ -28,56 +30,34 @@ function CommandGroup(props) {
     };
   };
 
-  const [group, setGroup] = useState({
-    name: "Command Set 0",
-    invocation: [],
-    order: 0,
-    commands: [
-      {
-        name: "Command 0",
-        invocation: [],
-        values: [],
-        subCommands: [],
-        subCommandSets: [],
-      },
-    ],
-  });
-
-  const [commandGroup, setCommandGroup] = useState({
-    name: "Command Set 0",
-    invocation: [],
-    order: 0,
-    count: 1,
-    commands: [
-      {
-        name: "Command 0",
-        invocation: [],
-        values: [],
-        subCommands: [],
-        subCommandSets: [],
-      },
-    ],
-  });
-
-  const onCommandsCountUpdate = useCallback((event) => {
+  const onCommandsCountUpdate = (event) => {
     const value = Number(event.target.value);
     if (value < 1) return;
 
     let commands = group.commands;
-    if (value < commandGroup.count) {
+    if (value < commands.length) {
       commands.pop();
     } else {
       commands.push(freshCommand(commands.length));
     }
 
-    setGroup({ commands: commands });
-    //onCommandGroupUpdate(commandGroup);
-  });
+    setCount(value)
+    onGroupsUpdate(index, group => group.commands = commands)
+  };
 
-  const onNameUpdate = useCallback((event) => {
+  const onNameUpdate = (event) => {
     const value = event.target.value;
-    setCommandGroup({ name: value });
-  });
+    let g = group
+    g.name = value
+    onGroupsUpdate(index, g)
+  };
+
+  const onOrderUpdate = (event) => {
+    const value = Number(event.target.value);
+    let g = group
+    g.order = value
+    onGroupsUpdate(index, g)
+  };
 
   return (
     <SettingsAccordion>
@@ -87,16 +67,26 @@ function CommandGroup(props) {
           id="groupName"
           name="groupName"
           label="Name"
-          defaultValue={commandGroup.name}
+          defaultValue={group.name}
           onChange={onNameUpdate}
         />
-        <TextFieldMultiInput name="invocation" label="Invocation" />
+        <TextFieldMultiInput 
+          name="invocation"
+          label="Invocation"
+          data={group.invocation}
+          onParentUpdate={(collection) => {
+            let g = group
+            g.invocation = collection
+            onGroupsUpdate(index, g)
+          }} />
         <TextField
           margin="normal"
           id="order"
           name="order"
           label="order"
+          InputProps={{ inputProps: { min: 1 } }}
           defaultValue={index}
+          onChange={onOrderUpdate}
         />
         <FormControlLabel
           control={
@@ -116,14 +106,14 @@ function CommandGroup(props) {
             margin="normal"
             type="number"
             InputProps={{ inputProps: { min: 1 } }}
-            defaultValue={commandGroup.count}
+            defaultValue={count}
             onChange={onCommandsCountUpdate}
           />
         </Box>
         <Typography variant="h6">Commands</Typography>
         <Divider />
         <Container sx={{ mt: 2 }}>
-          {commandGroup.commands.map((command, index) => (
+          {group.commands.map((command, index) => (
             <Command key={`command-${index}`} data={command} index={index} />
           ))}
         </Container>
@@ -132,4 +122,4 @@ function CommandGroup(props) {
   );
 }
 
-export default React.memo(CommandGroup);
+export default CommandGroup;

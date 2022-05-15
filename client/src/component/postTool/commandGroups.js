@@ -1,20 +1,21 @@
 import * as React from "react";
-import { useState, useCallback } from "react";
 import { Stack, Typography, TextField, Divider, Box } from "@mui/material";
 import SettingsAccordion from "./settingsAccordion";
 import { Container } from "@mui/material";
 import CommandGroup from "./commandGroup";
-import { ToolContext } from "../../page/postTool";
 
 function CommandGroups(props) {
-  const onCommandGroupsUpdate = props.onCommandGroupsUpdate;
+  const onLibraryUpdate = props.onParentUpdate;
+  const library = props.data;
+  const groups = library.groups;
+
+  const [count, setCount] = React.useState(1)
 
   const freshCommandGroup = (index) => {
     return {
       name: `Command Set ${index}`,
       invocation: [],
       order: index,
-      count: 1,
       commands: [
         {
           name: "Command 0",
@@ -27,48 +28,26 @@ function CommandGroups(props) {
     };
   };
 
-  const [groups, setGroups] = useState([
-    {
-      name: "Command Set 0",
-      invocation: [],
-      order: 0,
-      commands: [
-        {
-          name: "Command 0",
-          invocation: [],
-          values: [],
-          subCommands: [],
-          subCommandSets: [],
-        },
-      ],
-    },
-  ]);
-
   const onCommandGroupsCountUpdate = (event) => {
     const value = Number(event.target.value);
     if (value < 1) return;
 
-    const groupsLen = groups.length
-
     let gs = groups;
-    if (value < groupsLen) {
+    if (value < gs.length) {
       gs.pop();
     } else {
-      gs.push(freshCommandGroup(groupsLen));
+      gs.push(freshCommandGroup(gs.length));
     }
 
-    setGroups(gs);
-    onCommandGroupsUpdate(gs)
+    setCount(value)
+    onLibraryUpdate({groups: gs})
   }
 
   const onCommandGroupUpdate = (index, group) => {
     let gs = groups;
     gs[index] = group;
-    setGroups(gs);
-    onCommandGroupsUpdate(gs)
+    onLibraryUpdate({groups: gs})
   }
-
-  console.log(groups);
 
   return (
     <SettingsAccordion name="Command Groups">
@@ -82,7 +61,7 @@ function CommandGroups(props) {
               margin="normal"
               type="number"
               InputProps={{ inputProps: { min: 1 } }}
-              defaultValue={groups.length}
+              defaultValue={count}
               onChange={onCommandGroupsCountUpdate}
             />
           </Box>
@@ -104,4 +83,4 @@ function CommandGroups(props) {
   );
 }
 
-export default React.memo(CommandGroups);
+export default CommandGroups;

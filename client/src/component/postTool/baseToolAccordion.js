@@ -3,18 +3,17 @@ import { Container } from "@mui/material";
 import { Stack } from "@mui/material";
 import { TextField } from "@mui/material";
 import SettingsAccordion from "./settingsAccordion";
-import { ToolContext } from "../../page/postTool";
 
 function BaseToolAccordion(props) {
   const data = props.data;
-  const cb = props.cb;
+  const onParentUpdate = props.onParentUpdate;
 
   const onPropChange = (event, changePropAction) => {
     const value = event.target.value;
     let mainProp = data;
     changePropAction(value, mainProp);
     {
-      () => cb(mainProp);
+      () => onParentUpdate(mainProp);
     }
   };
 
@@ -31,8 +30,8 @@ function BaseToolAccordion(props) {
               name="name"
               autoComplete="name"
               onChange={(event) => {
-                onPropChange(event, (value, mProp) => {
-                  mProp.general.name = value;
+                onPropChange(event, (value, mainProp) => {
+                  mainProp.general.name = value;
                 });
               }}
             />
@@ -44,8 +43,8 @@ function BaseToolAccordion(props) {
               name="description"
               autoComplete="description"
               onChange={(event) => {
-                onPropChange(event, (value, mProp) => {
-                  mProp.general.description = value;
+                onPropChange(event, (value, mainProp) => {
+                  mainProp.general.description = value;
                 });
               }}
             />
@@ -62,8 +61,8 @@ function BaseToolAccordion(props) {
               name="ip"
               autoComplete="ip"
               onChange={(event) => {
-                onPropChange(event, (value, mProp) => {
-                  mProp.access.address = value;
+                onPropChange(event, (value, mainProp) => {
+                  mainProp.access.address = value;
                 });
               }}
             />
@@ -74,8 +73,8 @@ function BaseToolAccordion(props) {
               name="port"
               autoComplete="port"
               onChange={(event) => {
-                onPropChange(event, (value, mProp) => {
-                  mProp.access.port = value;
+                onPropChange(event, (value, mainProp) => {
+                  mainProp.access.port = value;
                 });
               }}
             />
