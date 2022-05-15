@@ -10,6 +10,7 @@ function TextFieldMultiInput(props) {
   const onParentUpdate = props.onParentUpdate
 
   const [input, setInput] = React.useState("");
+  const [chips, setChips] = React.useState(collection)
 
   const onSetInput = (event) => {
     const value = event.target.value;
@@ -17,8 +18,9 @@ function TextFieldMultiInput(props) {
   };
 
   const onAddElement = () => {
-    const hasChip = collection.find((chip) => chip === input);
-    if (!hasChip) {      
+    const hasChip = chips.find((chip) => chip === input);
+    if (!hasChip) {
+      setChips([...chips, input])
       let col = collection
       col.push(input)
       onParentUpdate(col)
@@ -27,9 +29,9 @@ function TextFieldMultiInput(props) {
   };
 
   const onRemoveElement = (deletingChip) => () => {
-    let col = collection
-    col.filter(chip => chip !== deletingChip)
-    onParentUpdate(col)
+    let cs = chips
+    setChips(cs.filter(chip => chip !== deletingChip))
+    onParentUpdate(chips)
   };
 
   return (
@@ -49,9 +51,9 @@ function TextFieldMultiInput(props) {
         </IconButton>
       </Box>
       <Container>
-        {collection && collection.length > 0 ? (
+        {chips && chips.length > 0 ? (
           <Stack direction="row" spacing={1}>
-            {collection.map((chip) => {
+            {chips.map((chip) => {
               return (
                 <Chip   
                   key={chip}                 
