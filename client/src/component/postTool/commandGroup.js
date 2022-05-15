@@ -14,7 +14,7 @@ import TextFieldMultiInput from "./textFieldMultiInput";
 import { FormControlLabel } from "@mui/material";
 import Command from "./command";
 
-export default function CommandGroup(props) {
+function CommandGroup(props) {
   const index = props.index;
   const onCommandGroupUpdate = props.onCommandGroupUpdate;
 
@@ -27,6 +27,21 @@ export default function CommandGroup(props) {
       subCommandSets: [],
     };
   };
+
+  const [group, setGroup] = useState({
+    name: "Command Set 0",
+    invocation: [],
+    order: 0,
+    commands: [
+      {
+        name: "Command 0",
+        invocation: [],
+        values: [],
+        subCommands: [],
+        subCommandSets: [],
+      },
+    ],
+  });
 
   const [commandGroup, setCommandGroup] = useState({
     name: "Command Set 0",
@@ -44,20 +59,20 @@ export default function CommandGroup(props) {
     ],
   });
 
-  const onCommandsCountUpdate = (event) => {
+  const onCommandsCountUpdate = useCallback((event) => {
     const value = Number(event.target.value);
     if (value < 1) return;
 
-    let commands = commandGroup.commands;
+    let commands = group.commands;
     if (value < commandGroup.count) {
       commands.pop();
     } else {
-      commands.push(freshCommand(commandGroup.count));
+      commands.push(freshCommand(commands.length));
     }
 
-    setCommandGroup({ count: value, commands: commands });
+    setGroup({ commands: commands });
     //onCommandGroupUpdate(commandGroup);
-  };
+  });
 
   const onNameUpdate = useCallback((event) => {
     const value = event.target.value;
@@ -116,3 +131,5 @@ export default function CommandGroup(props) {
     </SettingsAccordion>
   );
 }
+
+export default React.memo(CommandGroup);

@@ -3,9 +3,10 @@ import { Box, Container, Stack, TextField, Chip } from "@mui/material";
 import { IconButton } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 
-export default function TextFieldMultiInput(props) {
+function TextFieldMultiInput(props) {
   const name = props.name;
   const label = props.label;
+  const onUpdateParent = props.onUpdateParent
 
   const [input, setInput] = React.useState("");
   const [chips, setChips] = React.useState([]);
@@ -20,11 +21,13 @@ export default function TextFieldMultiInput(props) {
     if (!hasChip) {      
       setChips([...chips, input]);
       setInput("")
+      onUpdateParent(chips)
     }
   };
 
   const onRemoveElement = (deletingChip) => () => {
     setChips((chips) => chips.filter(chip => chip !== deletingChip));
+    onUpdateParent(chips)
   };
 
   return (
@@ -64,3 +67,5 @@ export default function TextFieldMultiInput(props) {
     </>
   );
 }
+
+export default React.memo(TextFieldMultiInput)

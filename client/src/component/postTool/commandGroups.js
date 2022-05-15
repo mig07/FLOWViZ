@@ -27,51 +27,48 @@ function CommandGroups(props) {
     };
   };
 
-  const [commandGroups, setCommandGroups] = useState({
-    count: 1,
-    groups: [
-      {
-        name: "Command Set 0",
-        invocation: [],
-        order: 0,
-        count: 1,
-        commands: [
-          {
-            name: "Command 0",
-            invocation: [],
-            values: [],
-            subCommands: [],
-            subCommandSets: [],
-          },
-        ],
-      },
-    ],
-  });
+  const [groups, setGroups] = useState([
+    {
+      name: "Command Set 0",
+      invocation: [],
+      order: 0,
+      commands: [
+        {
+          name: "Command 0",
+          invocation: [],
+          values: [],
+          subCommands: [],
+          subCommandSets: [],
+        },
+      ],
+    },
+  ]);
 
-
-
-  const onCommandGroupsCountUpdate = useCallback((event) => {
+  const onCommandGroupsCountUpdate = (event) => {
     const value = Number(event.target.value);
     if (value < 1) return;
 
-    let groups = commandGroups.groups;
-    if (value < commandGroups.count) {
-      groups.pop()
+    const groupsLen = groups.length
+
+    let gs = groups;
+    if (value < groupsLen) {
+      gs.pop();
     } else {
-      groups.push(freshCommandGroup(commandGroups.count))
+      gs.push(freshCommandGroup(groupsLen));
     }
 
-    setCommandGroups({ count: value, groups: groups });
-    onCommandGroupsUpdate(commandGroups);
-  });
+    setGroups(gs);
+    onCommandGroupsUpdate(gs)
+  }
 
-  const onCommandGroupUpdate = useCallback((index, group) => {
-    let groups = commandGroups.groups;
-    groups[index] = group;
-    onCommandGroupsUpdate({ groups: groups });
-  });
+  const onCommandGroupUpdate = (index, group) => {
+    let gs = groups;
+    gs[index] = group;
+    setGroups(gs);
+    onCommandGroupsUpdate(gs)
+  }
 
-  console.log(commandGroups.groups);
+  console.log(groups);
 
   return (
     <SettingsAccordion name="Command Groups">
@@ -85,14 +82,14 @@ function CommandGroups(props) {
               margin="normal"
               type="number"
               InputProps={{ inputProps: { min: 1 } }}
-              defaultValue={commandGroups.count}
+              defaultValue={groups.length}
               onChange={onCommandGroupsCountUpdate}
             />
           </Box>
           <Typography variant="h6">Groups</Typography>
           <Divider />
           <Container sx={{ mt: 2 }}>
-            {commandGroups.groups.map((group, index) => (
+            {groups.map((group, index) => (
               <CommandGroup
                 key={`commandGroup-${index}`}
                 onCommandGroupUpdate={onCommandGroupUpdate}
@@ -107,4 +104,4 @@ function CommandGroups(props) {
   );
 }
 
-export default CommandGroups;
+export default React.memo(CommandGroups);

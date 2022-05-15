@@ -15,22 +15,18 @@ import SendIcon from "@mui/icons-material/Send";
 import { Box } from "@mui/system";
 import toolSetupInitialState from "../util/constants";
 
-export const ToolContext = React.createContext();
-
 export default function PostTool() {
   const [tool, setTool] = React.useState(toolSetupInitialState);
+  const [api, setApi] = React.useState(toolSetupInitialState);
+  const [library, setLibrary] = React.useState(toolSetupInitialState);
 
-  const onApiChange = React.useCallback((updatedApi) => {
-    setTool({ api: updatedApi });
-  }, []);
+  const onApiChange = (updatedApi) => {
+    setApi(updatedApi);
+  };
 
-  const onLibraryChange = React.useCallback((updatedLib) => {
-    setTool({ library: updatedLib });
-  }, []);
-
-  const onCommandGroupsUpdate = React.useCallback((updatedCmdGroups) => {
-    setTool({ library: { commandGroups: updatedCmdGroups } });
-  }, []);
+  const onLibraryChange = (updatedLib) => {
+    setLibrary(updatedLib);
+  };
 
   return (
     <Container component="main" maxWidth="lg">
@@ -41,22 +37,20 @@ export default function PostTool() {
       </>
       <Paper elevation={0} sx={{ p: 2, maxHeight: 800, overflow: "auto" }}>
         <Stack spacing={2}>
-          <ToolContext.Provider value={{ state: tool }}>
-            <SettingsAccordion
-              name="API"
-              description="Describe your tool's endpoints"
-            >
-              <BaseToolAccordion onToolUpdate={onApiChange} type="api" />
-            </SettingsAccordion>
-            <SettingsAccordion
-              name="Library"
-              description="Describe your tool's library commands"
-            >
-              <BaseToolAccordion onToolUpdate={onLibraryChange} type="library">
-                <CommandGroups onCommandGroupsUpdate={onCommandGroupsUpdate} />
-              </BaseToolAccordion>
-            </SettingsAccordion>
-          </ToolContext.Provider>
+          <SettingsAccordion
+            name="API"
+            description="Describe your tool's endpoints"            
+          >
+            <BaseToolAccordion onToolUpdate={onApiChange} data={api} />
+          </SettingsAccordion>
+          <SettingsAccordion
+            name="Library"
+            description="Describe your tool's library commands"
+          >
+            <BaseToolAccordion onToolUpdate={onLibraryChange} data={library}>
+              <CommandGroups onCommandGroupsUpdate={onLibraryChange} />
+            </BaseToolAccordion>
+          </SettingsAccordion>
         </Stack>
       </Paper>
       <Box sx={{ mt: 2 }} textAlign="right">

@@ -6,18 +6,16 @@ import SettingsAccordion from "./settingsAccordion";
 import { ToolContext } from "../../page/postTool";
 
 function BaseToolAccordion(props) {
-  const toolCtx = React.useContext(ToolContext);
-  const tool = toolCtx.state;
-  const cb = tool.cb;
-  const type = props.type;
-
-  const mainProp = type === "api" ? tool.api : tool.library;
+  const data = props.data;
+  const cb = props.cb;
 
   const onPropChange = (event, changePropAction) => {
     const value = event.target.value;
-    let mProp = mainProp;
-    changePropAction(value, mProp);
-    {() => cb(mProp)}
+    let mainProp = data;
+    changePropAction(value, mainProp);
+    {
+      () => cb(mainProp);
+    }
   };
 
   return (
@@ -89,4 +87,4 @@ function BaseToolAccordion(props) {
   );
 }
 
-export default BaseToolAccordion
+export default BaseToolAccordion;
