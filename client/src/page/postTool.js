@@ -39,6 +39,7 @@ export default function PostTool() {
         name: "Command Set 0",
         invocation: [],
         order: 0,
+        allowCommandRep: false,
         commands: [
           {
             name: "Command 0",

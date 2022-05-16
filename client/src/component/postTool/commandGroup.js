@@ -18,7 +18,8 @@ function CommandGroup(props) {
   const group = props.data;
   const onGroupsUpdate = props.onParentUpdate;
 
-  const [count, setCount] = React.useState(1)
+  const [count, setCount] = React.useState(1);
+  const [checked, setChecked] = React.useState(false);
 
   const freshCommand = (index) => {
     return {
@@ -41,22 +42,8 @@ function CommandGroup(props) {
       commands.push(freshCommand(commands.length));
     }
 
-    setCount(value)
-    onGroupsUpdate(index, group => group.commands = commands)
-  };
-
-  const onNameUpdate = (event) => {
-    const value = event.target.value;
-    let g = group
-    g.name = value
-    onGroupsUpdate(index, g)
-  };
-
-  const onOrderUpdate = (event) => {
-    const value = Number(event.target.value);
-    let g = group
-    g.order = value
-    onGroupsUpdate(index, g)
+    setCount(value);
+    onGroupsUpdate(index, (group) => (group.commands = commands));
   };
 
   return (
@@ -68,17 +55,24 @@ function CommandGroup(props) {
           name="groupName"
           label="Name"
           defaultValue={group.name}
-          onChange={onNameUpdate}
+          onChange={(event) => {
+            const value = event.target.value;
+            let g = group;
+            g.name = value;
+            onGroupsUpdate(index, g);
+          }}
         />
-        <TextFieldMultiInput 
+        <TextFieldMultiInput
           name="invocation"
           label="Invocation"
           data={group.invocation}
           onParentUpdate={(collection) => {
-            let g = group
-            g.invocation = collection
-            onGroupsUpdate(index, g)
-          }} />
+            console.log(collection);
+            let g = group;
+            g.invocation = collection;
+            onGroupsUpdate(index, g);
+          }}
+        />
         <TextField
           margin="normal"
           id="order"
@@ -86,13 +80,23 @@ function CommandGroup(props) {
           label="order"
           InputProps={{ inputProps: { min: 1 } }}
           defaultValue={index}
-          onChange={onOrderUpdate}
+          onChange={(event) => {
+            const value = Number(event.target.value);
+            let g = group;
+            g.order = value;
+            onGroupsUpdate(index, g);
+          }}
         />
         <FormControlLabel
           control={
             <Switch
+              checked={checked}
               onChange={(event) => {
-                // TODO
+                const value = event.target.checked;
+                setChecked(value)
+                let g = group;
+                g.allowCommandRep = value;
+                onGroupsUpdate(index, g);
               }}
             />
           }

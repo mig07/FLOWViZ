@@ -6,11 +6,11 @@ import AddIcon from "@mui/icons-material/Add";
 function TextFieldMultiInput(props) {
   const name = props.name;
   const label = props.label;
-  const collection = props.data
-  const onParentUpdate = props.onParentUpdate
+  const collection = props.data;
+  const onParentUpdate = props.onParentUpdate;
 
   const [input, setInput] = React.useState("");
-  const [chips, setChips] = React.useState(collection)
+  const [chips, setChips] = React.useState([]);
 
   const onSetInput = (event) => {
     const value = event.target.value;
@@ -18,20 +18,20 @@ function TextFieldMultiInput(props) {
   };
 
   const onAddElement = () => {
-    const hasChip = chips.find((chip) => chip === input);
+    const hasChip = collection.find((chip) => chip === input);
     if (!hasChip) {
-      setChips([...chips, input])
-      let col = collection
-      col.push(input)
-      onParentUpdate(col)
-      setInput("")
+      setChips([...chips, input]);
+      let col = collection;
+      col.push(input);
+      onParentUpdate(col);
+      setInput("");
     }
   };
 
   const onRemoveElement = (deletingChip) => () => {
-    let cs = chips
-    setChips(cs.filter(chip => chip !== deletingChip))
-    onParentUpdate(chips)
+    setChips((chips) => chips.filter((chip) => chip !== deletingChip));
+    let col = collection.filter((chip) => chip !== deletingChip);
+    onParentUpdate(col);
   };
 
   return (
@@ -55,8 +55,8 @@ function TextFieldMultiInput(props) {
           <Stack direction="row" spacing={1}>
             {chips.map((chip) => {
               return (
-                <Chip   
-                  key={chip}                 
+                <Chip
+                  key={chip}
                   label={chip}
                   variant="outlined"
                   onDelete={onRemoveElement(chip)}
@@ -72,4 +72,4 @@ function TextFieldMultiInput(props) {
   );
 }
 
-export default React.memo(TextFieldMultiInput)
+export default TextFieldMultiInput;

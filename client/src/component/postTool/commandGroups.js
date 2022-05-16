@@ -32,11 +32,13 @@ function CommandGroups(props) {
     const value = Number(event.target.value);
     if (value < 1) return;
 
+    const diff = value - count
+
     let gs = groups;
-    if (value < gs.length) {
-      gs.pop();
+    if (diff < 0) {
+      gs.pop();      
     } else {
-      gs.push(freshCommandGroup(gs.length));
+      gs.push(freshCommandGroup(count));
     }
 
     setCount(value)
