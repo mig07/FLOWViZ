@@ -1,18 +1,22 @@
-import * as React from "react";
 import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Button,
+  Button, Container, Dialog, DialogActions, DialogContent, DialogTitle, FormControl,
+  InputLabel,
+  MenuItem, Select, Typography
 } from "@material-ui/core";
+import * as React from "react";
+import ToolLibrarySetup from "./toolLibrarySetup";
 
 export default function ToolSetupDialog(props) {
-  const open = props.openToolSetup;
+  const open = props.open;
+  const tool = props.tool;
+  const onSetupDialogCancel = props.onSetupDialogCancel;
+  const onSetupDialogApply = props.onSetupDialogApply;
   const scroll = props.toolSetupScroll;
-  const handleClose = props.onToolSetupButtonClose;
-
   const descriptionElementRef = React.useRef(null);
+
+  // For tools that provide both setup methods
+  const [setupMethod, setSetupMethod] = React.useState("library");
+
   React.useEffect(() => {
     if (open) {
       const { current: descriptionElement } = descriptionElementRef;
@@ -20,22 +24,41 @@ export default function ToolSetupDialog(props) {
         descriptionElement.focus();
       }
     }
-  }, [open]);
+  }, [open]);  
 
   return (
     <>
       <Dialog
+        fullWidth
+        maxWidth='sm'
         open={open}
-        onClose={handleClose}
+        onClose={onSetupDialogCancel}
         scroll={scroll}
         aria-labelledby="scroll-dialog-title"
         aria-describedby="scroll-dialog-description"
       >
-        <DialogTitle id="scroll-dialog-title">Tool Setup</DialogTitle>
-        <DialogContent dividers={scroll === "paper"}></DialogContent>
+        <DialogTitle id="scroll-dialog-title">Workflow Step Setup</DialogTitle>
+        <DialogContent dividers={scroll === "paper"}>
+          {tool.library && tool.api ? (
+            <Container>
+              <Typography variant="h6">Method</Typography>
+              <Button onClick={() => setSetupMethod("api")}>API</Button>
+              <Button onClick={() => setSetupMethod("library")}>Library</Button>
+            </Container>
+          ) : (
+            tool.library 
+            ?
+              <ToolLibrarySetup library={tool.library}/>
+            :
+              <>
+              </>
+
+          )}
+          
+        </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleClose}>Apply</Button>
+          <Button onClick={onSetupDialogCancel}>Cancel</Button>
+          <Button onClick={onSetupDialogApply}>Apply</Button>
         </DialogActions>
       </Dialog>
     </>

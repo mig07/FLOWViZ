@@ -33,17 +33,17 @@ export default function Whiteboard(props) {
   // Libraries and APIs state hook
   const [list, setList] = useState([]);
 
-  // Tool setup dialog state hooks
-  const [openToolSetup, setOpenToolSetup] = React.useState(false);
-  const [toolSetupScroll, setToolSetupScroll] = React.useState("paper");
+  // The workflow composition
+  const [workflowSteps, setWorkflowSteps] = useState([]);
 
-  const onToolSetupButtonOpen = (scrollType) => () => {
-    setOpenToolSetup(true);
-    setToolSetupScroll(scrollType);
+  const onAddStep = (event, step) => {
+    setWorkflowSteps([...workflowSteps, step]);
   };
 
-  const onToolSetupButtonClose = () => {
-    setOpenToolSetup(false);
+  const onRemoveStep = (event, stepName) => {
+    setWorkflowSteps((workflowSteps) =>
+      workflowSteps.filter((step) => step.name !== stepName)
+    );
   };
 
   useEffect(() => {
@@ -90,7 +90,8 @@ export default function Whiteboard(props) {
         data: {
           label: toolName,
           tool: response,
-          onToolSetupButtonOpen: onToolSetupButtonOpen,
+          onAddStep: onAddStep,
+          onRemoveStep: onRemoveStep,
         },
       };
 
@@ -102,11 +103,7 @@ export default function Whiteboard(props) {
   return (
     <>
       <ToolDrawer tools={list} />
-      <ToolSetupDialog
-        openToolSetup={openToolSetup}
-        toolSetupScroll={toolSetupScroll}
-        onToolSetupButtonClose={onToolSetupButtonClose}
-      />
+
       <ReactFlowProvider>
         <div
           className="reactflow-wrapper"
