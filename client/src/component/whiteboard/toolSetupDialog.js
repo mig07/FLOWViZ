@@ -1,15 +1,11 @@
 import * as React from "react";
 import {
-  Accordion,
-  AccordionSummary,
-  Typography,
   Dialog,
   DialogTitle,
   DialogContent,
   DialogActions,
   Button,
 } from "@material-ui/core";
-import Command from "./command";
 
 export default function ToolSetupDialog(props) {
   const open = props.openToolSetup;
@@ -26,21 +22,6 @@ export default function ToolSetupDialog(props) {
     }
   }, [open]);
 
-  const accordion = (action) => (
-    <Accordion>
-      <AccordionSummary
-        expandIcon={<ExpandMoreIcon />}
-        aria-controls="panel1a-content"
-        id="library-accordion"
-      >
-        <Typography>{type}</Typography>
-      </AccordionSummary>
-      <AccordionDetails>{action()}</AccordionDetails>
-    </Accordion>
-  );
-
-  
-
   return (
     <>
       <Dialog
@@ -51,9 +32,7 @@ export default function ToolSetupDialog(props) {
         aria-describedby="scroll-dialog-description"
       >
         <DialogTitle id="scroll-dialog-title">Tool Setup</DialogTitle>
-        <DialogContent dividers={scroll === "paper"}>
-          
-        </DialogContent>
+        <DialogContent dividers={scroll === "paper"}></DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
           <Button onClick={handleClose}>Apply</Button>

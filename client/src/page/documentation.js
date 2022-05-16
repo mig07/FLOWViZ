@@ -2,7 +2,7 @@ import * as React from 'react';
 import {useState, useEffect} from 'react';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-import ToolCard from '../component/toolCard'
+import ToolCard from '../component/documentation/toolCard'
 import { Toolbar } from '@mui/material';
 
 export default function Documentation(props) {

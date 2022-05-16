@@ -66,36 +66,6 @@ export default function Whiteboard(props) {
     event.dataTransfer.dropEffect = "move";
   }, []);
 
-  const onPaneClick = useCallback(
-    (event) => {
-      event.preventDefault();
-
-      // If the event wasn't triggered by a left mouse button click, then return.
-      if (event.button !== 0) {
-        return;
-      }
-
-      // Register the click position
-      const position = reactFlowInstance.project({
-        x: event.clientX,
-        y: event.clientY,
-      });
-
-      // Create the new node
-      const newNode = {
-        id: getId(),
-        type: "default",
-        position,
-        style: { width: nodeWidth, height: nodeHeight },
-        data: { label: `Node ${id}` },
-      };
-
-      // Concat new node
-      setNodes((nds) => nds.concat(newNode));
-    },
-    [reactFlowInstance]
-  );
-
   const onDrop = useCallback(
     async (event) => {
       event.preventDefault();
@@ -150,7 +120,6 @@ export default function Whiteboard(props) {
             onEdgesChange={onEdgesChange}
             onConnect={onConnect}
             onInit={setReactFlowInstance}
-            /* onPaneClick={onPaneClick} */
             onDragOver={onDragOver}
             onDrop={onDrop}
             onEdgeUpdate={onEdgeUpdate}
