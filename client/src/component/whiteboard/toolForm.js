@@ -1,4 +1,4 @@
-import { FormControl, InputLabel, MenuItem, Select } from "@material-ui/core";
+import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import * as React from "react";
 
 export default function ToolForm(props) {
@@ -7,11 +7,13 @@ export default function ToolForm(props) {
   const collection = props.collection;
   const value = props.value;
   const onSelectValueChange = props.onValueUpdate;
+  const len = collection.length
 
-  return !collection || collection.length === 0 ? (
-    <></>
-  ) : (
-    <>
+  const hasCollection = collection && len > 0
+
+  const Form = () => {
+    return (
+      <>
       <FormControl fullWidth>
         <InputLabel id={selectId}>{selectLabel}</InputLabel>
         <Select
@@ -29,7 +31,10 @@ export default function ToolForm(props) {
           })}
         </Select>
       </FormControl>
-      {value !== "" || collection.length > 0 ? props.children : <></>}
-    </>
-  );
+      </>
+    )
+  }
+
+  return !hasCollection ? (<></>) : (<Form/>)
+
 }
