@@ -9,9 +9,9 @@ import ReactFlow, {
   Controls,
   MiniMap,
 } from "react-flow-renderer";
-import ToolNode from "../component/whiteboard/toolNode";
+import ToolNode from "../component/whiteboard/step/toolNode";
 import ToolDrawer from "../component/whiteboard/toolDrawer";
-import ToolSetupDialog from "../component/whiteboard/toolSetupDialog";
+import ToolSetupDialog from "../component/whiteboard/step/setup/toolSetupDialog";
 
 let id = -1;
 const getId = () => `node${++id}`;
@@ -26,9 +26,13 @@ export default function Whiteboard(props) {
   const uri = `${config.appProtocol}://${config.address}:${config.port}/library`;
 
   const reactFlowWrapper = useRef(null);
+  
+  // Whiteboard GUI state
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
+
+  console.log(nodes)
 
   // Libraries and APIs state hook
   const [list, setList] = useState([]);
@@ -36,11 +40,11 @@ export default function Whiteboard(props) {
   // The workflow composition
   const [workflowSteps, setWorkflowSteps] = useState([]);
 
-  const onAddStep = (event, step) => {
+  const onAddStep = (step) => {
     setWorkflowSteps([...workflowSteps, step]);
   };
 
-  const onRemoveStep = (event, stepName) => {
+  const onRemoveStep = (stepName) => {
     setWorkflowSteps((workflowSteps) =>
       workflowSteps.filter((step) => step.name !== stepName)
     );

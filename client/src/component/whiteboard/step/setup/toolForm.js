@@ -13,7 +13,6 @@ export default function ToolForm(props) {
 
   const Form = () => {
     return (
-      <>
       <FormControl fullWidth>
         <InputLabel id={selectId}>{selectLabel}</InputLabel>
         <Select
@@ -30,8 +29,7 @@ export default function ToolForm(props) {
             );
           })}
         </Select>
-      </FormControl>
-      </>
+      </FormControl>      
     )
   }
 

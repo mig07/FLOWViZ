@@ -1,10 +1,15 @@
 import { Grid, Stack, Typography, Divider } from "@mui/material";
 import * as React from "react";
 import { useState } from "react";
-import ToolForm from "./toolForm";
+import ToolForm from "../toolForm";
+import ToolSetupRow from "../toolSetupRow";
+import ToolSetupStack from "../toolSetupStack";
+import ToolSetupLibraryCommands from "./toolSetupLibraryCommands";
 
-export default function ToolLibrarySetup(props) {
+export default function ToolLibraryDialog(props) {
   const library = props.library;
+  const librarySetupState = props.librarySetupState;
+  const onLibrarySetupUpdate = props.onLibrarySetupUpdate;
   const commandGroups = library.commandGroups;
 
   const cmdGroup = commandGroups.find((cmdGroup) => cmdGroup.order === 0);
@@ -67,41 +72,37 @@ export default function ToolLibrarySetup(props) {
   };
 
   const CommandSetup = () => (
-    <>
-      <Typography variant="h6">Command Setup</Typography>
-      <Divider />
-      <Grid container spacing={2}>
-        <Grid item xs={6}>
-          <ToolForm
-            id="cmd-type"
-            label="Command"
-            collection={cmdGroup.commands.map((cmd) => cmd.name)}
-            value={cmd}
-            onValueUpdate={(event) => onValueChange(event, setCmd)}
-          />
-        </Grid>
-        <Grid item xs={6}>
-          <ToolForm
-            id="cmd-value"
-            label="Command Value"
-            collection={selectedCmds.allowedValues.map((value) => value)}
-            value={cmdValue}
-            onValueUpdate={(event) => onValueChange(event, setCmdValue)}
-          />
-        </Grid>
-
-        <Grid item xs={12}>
-          <ToolForm
-            id="cmd-subCmdSet"
-            label="Sub-Command Set"
-            collection={selectedCmds.allowedCommandSets.map((value) => value)}
-            value={subCommandSet}
-            onValueUpdate={(event) => onValueChange(event, setSubCommandSet)}
-          />
-        </Grid>
-        <SubCommands />
+    <Grid container spacing={2}>
+      <Grid item xs={6}>
+        <ToolForm
+          id="cmd-type"
+          label="Command"
+          collection={cmdGroup.commands.map((cmd) => cmd.name)}
+          value={cmd}
+          onValueUpdate={(event) => onValueChange(event, setCmd)}
+        />
       </Grid>
-    </>
+      <Grid item xs={6}>
+        <ToolForm
+          id="cmd-value"
+          label="Command Value"
+          collection={selectedCmds.allowedValues.map((value) => value)}
+          value={cmdValue}
+          onValueUpdate={(event) => onValueChange(event, setCmdValue)}
+        />
+      </Grid>
+
+      <Grid item xs={12}>
+        <ToolForm
+          id="cmd-subCmdSet"
+          label="Sub-Command Set"
+          collection={selectedCmds.allowedCommandSets.map((value) => value)}
+          value={subCommandSet}
+          onValueUpdate={(event) => onValueChange(event, setSubCommandSet)}
+        />
+      </Grid>
+      <SubCommands />
+    </Grid>
   );
 
   const Inputs = () => (
@@ -119,10 +120,17 @@ export default function ToolLibrarySetup(props) {
   );
 
   return (
-    <Stack spacing={2}>
-      <Inputs/>
-      <Outputs/>
-      <CommandSetup />
-    </Stack>
+    <ToolSetupStack>
+      <ToolSetupRow title="Input"></ToolSetupRow>
+      <ToolSetupRow title="Output"></ToolSetupRow>
+      <ToolSetupRow title="Command Setup">
+        {/* <ToolSetupLibraryCommands
+          library={library}
+          librarySetupState={librarySetupState}
+          onLibrarySetupUpdate={onLibrarySetupUpdate}
+        /> */}
+        <CommandSetup/>
+      </ToolSetupRow>
+    </ToolSetupStack>
   );
 }

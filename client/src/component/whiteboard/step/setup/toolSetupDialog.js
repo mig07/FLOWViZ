@@ -1,18 +1,23 @@
 import {
-  Button, Container, Dialog, DialogActions, DialogContent, DialogTitle, FormControl,
-  InputLabel,
-  MenuItem, Select, Typography
+  Button,
+  Container,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle, Typography
 } from "@material-ui/core";
 import * as React from "react";
-import ToolLibrarySetup from "./toolLibrarySetup";
+import ToolLibraryDialog from "./library/toolLibraryDialog";
 
 export default function ToolSetupDialog(props) {
   const open = props.open;
   const tool = props.tool;
-  const onSetupDialogCancel = props.onSetupDialogCancel;
-  const onSetupDialogApply = props.onSetupDialogApply;
   const scroll = props.toolSetupScroll;
   const descriptionElementRef = React.useRef(null);
+  const onSetupDialogCancel = props.onSetupDialogCancel;
+  const onSetupDialogApply = props.onSetupDialogApply;
+  const librarySetupState = props.librarySetupState;
+  const onLibrarySetupUpdate = props.onLibrarySetupUpdate;
 
   // For tools that provide both setup methods
   const [setupMethod, setSetupMethod] = React.useState("library");
@@ -24,13 +29,13 @@ export default function ToolSetupDialog(props) {
         descriptionElement.focus();
       }
     }
-  }, [open]);  
+  }, [open]);
 
   return (
     <>
       <Dialog
         fullWidth
-        maxWidth='sm'
+        maxWidth="sm"
         open={open}
         onClose={onSetupDialogCancel}
         scroll={scroll}
@@ -45,16 +50,15 @@ export default function ToolSetupDialog(props) {
               <Button onClick={() => setSetupMethod("api")}>API</Button>
               <Button onClick={() => setSetupMethod("library")}>Library</Button>
             </Container>
+          ) : tool.library ? (
+            <ToolLibraryDialog
+              library={tool.library}
+              librarySetupState={librarySetupState}
+              onLibrarySetupUpdate={onLibrarySetupUpdate}
+            />
           ) : (
-            tool.library 
-            ?
-              <ToolLibrarySetup library={tool.library}/>
-            :
-              <>
-              </>
-
+            <></>
           )}
-          
         </DialogContent>
         <DialogActions>
           <Button onClick={onSetupDialogCancel}>Cancel</Button>
