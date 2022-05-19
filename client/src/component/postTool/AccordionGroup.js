@@ -8,14 +8,7 @@ import {
   Divider,
 } from "@mui/material";
 
-export default function AccordionGroup(props) {
-  const stackLabel = props.stackLabel;
-  const counterLabel = props.counterLabel;
-  const minValue = Number(props.minValue);
-  const initialGroupState = props.initialGroupState;
-  const onAddAccordion = props.onAddAccordion;
-  const onCounterChange = props.onCounterChange;
-
+export default function AccordionGroup({ stackLabel = "", counterLabel = 0, minValue = 1, initialGroupState = {}, onAddAccordion = () => { }, onCounterChange = () => { } }) {
   const [counter, setCounter] = React.useState(1);
   const [groups, setGroups] = React.useState([initialGroupState]);
 

@@ -3,11 +3,8 @@ import { Box, Container, Stack, TextField, Chip } from "@mui/material";
 import { IconButton } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 
-function TextFieldMultiInput(props) {
-  const name = props.name;
-  const label = props.label;
-  const collection = props.data;
-  const onParentUpdate = props.onParentUpdate;
+function TextFieldMultiInput({ name = "", label = "", data = [], onParentUpdate = () => { } }) {
+  const collection = data;
 
   const [input, setInput] = React.useState("");
   const [chips, setChips] = React.useState([]);

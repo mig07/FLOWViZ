@@ -17,7 +17,7 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   justifyContent: "flex-start",
 }));
 
-export default function ToolDrawer(props) {
+export default function ToolDrawer({tools = []}) {
   const onDragStart = (event) => {
     event.dataTransfer.setData(
       "application/reactflow",
@@ -43,7 +43,7 @@ export default function ToolDrawer(props) {
       >
         <DrawerHeader />
         <List>
-          {props.tools.map((tool) => {
+          {tools.map((tool) => {
             const name = tool.name;
             return (
               <ListItem button key={name}>

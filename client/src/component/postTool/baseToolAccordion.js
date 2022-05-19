@@ -4,9 +4,7 @@ import { Stack } from "@mui/material";
 import { TextField } from "@mui/material";
 import SettingsAccordion from "./settingsAccordion";
 
-function BaseToolAccordion(props) {
-  const data = props.data;
-  const onParentUpdate = props.onParentUpdate;
+function BaseToolAccordion({ data = {}, onParentUpdate = () => { }, children }) {
 
   const onPropChange = (event, changePropAction) => {
     const value = event.target.value;
@@ -80,7 +78,7 @@ function BaseToolAccordion(props) {
             />
           </Container>
         </SettingsAccordion>
-        {props.children}
+        {children}
       </Stack>
     </Container>
   );

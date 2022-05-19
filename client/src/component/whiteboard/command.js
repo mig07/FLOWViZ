@@ -4,8 +4,7 @@ import "./toolNode.css";
 import CmdSelector from "./cmdSelector";
 import SubCmdSelector from "./subCmdSelector";
 
-export default function Command(props) {
-  const commandGroups = props.commandGroups;
+export default function Command({commandGroups = []}) {
   const firstCommandGroup = commandGroups.find(
     (commandGroup) => commandGroup.order == 0
   );

@@ -13,10 +13,9 @@ import TextFieldMultiInput from "./textFieldMultiInput";
 import { FormControlLabel } from "@mui/material";
 import Command from "./command";
 
-function CommandGroup(props) {
-  const index = props.index;
-  const group = props.data;
-  const onGroupsUpdate = props.onParentUpdate;
+function CommandGroup({ index = 0, data = {}, onParentUpdate = () => { } }) {
+  const group = data;
+  const onGroupsUpdate = onParentUpdate;
 
   const [count, setCount] = React.useState(1);
   const [checked, setChecked] = React.useState(false);

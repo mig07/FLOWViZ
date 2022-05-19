@@ -2,13 +2,8 @@ import * as React from "react";
 import { Select, MenuItem, InputLabel, FormControl } from "@mui/material";
 import "./toolNode.css";
 
-export default function CmdSelector(props) {
-  const id = props.id;
+export default function CmdSelector({ id = 0, collection = [], selectedElem = "", cb = () => { }, label = "" }) {
   const labelId = `${id}-label`;
-  const collection = props.collection;
-  const selectedElem = props.selectedElem;
-  const cb = props.cb;
-  const label = props.label;
 
   return collection && collection.length > 0 ? (
     <>

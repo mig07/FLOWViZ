@@ -4,10 +4,9 @@ import SettingsAccordion from "./settingsAccordion";
 import { Container } from "@mui/material";
 import CommandGroup from "./commandGroup";
 
-function CommandGroups(props) {
-  const onLibraryUpdate = props.onParentUpdate;
-  const library = props.data;
-  const groups = library.groups;
+function CommandGroups({ data = {}, onParentUpdate = () => { } }) {
+  const groups = data.groups;
+  const onLibraryUpdate = onParentUpdate;
 
   const [count, setCount] = React.useState(1)
 
@@ -36,19 +35,19 @@ function CommandGroups(props) {
 
     let gs = groups;
     if (diff < 0) {
-      gs.pop();      
+      gs.pop();
     } else {
       gs.push(freshCommandGroup(count));
     }
 
     setCount(value)
-    onLibraryUpdate({groups: gs})
+    onLibraryUpdate({ groups: gs })
   }
 
   const onCommandGroupUpdate = (index, group) => {
     let gs = groups;
     gs[index] = group;
-    onLibraryUpdate({groups: gs})
+    onLibraryUpdate({ groups: gs })
   }
 
   return (

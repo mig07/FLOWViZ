@@ -6,10 +6,8 @@ import {
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
-export default function SettingsAccordion(props) {
-  const name = props.name;
+export default function SettingsAccordion({name, description, children}) {
   const id = `${name}-accordion`;
-  const description = props.description;
 
   const [expanded, setExpanded] = React.useState(false);
 
@@ -29,7 +27,7 @@ export default function SettingsAccordion(props) {
             {description ? description : <></>}
           </Typography>
         </AccordionSummary>
-        <>{props.children}</>
+        <>{children}</>
       </Accordion>    
   );
 }

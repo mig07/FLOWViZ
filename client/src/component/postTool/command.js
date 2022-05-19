@@ -3,11 +3,10 @@ import SettingsAccordion from "./settingsAccordion";
 import { Stack, TextField } from "@mui/material";
 import TextFieldMultiInput from "./textFieldMultiInput";
 
-function Command(props) {
+function Command({data = {}, index= 0, onParentUpdate = () => {}}) {
   
-  const command = props.data
-  const index = props.index
-  const onGroupCommandsUpdate = props.onParentUpdate
+  const command = data
+  const onGroupCommandsUpdate = onParentUpdate
 
   return (
     <SettingsAccordion>

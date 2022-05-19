@@ -11,17 +11,11 @@ import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import "./toolNode.css";
 
-export default function Selector(props) {
+export default function Selector({ id = 0, collection = [], label = "", onAdd = () => { }, onRemove = () => { }, canMultiply = { false} }) {
   const [selectedVal, setSelectedVal] = React.useState("");
 
-  const id = props.id;
   const labelId = `${id}-label`;
-  const collection = props.collection;
-  const label = props.label;
-  const onAdd = props.onAdd;
-  const onRemove = props.onRemove;
 
-  const canMultiply = props.canMultiply;
   const multFlag = canMultiply && canMultiply === true;
   const selectorWidth = multFlag ? 12 : 16;
 
