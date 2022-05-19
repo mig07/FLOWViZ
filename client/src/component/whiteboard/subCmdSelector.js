@@ -11,7 +11,7 @@ import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import "./toolNode.css";
 
-export default function Selector({ id = 0, collection = [], label = "", onAdd = () => { }, onRemove = () => { }, canMultiply = { false} }) {
+export default function Selector({ id = 0, collection = [], label = "", onAdd = () => { }, onRemove = () => { }, canMultiply = false }) {
   const [selectedVal, setSelectedVal] = React.useState("");
 
   const labelId = `${id}-label`;
