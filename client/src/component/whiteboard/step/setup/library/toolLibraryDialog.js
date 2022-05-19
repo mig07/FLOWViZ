@@ -6,10 +6,8 @@ import ToolSetupRow from "../toolSetupRow";
 import ToolSetupStack from "../toolSetupStack";
 import ToolSetupLibraryCommands from "./toolSetupLibraryCommands";
 
-export default function ToolLibraryDialog(props) {
-  const library = props.library;
-  const librarySetupState = props.librarySetupState;
-  const onLibrarySetupUpdate = props.onLibrarySetupUpdate;
+export default function ToolLibraryDialog({ library, librarySetupState, onLibrarySetupUpdate }) {
+
   const commandGroups = library.commandGroups;
 
   const cmdGroup = commandGroups.find((cmdGroup) => cmdGroup.order === 0);
@@ -29,7 +27,7 @@ export default function ToolLibraryDialog(props) {
 
   const onValueChange = (event, setter) => {
     const value = event.target.value;
-    setter(value);
+    setter(oldVal => value);
   };
 
   const SubCommands = () => {
@@ -55,7 +53,7 @@ export default function ToolLibraryDialog(props) {
                 label="Sub-Command value"
                 collection={cmdGroupCommands
                   .find((cmd) => cmd.name === subCommand)
-                  .allowedValues.map((str) => str)}
+                  .allowedValues}
                 value={subCommandValue}
                 onValueUpdate={(event) =>
                   onValueChange(event, setSubCommandValue)
@@ -77,7 +75,7 @@ export default function ToolLibraryDialog(props) {
         <ToolForm
           id="cmd-type"
           label="Command"
-          collection={cmdGroup.commands.map((cmd) => cmd.name)}
+          collection={cmdGroup.commands.map(cmd => cmd.name)}
           value={cmd}
           onValueUpdate={(event) => onValueChange(event, setCmd)}
         />
@@ -86,7 +84,7 @@ export default function ToolLibraryDialog(props) {
         <ToolForm
           id="cmd-value"
           label="Command Value"
-          collection={selectedCmds.allowedValues.map((value) => value)}
+          collection={selectedCmds.allowedValues}
           value={cmdValue}
           onValueUpdate={(event) => onValueChange(event, setCmdValue)}
         />
@@ -96,27 +94,13 @@ export default function ToolLibraryDialog(props) {
         <ToolForm
           id="cmd-subCmdSet"
           label="Sub-Command Set"
-          collection={selectedCmds.allowedCommandSets.map((value) => value)}
+          collection={selectedCmds.allowedCommandSets}
           value={subCommandSet}
           onValueUpdate={(event) => onValueChange(event, setSubCommandSet)}
         />
       </Grid>
       <SubCommands />
     </Grid>
-  );
-
-  const Inputs = () => (
-    <>
-      <Typography variant="h6">Input</Typography>
-      <Divider />
-    </>
-  );
-
-  const Outputs = () => (
-    <>
-      <Typography variant="h6">Output</Typography>
-      <Divider />
-    </>
   );
 
   return (
@@ -129,7 +113,7 @@ export default function ToolLibraryDialog(props) {
           librarySetupState={librarySetupState}
           onLibrarySetupUpdate={onLibrarySetupUpdate}
         /> */}
-        <CommandSetup/>
+        <CommandSetup />
       </ToolSetupRow>
     </ToolSetupStack>
   );

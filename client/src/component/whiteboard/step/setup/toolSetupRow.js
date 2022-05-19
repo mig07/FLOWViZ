@@ -1,12 +1,12 @@
 import { Divider, Typography } from "@mui/material";
 import * as React from "react";
 
-export default function ToolSetupRow(props) {
+export default function ToolSetupRow({title, children}) {
   return (
     <>
-      <Typography variant="h6">{props.title}</Typography>
+      <Typography variant="h6">{title}</Typography>
       <Divider />
-      {props.children}
+      {children}
     </>
   );
 }

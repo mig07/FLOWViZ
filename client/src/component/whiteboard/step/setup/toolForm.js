@@ -1,12 +1,8 @@
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import * as React from "react";
 
-export default function ToolForm(props) {
-  const selectId = props.id;
-  const selectLabel = props.label;
-  const collection = props.collection;
-  const value = props.value;
-  const onSelectValueChange = props.onValueUpdate;
+export default function ToolForm({ selectId, selectLabel, collection, value, onSelectValueChange }) {
+
   const len = collection.length
 
   const hasCollection = collection && len > 0
@@ -19,7 +15,7 @@ export default function ToolForm(props) {
           id={selectId}
           label={selectLabel}
           value={value}
-          onChange={onSelectValueChange}
+          onChange={(event) => onSelectValueChange(event)}
         >
           {collection.map((elem) => {
             return (
@@ -29,10 +25,10 @@ export default function ToolForm(props) {
             );
           })}
         </Select>
-      </FormControl>      
+      </FormControl>
     )
   }
 
-  return !hasCollection ? (<></>) : (<Form/>)
+  return !hasCollection ? (<></>) : (<Form />)
 
 }

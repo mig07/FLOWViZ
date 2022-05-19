@@ -9,15 +9,9 @@ import {
 import * as React from "react";
 import ToolLibraryDialog from "./library/toolLibraryDialog";
 
-export default function ToolSetupDialog(props) {
-  const open = props.open;
-  const tool = props.tool;
-  const scroll = props.toolSetupScroll;
+export default function ToolSetupDialog({ open, tool, scroll, onSetupDialogCancel, onSetupDialogApply, librarySetupState, onLibrarySetupUpdate }) {
+
   const descriptionElementRef = React.useRef(null);
-  const onSetupDialogCancel = props.onSetupDialogCancel;
-  const onSetupDialogApply = props.onSetupDialogApply;
-  const librarySetupState = props.librarySetupState;
-  const onLibrarySetupUpdate = props.onLibrarySetupUpdate;
 
   // For tools that provide both setup methods
   const [setupMethod, setSetupMethod] = React.useState("library");
@@ -47,8 +41,8 @@ export default function ToolSetupDialog(props) {
           {tool.library && tool.api ? (
             <Container>
               <Typography variant="h6">Method</Typography>
-              <Button onClick={() => setSetupMethod("api")}>API</Button>
-              <Button onClick={() => setSetupMethod("library")}>Library</Button>
+              <Button onClick={(event) => setSetupMethod("api")}>API</Button>
+              <Button onClick={(event) => setSetupMethod("library")}>Library</Button>
             </Container>
           ) : tool.library ? (
             <ToolLibraryDialog

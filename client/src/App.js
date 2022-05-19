@@ -19,6 +19,7 @@ import Config from "./config/dev-config.json";
 import Library from "./page/library";
 import Whiteboard from "./page/whiteboard";
 import PostTool from "./page/postTool";
+import Test from "./test/test";
 
 export default function App() {
   return (
@@ -47,6 +48,7 @@ export default function App() {
             path={"/whiteboard"}
             element={<Whiteboard config={Config.server} />}
           />
+          <Route exact path={"/test"} element={<Test />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
         <Copyright sx={{ mt: 8, mb: 4 }} />
