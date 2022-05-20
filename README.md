@@ -30,6 +30,32 @@ npm install or npm i
 npm start
 ```
 
+## Building and running on localhost **with tmux**
+
+1. Install tmux
+
+Arch distros:
+```sh
+sudo pacman -Sy tmux
+```
+
+Debian distros:
+```sh
+sudo apt-get update && sudo apt-get install tmux
+```
+
+2. Execute the start.sh script
+
+Note: if there are no permission, execute:
+```sh
+chmod +x start.sh
+```
+
+Build and start:
+```sh
+./start.sh
+```
+
 ## Testing
 
 To run unit tests:
