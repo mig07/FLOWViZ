@@ -15,28 +15,8 @@ export default function ToolNode({ data }) {
   const [openToolSetup, setOpenToolSetup] = useState(false);
   const [toolSetupScroll, setToolSetupScroll] = useState("paper");
 
-  // Library hooks
-  /* const [cmd, setCmd] = useState(firstCmdName);
-  const [cmdValue, setCmdValue] = useState("");
-  const [subCommandSet, setSubCommandSet] = useState("");
-  const [subCommand, setSubCommand] = useState("");
-  const [subCommandValue, setSubCommandValue] = useState(""); */
-
-  // Library setup hook
-  const [librarySetup, setLibrarySetup] = useState({
-    commandName: "",
-    commandValue: "",
-    subCommandSet: "",
-    subCommandName: "",
-    subCommandValue: "",
-  });
-
-  const onLibrarySetupUpdate = (updatedLibSetup) => {
-    setLibrarySetup(updatedLibSetup);
-  };
-
-  // API setup hook
-  const [apiSetup, setApiSetup] = useState({});
+  const [librarySetup, setLibrarySetup] = useState({})
+  const [apiSetup, setApiSetup] = useState({})
 
   // Opening the setup dialog
   const onSetupDialogOpen = (scrollType) => () => {
@@ -54,11 +34,9 @@ export default function ToolNode({ data }) {
       <ToolSetupDialog
         open={openToolSetup}
         tool={tool}
-        onSetupDialogCancel={onSetupDialogCancel}
-        onSetupDialogApply={(onAddStep)}
         toolSetupScroll={toolSetupScroll}
-        librarySetupState={librarySetup}
-        onLibrarySetupUpdate={onLibrarySetupUpdate}
+        onSetupDialogCancel={onSetupDialogCancel}
+        onSetupDialogApply={onAddStep}
       />
       <Handle position={Position.Top} />
       <Typography variant="body1">{tool.name} Node</Typography>

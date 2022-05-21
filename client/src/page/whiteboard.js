@@ -32,8 +32,6 @@ export default function Whiteboard(props) {
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
 
-  console.log(nodes)
-
   // Libraries and APIs state hook
   const [list, setList] = useState([]);
 

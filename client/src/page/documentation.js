@@ -18,8 +18,6 @@ export default function Documentation(props) {
           .then(setList);
     }, []);
 
-    console.log(list)
-
     return (
         <>
             <Toolbar />

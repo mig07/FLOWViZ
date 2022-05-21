@@ -23,24 +23,8 @@ export default function ToolSetupSelectField(props) {
         label={label}
         collection={values}
         value={currValue}
-        onValueUpdate={onCurrValueUpdate}
+        onSelectValueChange={onCurrValueUpdate}
       />
     </Grid>
   );
-
-  /* return stateDependency && stateDependency !== "" ? (
-    <>
-      <Grid item sx={fieldWidth}>
-        <ToolForm
-          id={id}
-          label={label}
-          collection={values}
-          value={currValue}
-          onValueUpdate={onCurrValueUpdate}
-        />
-      </Grid>
-    </>
-  ) : (
-    <></>
-  ); */
 }

@@ -4,17 +4,41 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogTitle, Typography
+  DialogTitle,
+  Typography,
 } from "@material-ui/core";
 import * as React from "react";
+import { useState } from "react";
 import ToolLibraryDialog from "./library/toolLibraryDialog";
 
-export default function ToolSetupDialog({ open, tool, scroll, onSetupDialogCancel, onSetupDialogApply, librarySetupState, onLibrarySetupUpdate }) {
+export default function ToolSetupDialog({
+  open,
+  tool,
+  scroll,
+  onSetupDialogCancel,
+  onSetupDialogApply,
+}) {
+  const library = tool.library;
 
   const descriptionElementRef = React.useRef(null);
 
   // For tools that provide both setup methods
-  const [setupMethod, setSetupMethod] = React.useState("library");
+  const [setupMethod, setSetupMethod] = useState("library");
+
+  const [librarySetup, setLibrarySetup] = useState({
+    cmd: "",
+    cmdValue: "",
+    subCommandSet: "",
+    subCommand: "",
+    subCommandValue: "",
+  });
+
+  const onLibrarySetupPropChange = (event, prop) => {
+    const value = event.target.value;
+    setLibrarySetup((prevState) => ({ ...prevState, [prop]: value }));
+  };
+
+  const [apiSetup, setApiSetup] = React.useState({});
 
   React.useEffect(() => {
     if (open) {
@@ -42,13 +66,15 @@ export default function ToolSetupDialog({ open, tool, scroll, onSetupDialogCance
             <Container>
               <Typography variant="h6">Method</Typography>
               <Button onClick={(event) => setSetupMethod("api")}>API</Button>
-              <Button onClick={(event) => setSetupMethod("library")}>Library</Button>
+              <Button onClick={(event) => setSetupMethod("library")}>
+                Library
+              </Button>
             </Container>
-          ) : tool.library ? (
+          ) : library ? (
             <ToolLibraryDialog
-              library={tool.library}
-              librarySetupState={librarySetupState}
-              onLibrarySetupUpdate={onLibrarySetupUpdate}
+              library={library}
+              librarySetup={librarySetup}
+              onParentUpdate={onLibrarySetupPropChange}
             />
           ) : (
             <></>

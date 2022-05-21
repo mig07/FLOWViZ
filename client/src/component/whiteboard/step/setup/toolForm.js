@@ -1,21 +1,21 @@
-import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import { FormControl, Select, MenuItem } from "@material-ui/core";
 import * as React from "react";
 
-export default function ToolForm({ selectId, selectLabel, collection, value, onSelectValueChange }) {
+export default function ToolForm({
+  collection = [],
+  value = "",
+  onSelectValueChange = () => {},
+}) {
+  const len = collection.length;
 
-  const len = collection.length
-
-  const hasCollection = collection && len > 0
+  const hasCollection = collection && len > 0;
 
   const Form = () => {
     return (
       <FormControl fullWidth>
-        <InputLabel id={selectId}>{selectLabel}</InputLabel>
         <Select
-          id={selectId}
-          label={selectLabel}
           value={value}
-          onChange={(event) => onSelectValueChange(event)}
+          onChange={onSelectValueChange}
         >
           {collection.map((elem) => {
             return (
@@ -26,9 +26,8 @@ export default function ToolForm({ selectId, selectLabel, collection, value, onS
           })}
         </Select>
       </FormControl>
-    )
-  }
+    );
+  };
 
-  return !hasCollection ? (<></>) : (<Form />)
-
+  return !hasCollection ? <></> : <Form />;
 }

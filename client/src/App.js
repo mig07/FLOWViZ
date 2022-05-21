@@ -48,7 +48,7 @@ export default function App() {
             path={"/whiteboard"}
             element={<Whiteboard config={Config.server} />}
           />
-          <Route exact path={"/test"} element={<Test />} />
+          <Route exact path={"/test"} element={<Test config={Config.server} />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
         <Copyright sx={{ mt: 8, mb: 4 }} />

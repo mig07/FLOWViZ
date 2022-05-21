@@ -2,26 +2,16 @@ import { Grid } from "@mui/material";
 import * as React from "react";
 import ToolSetupSelectField from "../toolSetupSelectField";
 
-export default function ToolSetupLibraryCommands(props) {
-  const library = props.library;
-  const librarySetupState = props.librarySetupState;
-  const onLibrarySetupUpdate = props.onLibrarySetupUpdate;
-
+export default function ToolSetupLibraryCommands({
+  library = {},
+  librarySetup = {},
+  onParentUpdate = () => {},
+}) {
   const commandGroups = library.commandGroups;
+
   const cmdGroup = commandGroups.find((cmdGroup) => cmdGroup.order === 0);
 
-  const onCurrValueUpdate = (event, mainProp, consumer) => {
-    const value = event.target.value;
-    let mProp = mainProp;
-    consumer(mProp, value);
-    onLibrarySetupUpdate(mProp);
-  };
-
-  console.log(librarySetupState)
-
-  const onValueUpdate = (event, consumer) => {
-    onCurrValueUpdate(event, librarySetupState, consumer);
-  };
+  console.log(librarySetup);
 
   return (
     <Grid container spacing={2}>
@@ -29,28 +19,23 @@ export default function ToolSetupLibraryCommands(props) {
         id="cmd-type"
         label="Command"
         values={cmdGroup.commands.map((cmd) => cmd.name)}
-        currValue={librarySetupState.commandName}
-        onCurrValueUpdate={(event) =>
-          onValueUpdate(event, (libSetup, value) => {
-            libSetup.commandName = value;            
-          })
-        }
-        stateDependency={librarySetupState.commandName}
-      />
-      {/* <ToolSetupSelectField
-        id="cmd-value"
-        label="Command Value"
-        values={selectedCmd.allowedValues}
-        currValue={librarySetupState.commandValue}
-        onCurrValueUpdate={(event) => {
-          onValueUpdate(event, (libSetup, value) => {
-            libSetup.commandValue = value;
-          });
-        }}
-        stateDependency={librarySetupState.commandName}
+        currValue={librarySetup.cmd}
+        onCurrValueUpdate={(event) => onParentUpdate(event, "cmd")}
+        stateDependency={librarySetup.cmd}
       />
       <ToolSetupSelectField
-        id="cmd-subCmdSet"
+        id="cmd-value"
+        label="Command Value"
+        values={
+          cmdGroup.commands.find((cmd) => cmd.name === librarySetup.cmd)
+            .allowedValues
+        }
+        currValue={librarySetup.cmdValue}
+        onCurrValueUpdate={(event) => onParentUpdate(event, "cmdValue")}
+        stateDependency={librarySetup.cmd}
+      />
+      {/* <ToolSetupSelectField
+        id="cmd-sub-command-set"
         label="Sub-Command Set"
         values={selectedCmd.allowedCommandSets}
         currValue={librarySetupState.subCommandSet}
