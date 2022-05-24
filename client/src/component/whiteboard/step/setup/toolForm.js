@@ -6,9 +6,7 @@ export default function ToolForm({
   value = "",
   onSelectValueChange = () => {},
 }) {
-  const len = collection.length;
-
-  const hasCollection = collection && len > 0;
+  const hasCollection = collection && collection.length > 0;
 
   const Form = () => {
     return (

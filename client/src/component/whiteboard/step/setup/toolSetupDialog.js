@@ -25,18 +25,7 @@ export default function ToolSetupDialog({
   // For tools that provide both setup methods
   const [setupMethod, setSetupMethod] = useState("library");
 
-  const [librarySetup, setLibrarySetup] = useState({
-    cmd: "",
-    cmdValue: "",
-    subCommandSet: "",
-    subCommand: "",
-    subCommandValue: "",
-  });
-
-  const onLibrarySetupPropChange = (event, prop) => {
-    const value = event.target.value;
-    setLibrarySetup((prevState) => ({ ...prevState, [prop]: value }));
-  };
+  
 
   const [apiSetup, setApiSetup] = React.useState({});
 
@@ -73,8 +62,6 @@ export default function ToolSetupDialog({
           ) : library ? (
             <ToolLibraryDialog
               library={library}
-              librarySetup={librarySetup}
-              onParentUpdate={onLibrarySetupPropChange}
             />
           ) : (
             <></>

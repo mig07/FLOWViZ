@@ -7,17 +7,12 @@ export default function ToolSetupSelectField(props) {
   const label = props.label;
   const currValue = props.currValue;
   const values = props.values;
+  const fieldWidth = Number(props.fieldWidth);
   const onCurrValueUpdate = props.onCurrValueUpdate;
   const stateDependency = props.stateDependency;
 
-  // If it is single, uses the full width, else leaves half of the space for the other field
-  const gridItemFullWidth = 12;
-  const gridItemHalfWidth = gridItemFullWidth / 2;
-  const fieldWidth =
-    stateDependency === currValue ? gridItemFullWidth : gridItemHalfWidth;
-
-  return (
-    <Grid item sx={fieldWidth}>
+  return !stateDependency || (stateDependency && stateDependency !== "") ? (
+    <Grid item xs={fieldWidth}>
       <ToolForm
         id={id}
         label={label}
@@ -26,5 +21,7 @@ export default function ToolSetupSelectField(props) {
         onSelectValueChange={onCurrValueUpdate}
       />
     </Grid>
+  ) : (
+    <></>
   );
 }
