@@ -12,11 +12,9 @@ function ToolNode({ data }) {
   const onAddStep = data.onAddStep;
 
   // Tool setup dialog state hooks
+  const [stepName, setStepName] = useState("");
   const [openToolSetup, setOpenToolSetup] = useState(false);
   const [toolSetupScroll, setToolSetupScroll] = useState("paper");
-
-  const [librarySetup, setLibrarySetup] = useState({})
-  const [apiSetup, setApiSetup] = useState({})
 
   // Opening the setup dialog
   const onSetupDialogOpen = (scrollType) => () => {
@@ -29,6 +27,11 @@ function ToolNode({ data }) {
     setOpenToolSetup(false);
   };
 
+  const onStepNameUpdate = (event) => {
+    const value = event.target.value;
+    setStepName(value);
+  };
+
   return (
     <div className="tool-node">
       <ToolSetupDialog
@@ -36,13 +39,15 @@ function ToolNode({ data }) {
         tool={tool}
         toolSetupScroll={toolSetupScroll}
         onSetupDialogCancel={onSetupDialogCancel}
-        onSetupDialogApply={onAddStep}
+        onSetupDialogApply={(setup) =>
+          onAddStep({ name: stepName, setup: setup })
+        }
       />
       <Handle position={Position.Top} />
       <Stack spacing>
         <Typography variant="caption">{tool.name} Node</Typography>
         <div>
-          <input placeholder="Step name" />          
+          <input placeholder="Step name" onChange={onStepNameUpdate} />
           <IconButton onClick={onSetupDialogOpen("paper")}>
             <SettingsIcon />
           </IconButton>
@@ -53,4 +58,4 @@ function ToolNode({ data }) {
   );
 }
 
-export default React.memo(ToolNode)
+export default React.memo(ToolNode);

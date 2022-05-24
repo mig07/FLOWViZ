@@ -26,7 +26,7 @@ export default function Whiteboard(props) {
   const uri = `${config.appProtocol}://${config.address}:${config.port}/library`;
 
   const reactFlowWrapper = useRef(null);
-  
+
   // Whiteboard GUI state
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
@@ -38,8 +38,20 @@ export default function Whiteboard(props) {
   // The workflow composition
   const [workflowSteps, setWorkflowSteps] = useState([]);
 
+  console.log(workflowSteps);
+
+  const workflowStep = (name, setup) => {
+    return {
+      name: name,
+      action: setup,
+      nextActions: [],
+      previousActions: [],
+    };
+  };
+
   const onAddStep = (step) => {
-    setWorkflowSteps([...workflowSteps, step]);
+    const updatedStep = workflowStep(step.name, step.setup);
+    setWorkflowSteps([...workflowSteps, updatedStep]);
   };
 
   const onRemoveStep = (stepName) => {

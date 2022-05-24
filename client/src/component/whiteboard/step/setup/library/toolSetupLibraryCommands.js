@@ -1,6 +1,6 @@
 import { Button, Grid } from "@mui/material";
 import * as React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ToolSetupLibraryCommand from "./toolSetupLibraryCommand";
 
 export default function ToolSetupLibraryCommands({
@@ -22,6 +22,7 @@ export default function ToolSetupLibraryCommands({
 
   const onAddCommand = (event) => {
     setCommands([...commands, command]);
+    onParentUpdate(commands)
   };
 
   const command = {
@@ -31,18 +32,22 @@ export default function ToolSetupLibraryCommands({
   };
 
   const onRemoveCommand = (event, i) => {
-    setCommands((cmds) => cmds.splice(i, 1));
+    const cmds = [...commands]
+    cmds.splice(i, 1)
+    setCommands(cmds);
+    onParentUpdate(commands)
   };
 
-  // TODO - add shouldClean
-  const onUpdateCommand = (event, i, prop) => {
+  const onUpdateCommand = (event, i, prop, propsToClean) => {
     const value = event.target.value;
     const cmds = [...commands];
     cmds[i][prop] = value;
+    propsToClean.forEach((propToClean) => {
+      cmds[i][propToClean] = "";
+    });
     setCommands(cmds);
+    onParentUpdate(commands)
   };
-
-  console.log(commands)
 
   return (
     <>

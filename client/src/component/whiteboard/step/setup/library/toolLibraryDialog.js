@@ -15,7 +15,7 @@ export default function ToolLibraryDialog({
       <ToolSetupRow title="Input"></ToolSetupRow>
       <ToolSetupRow title="Output"></ToolSetupRow>
       <ToolSetupRow title="Command Setup">
-        <ToolSetupLibraryCommands library={library} />
+        <ToolSetupLibraryCommands library={library} onParentUpdate={onParentUpdate} />
       </ToolSetupRow>
     </ToolSetupStack>
   );

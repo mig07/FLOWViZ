@@ -1,6 +1,7 @@
 import * as React from "react";
-import { Grid } from "@mui/material";
+import { Grid, IconButton } from "@mui/material";
 import ToolSetupSelectField from "../toolSetupSelectField";
+import CloseIcon from "@mui/icons-material/Close";
 
 export default function ToolSetupLibraryCommand({
   index,
@@ -15,6 +16,11 @@ export default function ToolSetupLibraryCommand({
     (cmdGroup) => cmdGroup.groupName === state.groupName
   );
 
+  const cmdValues =
+    state.name !== ""
+      ? currGroup.commands.find((cmd) => cmd.name === state.name).allowedValues
+      : [];
+
   return (
     <Grid container spacing={2}>
       <ToolSetupSelectField
@@ -22,29 +28,30 @@ export default function ToolSetupLibraryCommand({
         label="Command group"
         values={commandGroupNames}
         currValue={state.groupName}
-        fieldValue={12}
-        onCurrValueUpdate={(ev) => onParentUpdate(ev, index, "groupName")}
+        test={12}
+        onCurrValueUpdate={(ev) => onParentUpdate(ev, index, "groupName", ["name", "value"])}
       />
       <ToolSetupSelectField
         id={`cmd-name-${index}`}
         label="Command name"
         values={currGroup.commands.map((cmd) => cmd.name)}
         currValue={state.name}
-        fieldValue={6}
-        onCurrValueUpdate={(ev) => onParentUpdate(ev, index, "name")}
+        test={6}
+        onCurrValueUpdate={(ev) => onParentUpdate(ev, index, "name", ["value"])}
         stateDependency={state.groupName}
       />
       <ToolSetupSelectField
         id={`cmd-value-${index}`}
         label="Command value"
-        values={ 
-          [] // TODO
-        }
+        values={cmdValues}
         currValue={state.value}
-        fieldValue={6}
+        test={6}
         onCurrValueUpdate={(ev) => onParentUpdate(ev, index, "value")}
         stateDependency={state.name}
       />
+      <IconButton onClick={(ev) => onRemove(ev, index)}>
+        <CloseIcon />
+      </IconButton>
     </Grid>
   );
 }

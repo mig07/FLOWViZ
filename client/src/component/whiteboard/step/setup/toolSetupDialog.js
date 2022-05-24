@@ -25,10 +25,6 @@ export default function ToolSetupDialog({
   // For tools that provide both setup methods
   const [setupMethod, setSetupMethod] = useState("library");
 
-  
-
-  const [apiSetup, setApiSetup] = React.useState({});
-
   React.useEffect(() => {
     if (open) {
       const { current: descriptionElement } = descriptionElementRef;
@@ -62,6 +58,9 @@ export default function ToolSetupDialog({
           ) : library ? (
             <ToolLibraryDialog
               library={library}
+              onParentUpdate={(commands) => {
+                onSetupDialogApply({ api: {}, library: commands });
+              }}
             />
           ) : (
             <></>
