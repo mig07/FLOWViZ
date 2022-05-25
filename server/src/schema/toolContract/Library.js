@@ -1,24 +1,30 @@
+const { Integer } = require('json-schema');
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema
 
-const ArgumentSchema = new Schema({
-    name: { type: String, required: true },
-    areOptionsAllowed: { type: Boolean, required: true },
-    valueType: { type: Array }
+const CommandSchema = new Schema({
+    name: { type: String, required: true, unique: true },
+    description: { type: String },
+    invocation: [String],
+    allowedValues: [String],
+    allowedCommands: [String],
+    allowedCommandSets: [String]
 })
 
-const OptionSchema = new Schema({
-    name: { type: String, required: true },
-    arguments: { type: Array, required: true },
-    valueType: { type: String, required: true }
+const CommandGroupSchema = new Schema({
+    name: { type: String, required: true, unique: true },
+    description: { type: String },
+    invocation: [String],
+    order: { type: Number, required: true, unique: true },
+    allowedCommandRepetition: { type: Boolean, required: true },
+    commands: [CommandSchema]
 })
 
 const LibrarySchema = new Schema({
     machineAddress: { type: String, required: true },
-    image: { type: String},
-    name: { type: String, required: true },
-    arguments: [ArgumentSchema],
-    options: [OptionSchema]
+    image: { type: String, unique: true },
+    name: { type: String, required: true, unique: true },
+    commandGroups: [CommandGroupSchema]
 })
 
 module.exports = LibrarySchema
