@@ -8,5 +8,10 @@
 		"address" : "localhost",
 		"port" : 27017,
 		"librariesIndex" : "library"
-	}
+	},
+    "airflow": {
+        "address" : "localhost",
+        "port" : 8080,
+        "base" : "api/v1"
+    }
 }
