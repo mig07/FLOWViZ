@@ -10,8 +10,6 @@ import ReactFlow, {
   MiniMap,
 } from "react-flow-renderer";
 import ToolNode from "../component/whiteboard/step/toolNode";
-import ToolDrawer from "../component/whiteboard/toolDrawer";
-import ToolSetupDialog from "../component/whiteboard/step/setup/toolSetupDialog";
 
 let id = -1;
 const getId = () => `node${++id}`;
@@ -24,7 +22,7 @@ const nodeTypes = { tool: ToolNode };
 export default function Whiteboard(props) {
   const config = props.config;
   const uri = `${config.appProtocol}://${config.address}:${config.port}/library`;
-
+  
   const reactFlowWrapper = useRef(null);
 
   // Whiteboard GUI state
@@ -37,8 +35,6 @@ export default function Whiteboard(props) {
 
   // The workflow composition
   const [workflowSteps, setWorkflowSteps] = useState([]);
-
-  console.log(workflowSteps);
 
   const workflowStep = (name, setup) => {
     return {
@@ -116,7 +112,8 @@ export default function Whiteboard(props) {
 
   return (
     <>
-      <ToolDrawer tools={list} />
+      {/* <DrawerNavBar/> */}
+      {/* <ToolDrawer tools={list} /> */}
 
       <ReactFlowProvider>
         <div
