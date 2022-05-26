@@ -1,56 +1,123 @@
-import * as React from "react";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import Box from "@material-ui/core/Box";
-import Button from "@material-ui/core/Button";
-import CssBaseline from "@mui/material/CssBaseline";
-import { Typography } from "@material-ui/core";
+import { useTheme } from "@emotion/react";
+import styled from "@emotion/styled";
+import MuiAppBar from "@material-ui/core/AppBar";
 import { makeStyles } from "@material-ui/core/styles";
-import { useNavigate } from "react-router-dom";
-import { useLocation } from "react-router-dom";
+import Toolbar from "@material-ui/core/Toolbar";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import MenuIcon from "@mui/icons-material/Menu";
+import { Divider, Drawer, IconButton } from "@mui/material";
+import CssBaseline from "@mui/material/CssBaseline";
+import * as React from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import NavBarButtons from "./navBarButtons";
+import NavBarTitle from "./navBarTitle";
 
-const pageButtonsGroups = [
-  {
-    position: "center",
-    pageButtons: [
-      {
-        name: "Home",
-        url: "/",
-        isDefault: true,
-      },
-      {
-        name: "Documentation",
-        url: "/documentation",
-        isDefault: false,
-      },
-      {
-        name: "About",
-        url: "/about",
-        isDefault: false,
-      },
-    ],
-  },
-  {
-    position: "right",
-    pageButtons: [
-      {
-        name: "Login",
-        url: "/login",
-        isDefault: false,
-      },
-      {
-        name: "Register",
-        url: "/register",
-        isDefault: false,
-      },
-    ],
-  },
-];
+const drawerWidth = 250;
 
-export default function NavBar() {
+const pagesWithDrawer = ["/whiteboard"];
+
+const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
+  ({ theme, open }) => ({
+    flexGrow: 1,
+    padding: theme.spacing(3),
+    transition: theme.transitions.create("margin", {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+    marginLeft: `-${drawerWidth}px`,
+    ...(open && {
+      transition: theme.transitions.create("margin", {
+        easing: theme.transitions.easing.easeOut,
+        duration: theme.transitions.duration.enteringScreen,
+      }),
+      marginLeft: 0,
+    }),
+  })
+);
+
+const DrawerHeader = styled("div")(({ theme }) => ({
+  display: "flex",
+  alignItems: "center",
+  padding: theme.spacing(0, 1),
+  // necessary for content to be below app bar
+  ...theme.mixins.toolbar,
+  justifyContent: "flex-end",
+}));
+
+const AppBar = styled(MuiAppBar, {
+  shouldForwardProp: (prop) => prop !== "open",
+})(({ theme, open }) => ({
+  transition: theme.transitions.create(["margin", "width"], {
+    easing: theme.transitions.easing.sharp,
+    duration: theme.transitions.duration.leavingScreen,
+  }),
+  ...(open && {
+    width: `calc(100% - ${drawerWidth}px)`,
+    marginLeft: `${drawerWidth}px`,
+    transition: theme.transitions.create(["margin", "width"], {
+      easing: theme.transitions.easing.easeOut,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+  }),
+}));
+
+export default function NavBar({ children, drawerData }) {
+  const theme = useTheme();
   const navigate = useNavigate();
   const location = useLocation();
-  const currentPage = location.pathname
+  const currentPage = location.pathname;
+
+  const hasDrawer = pagesWithDrawer.includes(currentPage);
+
+  const [open, setOpen] = React.useState(false);
+
+  const handleDrawerOpen = () => {
+    setOpen(true);
+  };
+  const handleDrawerClose = () => {
+    setOpen(false);
+  };
+
+  const drawerIcon = (
+    <IconButton
+      aria-label="open drawer"
+      onClick={handleDrawerOpen}
+      edge="start"
+      sx={{ mr: 2, ...(open && { display: "none" }) }}
+    >
+      <MenuIcon />
+    </IconButton>
+  );
+
+  const PersistantDrawer = (list) => {
+    return (
+      <Drawer
+        sx={{
+          width: drawerWidth,
+          flexShrink: 0,
+          "& .MuiDrawer-paper": {
+            width: drawerWidth,
+            boxSizing: "border-box",
+          },
+        }}
+        variant="persistent"
+        anchor="left"
+        open={open}
+      >
+        <DrawerHeader>
+          <IconButton onClick={handleDrawerClose}>
+            {theme.direction === "ltr" ? (
+              <ChevronLeftIcon />
+            ) : (
+              <ChevronRightIcon />
+            )}
+          </IconButton>
+        </DrawerHeader>
+        <Divider />
+      </Drawer>
+    );
+  };
 
   const useStyles = makeStyles(() => ({
     appBar: {
@@ -58,60 +125,27 @@ export default function NavBar() {
     },
   }));
 
-  const navigateTo = (page) => {
-    // Avoid current page rerender
-    if (page === currentPage) return
-    navigate(page)
-  }
-
   const classes = useStyles();
 
-  const pcInterface = pageButtonsGroups.map((pageButtonsGroup) => (
-    <Box
-      key={pageButtonsGroup.position}
-      sx={{
-        flexGrow: 1,
-        display: { xs: "none", md: "flex" },
-        justifyContent: pageButtonsGroup.position,
-      }}
-    >
-      {pageButtonsGroup.pageButtons.map((pageButton) => (
-        <Button
-          key={pageButton.name}
-          color="secondary"
-          variant={currentPage === pageButton.url ? "outlined" : "string"}
-          onClick={() => navigateTo(pageButton.url)}
-        >
-          {pageButton.name}
-        </Button>
-      ))}
-    </Box>
-  ));
+  const navigateTo = (page) => {
+    // Avoid current page rerender
+    if (page === currentPage) return;
+    navigate(page);
+  };
 
   return (
     <>
       <CssBaseline />
-      <AppBar className={classes.appBar}>
-        <Toolbar variant="regular">
-          <Box
-            sx={{
-              flexGrow: 1,
-              display: { xs: "none", md: "flex" },
-              justifyContent: "left",
-            }}
-          >
-            <Button
-              key={"FLOWViZ"}
-              sx={{ my: 2, display: "block" }}
-              onClick={() => navigateTo("/")}
-            >
-              <Typography variant="h5">FLOWViZ</Typography>
-            </Button>
-          </Box>
-          {pcInterface}
+      <AppBar className={classes.appBar} position="fixed" open={open}>
+        <Toolbar>
+          {hasDrawer ? drawerIcon : <></>}
+          <NavBarTitle navigateTo={navigateTo} />
+          <NavBarButtons />
         </Toolbar>
       </AppBar>
       <Toolbar />
+      {hasDrawer ? <PersistantDrawer list={drawerData} /> : <></>}
+      {hasDrawer ? <Main open={open}>{children}</Main> : children}
     </>
   );
 }
