@@ -1,15 +1,15 @@
 const assert = require('assert');
-const libraryDbDataSourceMock = require('./mock/libraryDbDataSourceMock')()
-const libraryService = require('../service/libraryService')(libraryDbDataSourceMock)
+const toolDbDataSourceMock = require('./mock/toolDbDataSourceMock')()
+const toolService = require('../service/toolService')(toolDbDataSourceMock)
 
 describe("Test GET all libraries", () => {
     it('should get all libraries', async () => {
         const mockContractNames = ['Phylolib']
-        const libraries = await libraryService.getLibraries()
+        const tools = await toolService.getTools()
 
         // Assert all libraries' names with mockContractNames array
-        libraries.forEach((library, index) => {
-            assert.equal(library.name, mockContractNames[index])
+        tools.forEach((tool, index) => {
+            assert.equal(tool.name, mockContractNames[index])
         });
     })
 })
@@ -17,10 +17,10 @@ describe("Test GET all libraries", () => {
 describe("Test GET Phylolib library", () => {
     it('should get only the Phylolib library details', async () => {
         const mockContractArgumentsNames = ['help', 'distance', 'correction', 'algorithm', 'optimization']
-        const libraries = await libraryService.getLibrary("Phylolib")
+        const tools = await toolService.getTool("Phylolib")
 
         // Assert all Phylolib arguments with mockContractArgumentsNames array
-        libraries.library.arguments.forEach((argument, index) => {
+        tools.library.arguments.forEach((argument, index) => {
             assert.equal(argument.name, mockContractArgumentsNames[index])
         });
     })

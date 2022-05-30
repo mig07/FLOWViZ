@@ -3,16 +3,16 @@ module.exports = () => {
     const ok = { code: 200 }
     const created = { code: 201 }
 
-    function getLibraries() {
+    function getTools() {
         return Promise.resolve(contractsMock)
     }
 
-    function getLibrary(libraryName) {
-        const library = contractsMock.find(library => library.name === libraryName)
-        return Promise.resolve(library)
+    function getTool(toolName) {
+        const tool = contractsMock.find(tool => tool.name === toolName)
+        return Promise.resolve(tool)
     }
 
-    function addLibrary(body) {
+    function addTool(body) {
         const uri = dataSourceOperations.addLibrary(body.name)
         const options = buildRequest(
             "POST",
@@ -22,7 +22,7 @@ module.exports = () => {
         return fetch(uri, options).catch(err => { throw err })
     }
 
-    function updateLibrary() {
+    function updateTool() {
         // TODO
     }
 
@@ -35,9 +35,9 @@ module.exports = () => {
     }
 
     return {
-        'getLibraries': getLibraries,
-        'getLibrary': getLibrary,
-        'addLibrary': addLibrary
+        'getTools': getTools,
+        'getTool': getTool,
+        'addTool': addTool
     }    
 }
 

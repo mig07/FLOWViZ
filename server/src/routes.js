@@ -1,17 +1,17 @@
 const apiExceptionHandler = require('./exception/apiExceptionHandler')
 
-module.exports = (app, libraryController, workflowController, dev) => {
+module.exports = (app, toolController, workflowController, dev) => {
     
     const apiExceptionHandler = require('./exception/apiExceptionHandler')(dev)
 
     /* Library Endpoints */
 
     // GETs
-    app.get('/library', libraryController.getLibraries)
-    app.get('/library/:name', libraryController.getLibrary)
+    app.get('/tool', toolController.getTools)
+    app.get('/tool/:name', toolController.getTool)
 
     // POSTs
-    app.post('/library', libraryController.addLibrary)
+    app.post('/tool', toolController.addTool)
 
     /* Workflow Endpoints */
 

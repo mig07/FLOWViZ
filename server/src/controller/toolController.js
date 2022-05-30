@@ -1,8 +1,8 @@
 module.exports = (service) => {
     
-    function getLibraries(req, res, next) {
+    function getTools(req, res, next) {
 
-        service.getLibraries()
+        service.getTools()
             .then(data => {
                 res.statusCode = 200
                 res.setHeader('content-type', 'application/json')
@@ -11,11 +11,11 @@ module.exports = (service) => {
             .catch(err => next(err))        
     }
 
-    function getLibrary(req, res, next) {
+    function getTool(req, res, next) {
 
-        const libraryName = req.params.name;
+        const toolName = req.params.name;
 
-        service.getLibrary(libraryName)
+        service.getTool(toolName)
             .then(data => {                
                 res.statusCode = 200
                 res.setHeader('content-type', 'application/json')
@@ -24,11 +24,11 @@ module.exports = (service) => {
             .catch(err => next(err))       
     }
 
-    function addLibrary(req, res, next) {        
+    function addTool(req, res, next) {        
 
-        const library = req.body    
+        const tool = req.body    
         
-        service.addLibrary(library)
+        service.addTool(tool)
             .then(data => {
                 res.statusCode = 201
                 res.setHeader('content-type', 'application/json')
@@ -38,8 +38,8 @@ module.exports = (service) => {
     }
 
     return {
-        'getLibraries': getLibraries,
-        'getLibrary': getLibrary,
-        'addLibrary': addLibrary
+        'getTools': getTools,
+        'getTool': getTool,
+        'addTool': addTool
     }
 }

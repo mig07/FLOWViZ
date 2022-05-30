@@ -38,9 +38,9 @@ const ApiException = require('./exception/apiException');
 /* Server modules */
 
 // Library
-const libraryDb = require('./datasource/libraryDbDataSource.js')()
-const libraryService = require('./service/libraryService.js')(libraryDb, ApiException)
-const libraryController = require('./controller/libraryController.js')(libraryService)
+const toolDb = require('./datasource/toolDbDataSource.js')()
+const toolService = require('./service/toolService.js')(toolDb, ApiException)
+const toolController = require('./controller/toolController.js')(toolService)
 
 // Workflow
 const workflowDb = require('./datasource/workflowDbDataSource.js')(fetch)
@@ -48,7 +48,7 @@ const workflowService = require('./service/workflowService.js')(workflowDb, vali
 const workflowController = require('./controller/workflowController')(workflowService);
 
 // API's endpoints
-require('./routes.js')(app, libraryController, workflowController, dev)
+require('./routes.js')(app, toolController, workflowController, dev)
 
 /* Server initialization */
 app.listen(port, (err) => {
