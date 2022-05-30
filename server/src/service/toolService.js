@@ -29,7 +29,7 @@ module.exports = (toolDb, ApiException) => {
 
         const name = tool.name
 
-        const t = await toolDb.getLibrary(name)
+        const t = await toolDb.getTool(name)
 
         if (t) {
             throw ApiException.conflict(`A library with name ${name} already exists.`)
