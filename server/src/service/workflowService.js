@@ -6,8 +6,8 @@ module.exports = (workflowDb, validator, ApiException) => {
         return await workflowDb.getWorkflows()
     }
 
-    async function getWorkflow(name) {
-        return await workflowDb.getWorkflow(name)
+    async function getWorkflow(id) {
+        return await workflowDb.getWorkflow(id)
     }
 
     async function postWorkflow(workflow) {
