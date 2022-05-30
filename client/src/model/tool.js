@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 export default function Tool({ config, toolName, children }) {
-  const uri = `${config.appProtocol}://${config.address}:${config.port}/library/${toolName}`;
+  const uri = `${config.appProtocol}://${config.address}:${config.port}/tool/${toolName}`;
 
   // Libraries and APIs state hook
   const [tool, setTool] = useState({
