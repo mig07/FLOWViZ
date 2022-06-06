@@ -7,7 +7,5 @@ export default function useNavBar() {
     setDrawerList(list);
   };
 
-  console.log(drawerList);
-
   return [drawerList, onChangeDrawerList];
 }

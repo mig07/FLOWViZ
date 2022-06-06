@@ -1,4 +1,3 @@
-import { useTheme } from "@emotion/react";
 import styled from "@emotion/styled";
 import { Typography } from "@material-ui/core";
 import MuiAppBar from "@material-ui/core/AppBar";
@@ -13,6 +12,7 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import * as React from "react";
+import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import NavBarButtons from "./navBarButtons";
 import NavBarTitle from "./navBarTitle";
@@ -47,7 +47,6 @@ const AppBar = styled(MuiAppBar, {
 }));
 
 export default function NavBar({ drawerList, children }) {
-  const theme = useTheme();
   const navigate = useNavigate();
   const location = useLocation();
   const currentPage = location.pathname;
@@ -56,7 +55,7 @@ export default function NavBar({ drawerList, children }) {
 
   const hasDrawer = isDrawerPage && drawerList && drawerList.length > 0;
 
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -76,15 +75,15 @@ export default function NavBar({ drawerList, children }) {
     </IconButton>
   );
 
-  const onDragStart = (event) => {
-    event.dataTransfer.setData(
-      "application/reactflow",
-      event.target.textContent
-    );
-    event.dataTransfer.effectAllowed = "move";
-  };
-
   const PersistantDrawer = (list) => {
+    const onDragStart = (event) => {
+      event.dataTransfer.setData(
+        "application/reactflow",
+        event.target.textContent
+      );
+      event.dataTransfer.effectAllowed = "move";
+    };
+
     return (
       <Drawer
         sx={{
@@ -136,6 +135,7 @@ export default function NavBar({ drawerList, children }) {
     // Avoid current page rerender
     if (page === currentPage) return;
     navigate(page);
+    setOpen(false); // Close drawer nav bar gap when changing page
   };
 
   return (
@@ -145,7 +145,7 @@ export default function NavBar({ drawerList, children }) {
         <Toolbar>
           {hasDrawer ? drawerIcon : <></>}
           <NavBarTitle navigateTo={navigateTo} />
-          <NavBarButtons />
+          <NavBarButtons navigateTo={navigateTo} />
         </Toolbar>
       </AppBar>
       <Toolbar />

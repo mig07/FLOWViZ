@@ -14,10 +14,14 @@ import ToolNode from "../component/whiteboard/step/toolNode";
 let id = -1;
 const getId = () => `node${++id}`;
 
-const nodeWidth = 150;
-const nodeHeight = 40;
-
 const nodeTypes = { tool: ToolNode };
+
+const edgeOptions = {
+  animated: true,
+  style: {
+    stroke: "black",
+  },
+};
 
 export default function Whiteboard({ config, setDrawerList }) {
   const uri = `${config.appProtocol}://${config.address}:${config.port}/tool`;
@@ -108,9 +112,6 @@ export default function Whiteboard({ config, setDrawerList }) {
 
   return (
     <>
-      {/* <DrawerNavBar/> */}
-      {/* <ToolDrawer tools={list} /> */}
-
       <ReactFlowProvider>
         <div
           className="reactflow-wrapper"
@@ -122,6 +123,7 @@ export default function Whiteboard({ config, setDrawerList }) {
             edges={edges}
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
+            defaultEdgeOptions={edgeOptions}
             onConnect={onConnect}
             onInit={setReactFlowInstance}
             onDragOver={onDragOver}

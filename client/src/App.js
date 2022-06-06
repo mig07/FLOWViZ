@@ -19,6 +19,7 @@ import WorkflowList from "./page/workflowList";
 import Test from "./test/test";
 
 export default function App() {
+  // Custom hook for pages with side drawer
   const [drawerList, setDrawerList] = useNavBar();
 
   return (

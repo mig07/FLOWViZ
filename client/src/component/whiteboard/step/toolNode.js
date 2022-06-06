@@ -11,6 +11,9 @@ function ToolNode({ data }) {
   const tool = data.tool;
   const onAddStep = data.onAddStep;
 
+  const inputColor = "#ff0000";
+  const outputColor = "#00ff22";
+
   // Tool setup dialog state hooks
   const [stepName, setStepName] = useState("");
   const [openToolSetup, setOpenToolSetup] = useState(false);
@@ -43,7 +46,16 @@ function ToolNode({ data }) {
           onAddStep({ name: stepName, setup: setup })
         }
       />
-      <Handle position={Position.Top} />
+      <Handle
+        type="target"
+        position={Position.Top}
+        style={{ background: inputColor }}
+      />
+      <Handle
+        type="source"
+        position={Position.Bottom}
+        style={{ background: outputColor }}
+      />
       <Stack spacing>
         <Typography variant="caption">{tool.name} Node</Typography>
         <div>
@@ -53,7 +65,6 @@ function ToolNode({ data }) {
           </IconButton>
         </div>
       </Stack>
-      <Handle position={Position.Bottom} />
     </div>
   );
 }

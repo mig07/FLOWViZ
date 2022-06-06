@@ -41,16 +41,10 @@ const pageButtonsGroups = [
   },
 ];
 
-export default function NavBarButtons() {
+export default function NavBarButtons({ navigateTo }) {
   const navigate = useNavigate();
   const location = useLocation();
   const currentPage = location.pathname;
-
-  const navigateTo = (page) => {
-    // Avoid current page rerender
-    if (page === currentPage) return;
-    navigate(page);
-  };
 
   return pageButtonsGroups.map((pageButtonsGroup) => (
     <Box
