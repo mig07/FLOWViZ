@@ -19,19 +19,15 @@ const nodeHeight = 40;
 
 const nodeTypes = { tool: ToolNode };
 
-export default function Whiteboard(props) {
-  const config = props.config;
-  const uri = `${config.appProtocol}://${config.address}:${config.port}/library`;
-  
+export default function Whiteboard({ config, setDrawerList }) {
+  const uri = `${config.appProtocol}://${config.address}:${config.port}/tool`;
+
   const reactFlowWrapper = useRef(null);
 
   // Whiteboard GUI state
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
-
-  // Libraries and APIs state hook
-  const [list, setList] = useState([]);
 
   // The workflow composition
   const [workflowSteps, setWorkflowSteps] = useState([]);
@@ -59,7 +55,7 @@ export default function Whiteboard(props) {
   useEffect(() => {
     fetch(uri)
       .then((response) => response.json())
-      .then(setList);
+      .then(setDrawerList);
   }, []);
 
   // Set edges
@@ -89,7 +85,7 @@ export default function Whiteboard(props) {
       });
 
       // TODO - change for a requester class
-      const uri = `${config.appProtocol}://${config.address}:${config.port}/library/${toolName}`;
+      const uri = `${config.appProtocol}://${config.address}:${config.port}/tool/${toolName}`;
       const request = await fetch(uri);
       const response = await request.json();
 

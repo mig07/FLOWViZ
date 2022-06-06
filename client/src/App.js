@@ -5,6 +5,7 @@ import Copyright from "./component/common/copyright";
 import NavBar from "./component/common/navBar";
 import Config from "./config/dev-config.json";
 import { Theme } from "./config/theme";
+import useNavBar from "./hooks/useNavBar";
 import About from "./page/about";
 import Documentation from "./page/documentation";
 import Home from "./page/home";
@@ -18,10 +19,12 @@ import WorkflowList from "./page/workflowList";
 import Test from "./test/test";
 
 export default function App() {
+  const [drawerList, setDrawerList] = useNavBar();
+
   return (
     <ThemeProvider theme={Theme}>
       <Router>
-        <NavBar>
+        <NavBar drawerList={drawerList}>
           <Routes>
             <Route exact path={"/"} element={<Home />} />
             <Route path={"/tool"} element={<PostTool />} />
@@ -41,13 +44,17 @@ export default function App() {
             <Route exact path={"/workflow"} element={<WorkflowList />} />
             <Route
               path={"/whiteboard"}
-              element={<Whiteboard config={Config.server} />}
+              element={
+                <Whiteboard
+                  config={Config.server}
+                  setDrawerList={setDrawerList}
+                />
+              }
             />
             <Route path={"/test"} element={<Test />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
           <Copyright sx={{ mt: 8, mb: 4 }} />
-
         </NavBar>
       </Router>
     </ThemeProvider>

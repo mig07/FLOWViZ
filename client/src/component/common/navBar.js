@@ -1,40 +1,24 @@
 import { useTheme } from "@emotion/react";
 import styled from "@emotion/styled";
+import { Typography } from "@material-ui/core";
 import MuiAppBar from "@material-ui/core/AppBar";
 import { makeStyles } from "@material-ui/core/styles";
 import Toolbar from "@material-ui/core/Toolbar";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
 import MenuIcon from "@mui/icons-material/Menu";
 import { Divider, Drawer, IconButton } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemText from "@mui/material/ListItemText";
 import * as React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import NavBarButtons from "./navBarButtons";
 import NavBarTitle from "./navBarTitle";
 
 const drawerWidth = 250;
-
-const pagesWithDrawer = ["/whiteboard"];
-
-const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
-  ({ theme, open }) => ({
-    flexGrow: 1,
-    padding: theme.spacing(3),
-    transition: theme.transitions.create("margin", {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-    marginLeft: `-${drawerWidth}px`,
-    ...(open && {
-      transition: theme.transitions.create("margin", {
-        easing: theme.transitions.easing.easeOut,
-        duration: theme.transitions.duration.enteringScreen,
-      }),
-      marginLeft: 0,
-    }),
-  })
-);
+const drawerPages = ["/whiteboard"];
 
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
@@ -62,13 +46,15 @@ const AppBar = styled(MuiAppBar, {
   }),
 }));
 
-export default function NavBar({ children, drawerData }) {
+export default function NavBar({ drawerList, children }) {
   const theme = useTheme();
   const navigate = useNavigate();
   const location = useLocation();
   const currentPage = location.pathname;
 
-  const hasDrawer = pagesWithDrawer.includes(currentPage);
+  const isDrawerPage = drawerPages.includes(currentPage);
+
+  const hasDrawer = isDrawerPage && drawerList && drawerList.length > 0;
 
   const [open, setOpen] = React.useState(false);
 
@@ -90,6 +76,14 @@ export default function NavBar({ children, drawerData }) {
     </IconButton>
   );
 
+  const onDragStart = (event) => {
+    event.dataTransfer.setData(
+      "application/reactflow",
+      event.target.textContent
+    );
+    event.dataTransfer.effectAllowed = "move";
+  };
+
   const PersistantDrawer = (list) => {
     return (
       <Drawer
@@ -106,15 +100,26 @@ export default function NavBar({ children, drawerData }) {
         open={open}
       >
         <DrawerHeader>
+          <LibraryBooksIcon />
+          <Typography variant="h6" align="left">
+            Available tools
+          </Typography>
           <IconButton onClick={handleDrawerClose}>
-            {theme.direction === "ltr" ? (
-              <ChevronLeftIcon />
-            ) : (
-              <ChevronRightIcon />
-            )}
+            <ChevronLeftIcon />
           </IconButton>
         </DrawerHeader>
         <Divider />
+        <List>
+          {list.list.map((item) => (
+            <ListItem key={item.name}>
+              <ListItemText
+                onDragStart={(event) => onDragStart(event)}
+                draggable
+                primary={item.name}
+              />
+            </ListItem>
+          ))}
+        </List>
       </Drawer>
     );
   };
@@ -144,8 +149,8 @@ export default function NavBar({ children, drawerData }) {
         </Toolbar>
       </AppBar>
       <Toolbar />
-      {hasDrawer ? <PersistantDrawer list={drawerData} /> : <></>}
-      {hasDrawer ? <Main open={open}>{children}</Main> : children}
+      {hasDrawer ? <PersistantDrawer list={drawerList} /> : <></>}
+      {children}
     </>
   );
 }
