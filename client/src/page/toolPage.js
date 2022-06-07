@@ -3,8 +3,8 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Container } from "@material-ui/core";
 import { Toolbar } from "@mui/material";
-import ToolTitle from "../component/documentation/toolTitle";
-import ToolFunctions from "../component/documentation/toolFunctions";
+import ToolTitle from "../component/documentation/tool/toolTitle";
+import ToolFunctions from "../component/documentation/tool/toolFunctions";
 import Tool from "../model/tool";
 
 export default function ToolPage(props) {

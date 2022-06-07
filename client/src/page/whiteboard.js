@@ -10,6 +10,9 @@ import ReactFlow, {
   MiniMap,
 } from "react-flow-renderer";
 import ToolNode from "../component/whiteboard/step/toolNode";
+import NoResourceFoundException from "../exception/NoResourceFoundException";
+import Request from "../service/request";
+import Loading from "../component/common/loading";
 
 let id = -1;
 const getId = () => `node${++id}`;
@@ -24,7 +27,7 @@ const edgeOptions = {
 };
 
 export default function Whiteboard({ config, setDrawerList }) {
-  const uri = `${config.appProtocol}://${config.address}:${config.port}/tool`;
+  const url = `${config.appProtocol}://${config.address}:${config.port}/tool`;
 
   const reactFlowWrapper = useRef(null);
 
@@ -56,11 +59,7 @@ export default function Whiteboard({ config, setDrawerList }) {
     );
   };
 
-  useEffect(() => {
-    fetch(uri)
-      .then((response) => response.json())
-      .then(setDrawerList);
-  }, []);
+  Request(url, {}, NoResourceFoundException, setDrawerList, <Loading />);
 
   // Set edges
   const onConnect = useCallback(
@@ -91,7 +90,7 @@ export default function Whiteboard({ config, setDrawerList }) {
       // TODO - change for a requester class
       const uri = `${config.appProtocol}://${config.address}:${config.port}/tool/${toolName}`;
       const request = await fetch(uri);
-      const response = await request.json();
+      const tool = await request.json();
 
       const newNode = {
         id: getId(),
@@ -99,7 +98,7 @@ export default function Whiteboard({ config, setDrawerList }) {
         position: position,
         data: {
           label: toolName,
-          tool: response,
+          tool: tool,
           onAddStep: onAddStep,
           onRemoveStep: onRemoveStep,
         },
