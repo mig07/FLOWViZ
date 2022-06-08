@@ -7,15 +7,17 @@ import { IconButton } from "@material-ui/core";
 import SettingsIcon from "@mui/icons-material/Settings";
 import ToolSetupDialog from "./setup/toolSetupDialog";
 
-function ToolNode({ data }) {
+function ToolNode({ id, data }) {
   const tool = data.tool;
-  const onAddStep = data.onAddStep;
 
   const inputColor = "#ff0000";
   const outputColor = "#00ff22";
 
+  console.log(data);
+
   // Tool setup dialog state hooks
   const [stepName, setStepName] = useState("");
+  const [config, setConfig] = useState({});
   const [openToolSetup, setOpenToolSetup] = useState(false);
   const [toolSetupScroll, setToolSetupScroll] = useState("paper");
 
@@ -33,6 +35,15 @@ function ToolNode({ data }) {
   const onStepNameUpdate = (event) => {
     const value = event.target.value;
     setStepName(value);
+    const nodeSetup = data.setup;
+    nodeSetup.stepName = value;
+    data.onNodeUpdate(id, nodeSetup);
+  };
+
+  const onStepConfigUpdate = (config) => {
+    const nodeSetup = data.setup;
+    nodeSetup.config = config;
+    data.onNodeUpdate(id, nodeSetup);
   };
 
   return (
@@ -42,9 +53,7 @@ function ToolNode({ data }) {
         tool={tool}
         toolSetupScroll={toolSetupScroll}
         onSetupDialogCancel={onSetupDialogCancel}
-        onSetupDialogApply={(setup) =>
-          onAddStep({ name: stepName, setup: setup })
-        }
+        onSetupDialogApply={onStepConfigUpdate}
       />
       <Handle
         type="target"

@@ -1,18 +1,20 @@
-import React, { useState, useCallback, useRef, useEffect } from "react";
+import SendIcon from "@mui/icons-material/Send";
+import { Box, Button } from "@mui/material";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import ReactFlow, {
-  Background,
-  ReactFlowProvider,
   addEdge,
-  useNodesState,
-  useEdgesState,
-  updateEdge,
+  Background,
   Controls,
   MiniMap,
+  ReactFlowProvider,
+  updateEdge,
+  useEdgesState,
+  useNodesState,
 } from "react-flow-renderer";
+import Loading from "../component/common/loading";
 import ToolNode from "../component/whiteboard/step/toolNode";
 import NoResourceFoundException from "../exception/NoResourceFoundException";
 import Request from "../service/request";
-import Loading from "../component/common/loading";
 
 let id = -1;
 const getId = () => `node${++id}`;
@@ -36,30 +38,30 @@ export default function Whiteboard({ config, setDrawerList }) {
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
 
-  // The workflow composition
-  const [workflowSteps, setWorkflowSteps] = useState([]);
+  // States if the workflow can be commited
+  const [canAdvance, setCanAdvance] = useState(false);
 
-  const workflowStep = (name, setup) => {
-    return {
-      name: name,
-      action: setup,
-      nextActions: [],
-      previousActions: [],
-    };
-  };
-
-  const onAddStep = (step) => {
-    const updatedStep = workflowStep(step.name, step.setup);
-    setWorkflowSteps([...workflowSteps, updatedStep]);
-  };
-
-  const onRemoveStep = (stepName) => {
-    setWorkflowSteps((workflowSteps) =>
-      workflowSteps.filter((step) => step.name !== stepName)
-    );
-  };
+  useEffect(() => {
+    console.log(nodes);
+    if (!allStepsNamesAreValid(nodes)) {
+      setCanAdvance(false);
+      return;
+    }
+    setCanAdvance(true);
+  });
 
   Request(url, {}, NoResourceFoundException, setDrawerList, <Loading />);
+
+  const onNodeSetupUpdate = (nodeId, setup) => {
+    setNodes((nds) => {
+      return nds.map((node) => {
+        if (node.id === nodeId) {
+          node.data.setup = setup;
+        }
+        return node;
+      });
+    });
+  };
 
   // Set edges
   const onConnect = useCallback(
@@ -92,19 +94,19 @@ export default function Whiteboard({ config, setDrawerList }) {
       const request = await fetch(uri);
       const tool = await request.json();
 
-      const newNode = {
+      // Creating new node
+      const node = {
         id: getId(),
         type: "tool",
         position: position,
         data: {
-          label: toolName,
           tool: tool,
-          onAddStep: onAddStep,
-          onRemoveStep: onRemoveStep,
+          setup: { stepName: "", config: {} },
+          onNodeUpdate: onNodeSetupUpdate,
         },
       };
 
-      setNodes((nds) => nds.concat(newNode));
+      setNodes((nds) => nds.concat(node));
     },
     [reactFlowInstance]
   );
@@ -115,7 +117,7 @@ export default function Whiteboard({ config, setDrawerList }) {
         <div
           className="reactflow-wrapper"
           ref={reactFlowWrapper}
-          style={{ height: "100vh", width: "100vw" }}
+          style={{ height: "90vh", width: "100vw" }}
         >
           <ReactFlow
             nodes={nodes}
@@ -138,6 +140,23 @@ export default function Whiteboard({ config, setDrawerList }) {
           </ReactFlow>
         </div>
       </ReactFlowProvider>
+      <Box
+        width="100vw"
+        display="flex"
+        justifyContent="flex-end"
+        alignItems="flex-end"
+        padding={2}
+      >
+        <Button variant="outlined" endIcon={<SendIcon />}>
+          Commit
+        </Button>
+      </Box>
     </>
+  );
+}
+
+function allStepsNamesAreValid(workflow) {
+  return workflow.every(
+    (step) => step.data.stepName && step.data.stepName !== ""
   );
 }

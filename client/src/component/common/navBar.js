@@ -6,7 +6,7 @@ import Toolbar from "@material-ui/core/Toolbar";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
 import MenuIcon from "@mui/icons-material/Menu";
-import { Divider, Drawer, IconButton } from "@mui/material";
+import { Divider, Drawer, IconButton, ListItemButton } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -23,6 +23,7 @@ const drawerPages = ["/whiteboard"];
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
   alignItems: "center",
+  textAlign: "left",
   padding: theme.spacing(0, 1),
   // necessary for content to be below app bar
   ...theme.mixins.toolbar,
@@ -111,11 +112,13 @@ export default function NavBar({ drawerList, children }) {
         <List>
           {list.list.map((item) => (
             <ListItem key={item.name}>
-              <ListItemText
-                onDragStart={(event) => onDragStart(event)}
-                draggable
-                primary={item.name}
-              />
+              <ListItemButton sx={{ borderRadius: 4 }}>
+                <ListItemText
+                  onDragStart={(event) => onDragStart(event)}
+                  draggable
+                  primary={item.name}
+                />
+              </ListItemButton>
             </ListItem>
           ))}
         </List>
