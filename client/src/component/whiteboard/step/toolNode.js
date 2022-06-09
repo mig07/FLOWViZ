@@ -13,8 +13,6 @@ function ToolNode({ id, data }) {
   const inputColor = "#ff0000";
   const outputColor = "#00ff22";
 
-  console.log(data);
-
   // Tool setup dialog state hooks
   const [stepName, setStepName] = useState("");
   const [config, setConfig] = useState({});

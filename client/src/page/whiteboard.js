@@ -42,8 +42,7 @@ export default function Whiteboard({ config, setDrawerList }) {
   const [canAdvance, setCanAdvance] = useState(false);
 
   useEffect(() => {
-    console.log(nodes);
-    if (!allStepsNamesAreValid(nodes)) {
+    if (!isWorkflowValid(nodes, edges)) {
       setCanAdvance(false);
       return;
     }
@@ -52,7 +51,7 @@ export default function Whiteboard({ config, setDrawerList }) {
 
   Request(url, {}, NoResourceFoundException, setDrawerList, <Loading />);
 
-  const onNodeSetupUpdate = (nodeId, setup) => {
+  const onNodeSetupUpdate = useCallback((nodeId, setup) => {
     setNodes((nds) => {
       return nds.map((node) => {
         if (node.id === nodeId) {
@@ -61,7 +60,7 @@ export default function Whiteboard({ config, setDrawerList }) {
         return node;
       });
     });
-  };
+  });
 
   // Set edges
   const onConnect = useCallback(
@@ -147,7 +146,11 @@ export default function Whiteboard({ config, setDrawerList }) {
         alignItems="flex-end"
         padding={2}
       >
-        <Button variant="outlined" endIcon={<SendIcon />}>
+        <Button
+          variant="outlined"
+          endIcon={<SendIcon />}
+          onClick={(e) => getWorkflowRequest(nodes, edges)}
+        >
           Commit
         </Button>
       </Box>
@@ -155,8 +158,61 @@ export default function Whiteboard({ config, setDrawerList }) {
   );
 }
 
-function allStepsNamesAreValid(workflow) {
-  return workflow.every(
-    (step) => step.data.stepName && step.data.stepName !== ""
+function getWorkflowRequest(nodes, edges) {
+  const workflow = [];
+
+  nodes.forEach((node) => {
+    const nodeId = node.id;
+
+    const nodeNextSteps = edges.map((edge) => {
+      if (edge.source.includes(nodeId)) {
+        return edge.target;
+      }
+    });
+
+    const nodePreviousSteps = edges.map((edge) => {
+      if (edge.target.includes(nodeId)) {
+        return edge.source;
+      }
+    });
+
+    const step = {
+      stepId: nodeId,
+      config: node.data.setup,
+      nextSteps: nodeNextSteps,
+      previousSteps: nodePreviousSteps,
+    };
+
+    workflow.push(step);
+  });
+
+  return workflow;
+}
+
+function isWorkflowValid(nodes, edges) {
+  if (nodes.length === 0 || edges.length === 0) return false;
+
+  // Checking if all nodes have assigned names
+  const areStepNamesValid = nodes.every(
+    (step) => step.data.setup.stepName && step.data.setup.stepName !== ""
+  );
+
+  // Checking if there are no isolated nodes
+  const nodeIds = nodes.map((node) => node.id);
+  const edgeSources = edges.map((edge) => edge.source);
+  const edgeTargets = edges.map((edge) => edge.target);
+  const eds = [...new Set([...edgeSources, ...edgeTargets])];
+
+  const areAllStepsConnected = arrayEquals(nodeIds, eds);
+
+  return areStepNamesValid && areAllStepsConnected;
+}
+
+function arrayEquals(a, b) {
+  return (
+    Array.isArray(a) &&
+    Array.isArray(b) &&
+    a.length === b.length &&
+    a.every((val, index) => val === b[index])
   );
 }
