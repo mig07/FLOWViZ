@@ -11,10 +11,7 @@ export default function ToolForm({
   const Form = () => {
     return (
       <FormControl fullWidth>
-        <Select
-          value={value}
-          onChange={onSelectValueChange}
-        >
+        <Select value={value} onChange={onSelectValueChange}>
           {collection.map((elem) => {
             return (
               <MenuItem key={elem} value={elem}>

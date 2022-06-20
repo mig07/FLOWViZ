@@ -149,7 +149,7 @@ export default function Whiteboard({ config, setDrawerList }) {
         <Button
           variant="outlined"
           endIcon={<SendIcon />}
-          onClick={(e) => getWorkflowRequest(nodes, edges)}
+          onClick={() => getWorkflowRequest(nodes, edges)}
         >
           Commit
         </Button>
@@ -182,10 +182,8 @@ function getWorkflowRequest(nodes, edges) {
       nextSteps: nodeNextSteps,
       previousSteps: nodePreviousSteps,
     };
-
     workflow.push(step);
   });
-
   return workflow;
 }
 

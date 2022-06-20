@@ -15,15 +15,65 @@ export default function ToolSetupDialog({
   open,
   tool,
   scroll,
-  onSetupDialogCancel,
   onSetupDialogApply,
+  onSetupDialogClose,
 }) {
-  const library = tool.library;
-
   const descriptionElementRef = React.useRef(null);
 
   // For tools that provide both setup methods
   const [setupMethod, setSetupMethod] = useState("library");
+
+  const [commandGroups, cmdGroup, firstCmdName] = getLibrary(tool);
+
+  const command = {
+    groupName: cmdGroup.name,
+    name: "",
+    value: "",
+  };
+
+  const [commands, setCommands] = useState([
+    {
+      groupName: cmdGroup.name,
+      name: firstCmdName,
+      value: "",
+    },
+  ]);
+
+  const [endpoints, setEndpoints] = useState([
+    {
+      groupName: cmdGroup.name,
+      name: firstCmdName,
+      value: "",
+    },
+  ]);
+
+  const onAddCommand = (event) => {
+    setCommands([...commands, command]);
+  };
+
+  const onRemoveCommand = (event, i) => {
+    if (commands.length <= 1 || i === 0) return;
+    const cmds = [...commands];
+    cmds.splice(i, 1);
+    setCommands(cmds);
+  };
+
+  const onUpdateCommand = (event, i, prop) => {
+    const value = event.target.value;
+    const cmds = [...commands];
+    cmds[i][prop] = value;
+    setCommands(cmds);
+  };
+
+  const onCancel = (event) => {
+    setCommands([command]);
+    onSetupDialogClose();
+  };
+
+  const onApply = (config) => {
+    onSetupDialogApply(!config.library ? { endpoints } : { commands });
+    onSetupDialogClose();
+  };
 
   React.useEffect(() => {
     if (open) {
@@ -40,7 +90,7 @@ export default function ToolSetupDialog({
         fullWidth
         maxWidth="sm"
         open={open}
-        onClose={onSetupDialogCancel}
+        onClose={onSetupDialogClose}
         scroll={scroll}
         aria-labelledby="scroll-dialog-title"
         aria-describedby="scroll-dialog-description"
@@ -55,22 +105,40 @@ export default function ToolSetupDialog({
                 Library
               </Button>
             </Container>
-          ) : library ? (
+          ) : tool.library ? (
             <ToolLibraryDialog
-              library={library}
-              onParentUpdate={(commands) => {
-                onSetupDialogApply({ api: {}, library: commands });
-              }}
+              commands={commands}
+              commandGroups={commandGroups}
+              onAddCommand={onAddCommand}
+              onRemoveCommand={onRemoveCommand}
+              onUpdateCommand={onUpdateCommand}
             />
           ) : (
             <></>
           )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={onSetupDialogCancel}>Cancel</Button>
-          <Button onClick={onSetupDialogApply}>Apply</Button>
+          <Button onClick={onCancel}>Cancel</Button>
+          <Button
+            onClick={() => onApply({ library: commands, api: endpoints })}
+          >
+            Apply
+          </Button>
         </DialogActions>
       </Dialog>
     </>
   );
+}
+
+function getLibrary(tool) {
+  const library = tool.library;
+
+  if (!library) return [];
+
+  const commandGroups = library.commandGroups;
+  const cmdGroup = commandGroups.find((cmdGroup) => cmdGroup.order === 0);
+  const firstCmd = cmdGroup.commands[0];
+  const firstCmdName = firstCmd.name;
+
+  return [commandGroups, cmdGroup, firstCmdName];
 }

@@ -7,15 +7,24 @@ import ToolSetupStack from "../toolSetupStack";
 import ToolSetupLibraryCommands from "./toolSetupLibraryCommands";
 
 export default function ToolLibraryDialog({
-  library = {},
-  onParentUpdate = () => {},
+  commands = [],
+  commandGroups = [],
+  onAddCommand = () => {},
+  onRemoveCommand = () => {},
+  onUpdateCommand = () => {},
 }) {
   return (
     <ToolSetupStack>
       <ToolSetupRow title="Input"></ToolSetupRow>
       <ToolSetupRow title="Output"></ToolSetupRow>
       <ToolSetupRow title="Command Setup">
-        <ToolSetupLibraryCommands library={library} onParentUpdate={onParentUpdate} />
+        <ToolSetupLibraryCommands
+          commands={commands}
+          commandGroups={commandGroups}
+          onAddCommand={onAddCommand}
+          onRemoveCommand={onRemoveCommand}
+          onUpdateCommand={onUpdateCommand}
+        />
       </ToolSetupRow>
     </ToolSetupStack>
   );

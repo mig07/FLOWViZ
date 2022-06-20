@@ -14,8 +14,6 @@ function ToolNode({ id, data }) {
   const outputColor = "#00ff22";
 
   // Tool setup dialog state hooks
-  const [stepName, setStepName] = useState("");
-  const [config, setConfig] = useState({});
   const [openToolSetup, setOpenToolSetup] = useState(false);
   const [toolSetupScroll, setToolSetupScroll] = useState("paper");
 
@@ -26,21 +24,20 @@ function ToolNode({ id, data }) {
   };
 
   // Closing the setup dialog
-  const onSetupDialogCancel = () => {
+  const onSetupDialogClose = () => {
     setOpenToolSetup(false);
+  };
+
+  const onSetupDialogApply = (config) => {
+    const nodeSetup = data.setup;
+    nodeSetup.config = config;
+    data.onNodeUpdate(id, nodeSetup);
   };
 
   const onStepNameUpdate = (event) => {
     const value = event.target.value;
-    setStepName(value);
     const nodeSetup = data.setup;
     nodeSetup.stepName = value;
-    data.onNodeUpdate(id, nodeSetup);
-  };
-
-  const onStepConfigUpdate = (config) => {
-    const nodeSetup = data.setup;
-    nodeSetup.config = config;
     data.onNodeUpdate(id, nodeSetup);
   };
 
@@ -49,9 +46,9 @@ function ToolNode({ id, data }) {
       <ToolSetupDialog
         open={openToolSetup}
         tool={tool}
-        toolSetupScroll={toolSetupScroll}
-        onSetupDialogCancel={onSetupDialogCancel}
-        onSetupDialogApply={onStepConfigUpdate}
+        scroll={toolSetupScroll}
+        onSetupDialogApply={onSetupDialogApply}
+        onSetupDialogClose={onSetupDialogClose}
       />
       <Handle
         type="target"
