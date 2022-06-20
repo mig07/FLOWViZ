@@ -131,11 +131,10 @@ export default function Whiteboard({ config, setDrawerList }) {
             onEdgeUpdate={onEdgeUpdate}
             deleteKeyCode={"Delete"}
             nodeTypes={nodeTypes}
-            fitView
           >
             <MiniMap />
             <Controls />
-            <Background variant="lines" color="#aaa" gap={12} />
+            <Background variant="lines" color="#bbb" gap={20} />
           </ReactFlow>
         </div>
       </ReactFlowProvider>

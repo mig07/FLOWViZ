@@ -61,7 +61,7 @@ function ToolNode({ id, data }) {
         style={{ background: outputColor }}
       />
       <Stack spacing>
-        <Typography variant="caption">{tool.name} Node</Typography>
+        <div>{tool.name} Node</div>
         <div>
           <input placeholder="Step name" onChange={onStepNameUpdate} />
           <IconButton onClick={onSetupDialogOpen("paper")}>
