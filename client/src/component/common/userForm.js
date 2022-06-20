@@ -13,6 +13,7 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { Toolbar } from "@mui/material";
 import Theme from "../../config/theme";
+import { useNavigate } from "react-router-dom";
 
 function LoginForm() {
   return (
@@ -69,6 +70,8 @@ function RegisterForm() {
 }
 
 export default function UserForm(props) {
+  const op = props.operationName;
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -93,12 +96,12 @@ export default function UserForm(props) {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          {props.operationName}
+          {op}
         </Typography>
 
         <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
           {(() => {
-            switch (props.operationName) {
+            switch (op) {
               case "Register":
                 return <RegisterForm />;
               case "Login":
@@ -117,21 +120,22 @@ export default function UserForm(props) {
           >
             {props.operationName}
           </Button>
-          <Grid container>
-            <Grid item xs>
-              <Link href="#" variant="body2">
-                Forgot password?
-              </Link>
+          {op === "Login" ? (
+            <Grid container>
+              <Grid item xs>
+                <Link href="#" variant="body2">
+                  Forgot password?
+                </Link>
+              </Grid>
+              <Grid item>
+                <Link href="/register" variant="body2">
+                  Don&apos;t have an account? Sign Up
+                </Link>
+              </Grid>
             </Grid>
-            <Grid item>
-              <Link href="#" variant="body2">
-                {(() => {
-                  if (props.operationName === "Login")
-                    return "Don't have an account? Sign Up";
-                })()}
-              </Link>
-            </Grid>
-          </Grid>
+          ) : (
+            <></>
+          )}
         </Box>
       </Box>
     </Container>
