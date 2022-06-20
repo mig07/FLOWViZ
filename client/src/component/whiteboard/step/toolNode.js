@@ -13,6 +13,13 @@ function ToolNode({ id, data }) {
   const inputColor = "#ff0000";
   const outputColor = "#00ff22";
 
+  const [nodeColor, setNodeColor] = useState("#000");
+
+  const onChangeNodeColor = (event) => {
+    const color = event.target.value;
+    setNodeColor(color);
+  };
+
   // Tool setup dialog state hooks
   const [openToolSetup, setOpenToolSetup] = useState(false);
   const [toolSetupScroll, setToolSetupScroll] = useState("paper");
@@ -42,7 +49,7 @@ function ToolNode({ id, data }) {
   };
 
   return (
-    <div className="tool-node">
+    <div className="tool-node" style={{ "border-color": nodeColor }}>
       <ToolSetupDialog
         open={openToolSetup}
         tool={tool}
@@ -60,15 +67,20 @@ function ToolNode({ id, data }) {
         position={Position.Bottom}
         style={{ background: outputColor }}
       />
-      <Stack spacing>
-        <div>{tool.name} Node</div>
-        <div>
-          <input placeholder="Step name" onChange={onStepNameUpdate} />
-          <IconButton onClick={onSetupDialogOpen("paper")}>
-            <SettingsIcon />
-          </IconButton>
-        </div>
-      </Stack>
+      <div>{tool.name} Node</div>
+      <div>
+        <input placeholder="Step name" onChange={onStepNameUpdate} />
+        <IconButton onClick={onSetupDialogOpen("paper")}>
+          <SettingsIcon />
+        </IconButton>
+        <input
+          className="nodrag"
+          type="color"
+          onChange={onChangeNodeColor}
+          defaultValue={nodeColor}
+          style={{ width: 30 }}
+        />
+      </div>
     </div>
   );
 }
