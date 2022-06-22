@@ -1,87 +1,63 @@
 import * as React from "react";
+import { useState } from "react";
 import { Stack, Typography, TextField, Divider, Box } from "@mui/material";
-import SettingsAccordion from "./settingsAccordion";
 import { Container } from "@mui/material";
 import CommandGroup from "./commandGroup";
+import onArrayCountUpdate from "./util";
 
-function CommandGroups({ data = {}, onParentUpdate = () => { } }) {
-  const groups = data.groups;
-  const onLibraryUpdate = onParentUpdate;
+export default function CommandGroups({
+  data = {},
+  library,
+  onLibraryUpdate = () => {},
+  generateCommandGroup,
+}) {
+  const groups = data;
 
-  const [count, setCount] = React.useState(1)
-
-  const freshCommandGroup = (index) => {
-    return {
-      name: `Command Set ${index}`,
-      invocation: [],
-      order: index,
-      commands: [
-        {
-          name: "Command 0",
-          invocation: [],
-          values: [],
-          subCommands: [],
-          subCommandSets: [],
-        },
-      ],
-    };
-  };
+  const [count, setCount] = useState(1);
 
   const onCommandGroupsCountUpdate = (event) => {
-    const value = Number(event.target.value);
-    if (value < 1) return;
-
-    const diff = value - count
-
-    let gs = groups;
-    if (diff < 0) {
-      gs.pop();
-    } else {
-      gs.push(freshCommandGroup(count));
-    }
-
-    setCount(value)
-    onLibraryUpdate({ groups: gs })
-  }
+    onArrayCountUpdate(
+      event,
+      library,
+      count,
+      onLibraryUpdate,
+      setCount,
+      generateCommandGroup
+    );
+  };
 
   const onCommandGroupUpdate = (index, group) => {
-    let gs = groups;
+    let gs = { ...library };
     gs[index] = group;
-    onLibraryUpdate({ groups: gs })
-  }
+    onLibraryUpdate(gs);
+  };
 
   return (
-    <SettingsAccordion name="Command Groups">
-      <Container sx={{ w: "100%", m: 2 }}>
-        <Stack spacing={2}>
-          <Box display="flex" alignItems="center" justifyContent="center">
-            <Typography variant="h6" sx={{ mr: 2 }}>
-              Number of commands groups
-            </Typography>
-            <TextField
-              margin="normal"
-              type="number"
-              InputProps={{ inputProps: { min: 1 } }}
-              defaultValue={count}
-              onChange={onCommandGroupsCountUpdate}
+    <Container sx={{ w: "100%" }}>
+      <Stack spacing={2}>
+        <Box display="flex" alignItems="center" justifyContent="center">
+          <Typography variant="h6" sx={{ mr: 2 }}>
+            Number of commands groups
+          </Typography>
+          <TextField
+            margin="normal"
+            type="number"
+            InputProps={{ inputProps: { min: 1, max: 10 } }}
+            defaultValue={count}
+            onChange={onCommandGroupsCountUpdate}
+          />
+        </Box>
+        <Container sx={{ mt: 2 }}>
+          {groups.map((group, index) => (
+            <CommandGroup
+              key={`commandGroup-${index}`}
+              onCommandGroupUpdate={onCommandGroupUpdate}
+              data={group}
+              index={index}
             />
-          </Box>
-          <Typography variant="h6">Groups</Typography>
-          <Divider />
-          <Container sx={{ mt: 2 }}>
-            {groups.map((group, index) => (
-              <CommandGroup
-                key={`commandGroup-${index}`}
-                onCommandGroupUpdate={onCommandGroupUpdate}
-                data={group}
-                index={index}
-              />
-            ))}
-          </Container>
-        </Stack>
-      </Container>
-    </SettingsAccordion>
+          ))}
+        </Container>
+      </Stack>
+    </Container>
   );
 }
-
-export default CommandGroups;

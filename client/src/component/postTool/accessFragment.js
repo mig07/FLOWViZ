@@ -1,5 +1,6 @@
 import { Container, Stack, TextField, Typography } from "@mui/material";
 import * as React from "react";
+import { validateInputs } from "./util";
 
 export default function Access({
   onAccessUpdate = () => {},
@@ -7,14 +8,14 @@ export default function Access({
   address,
   port,
 }) {
+  const requiredFields = [address];
+
   React.useEffect(() => {
-    const requiredFields = [address];
-    const hasAllRequiredFields = requiredFields.every((field) => field !== "");
-    setCanAdvance(hasAllRequiredFields);
-    if (hasAllRequiredFields) {
-      onAccessUpdate({ address: address, port: port });
-    }
-  }, [address, port]);
+    validateInputs(requiredFields, setCanAdvance, onAccessUpdate, {
+      address: address,
+      port: port,
+    });
+  }, requiredFields);
 
   return (
     <Container sx={{ p: 2 }}>

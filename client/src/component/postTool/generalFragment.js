@@ -1,5 +1,6 @@
 import { Container, Stack, TextField, Typography } from "@mui/material";
 import * as React from "react";
+import { validateInputs } from "./util";
 
 export default function General({
   onGeneralUpdate = () => {},
@@ -7,14 +8,14 @@ export default function General({
   name,
   description,
 }) {
+  const requiredFields = [name, description];
+
   React.useEffect(() => {
-    const requiredFields = [name, description];
-    const hasAllRequiredFields = requiredFields.every((field) => field !== "");
-    setCanAdvance(hasAllRequiredFields);
-    if (hasAllRequiredFields) {
-      onGeneralUpdate({ name: name, description: description });
-    }
-  }, [name, description]);
+    validateInputs(requiredFields, setCanAdvance, onGeneralUpdate, {
+      name: name,
+      description: description,
+    });
+  }, requiredFields);
 
   return (
     <Container sx={{ p: 2 }}>

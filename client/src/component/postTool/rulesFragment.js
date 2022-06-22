@@ -1,14 +1,17 @@
-import { Button, Grid, Toolbar, Typography } from "@mui/material";
+import { Box, Button, Grid, Toolbar, Typography } from "@mui/material";
 import * as React from "react";
-import BaseToolAccordion from "./baseToolAccordion";
+import CommandGroups from "./commandGroups";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { useState } from "react";
+import onArrayCountUpdate from "./util";
 
 export default function Rules({
   api,
   library,
   configMethod,
   onMethodChoice = () => {},
-  onApiChange = () => {},
-  onLibraryChange = () => {},
+  onLibraryUpdate = () => {},
+  generateCommandGroup,
 }) {
   const MethodChoice = () => (
     <>
@@ -38,27 +41,32 @@ export default function Rules({
   );
 
   const LibraryConfig = () => (
-    <>
-      <BaseToolAccordion onParentUpdate={onApiChange} data={api} />
-    </>
+    <CommandGroups
+      data={library}
+      library={library}
+      onLibraryUpdate={onLibraryUpdate}
+      generateCommandGroup={generateCommandGroup}
+    />
   );
 
-  const ApiConfig = () => (
-    <>
-      <BaseToolAccordion onParentUpdate={onLibraryChange} data={library} />
-    </>
-  );
+  const ApiConfig = () => <></>;
 
-  const RulesFragment = () => {
+  const Method = () => {
     switch (configMethod) {
       case "library":
         return <LibraryConfig />;
       case "api":
         return <ApiConfig />;
       default:
-        return <MethodChoice />;
+        return <></>;
     }
   };
 
-  return <RulesFragment />;
+  return (
+    <>
+      <MethodChoice />
+      <Method />
+      <Toolbar />
+    </>
+  );
 }

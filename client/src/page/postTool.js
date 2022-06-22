@@ -14,9 +14,16 @@ import { useState, useEffect } from "react";
 import Access from "../component/postTool/accessFragment";
 import General from "../component/postTool/generalFragment";
 import Rules from "../component/postTool/rulesFragment";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import BadgeOutlinedIcon from "@mui/icons-material/BadgeOutlined";
+import CellTowerIcon from "@mui/icons-material/CellTower";
+import FactCheckOutlinedIcon from "@mui/icons-material/FactCheckOutlined";
+import SendIcon from "@mui/icons-material/Send";
+import onArrayCountUpdate from "../component/postTool/util";
 
 export default function PostTool() {
-  const [activeStep, setActiveStep] = useState(0);
+  const [activeStep, setActiveStep] = useState(2);
   const [canAdvance, setCanAdvance] = useState(false);
   const [configMethod, setConfigMethod] = useState("");
 
@@ -53,16 +60,13 @@ export default function PostTool() {
     setAccess(acc);
   };
 
-  console.log(general);
-  console.log(access);
-
   const [api, setApi] = useState([]);
-  const [library, setLibrary] = useState([
-    {
-      name: "Command Set 0",
+
+  const generateCommandGroup = (index) => {
+    return {
+      name: `Command Set ${index}`,
       invocation: [],
-      order: 0,
-      allowCommandRep: false,
+      order: index,
       commands: [
         {
           name: "Command 0",
@@ -72,20 +76,23 @@ export default function PostTool() {
           subCommandSets: [],
         },
       ],
-    },
-  ]);
+    };
+  };
 
-  const onApiChange = (updatedApi) => {
+  const [library, setLibrary] = useState([generateCommandGroup(0)]);
+
+  const onApiUpdate = (updatedApi) => {
     setApi(updatedApi);
   };
 
-  const onLibraryChange = (updatedLib) => {
+  const onLibraryUpdate = (updatedLib) => {
     setLibrary(updatedLib);
   };
 
   const steps = [
     {
       label: "General",
+      icon: <BadgeOutlinedIcon />,
       description: "Tool's relevant metadata.",
       fragment: (
         <General
@@ -98,6 +105,7 @@ export default function PostTool() {
     },
     {
       label: "Access",
+      icon: <CellTowerIcon />,
       description: "Where the tool is located and how it can be accessed.",
       fragment: (
         <Access
@@ -110,6 +118,7 @@ export default function PostTool() {
     },
     {
       label: "Rules",
+      icon: <FactCheckOutlinedIcon />,
       description:
         "The rules and guidelines needed to configure and use the tool.",
       fragment: (
@@ -118,12 +127,57 @@ export default function PostTool() {
           library={library}
           configMethod={configMethod}
           onMethodChoice={onConfigMethodUpdate}
-          onApiChange={onApiChange}
-          onLibraryChange={onLibraryChange}
+          onLibraryUpdate={onLibraryUpdate}
+          generateCommandGroup={generateCommandGroup}
         />
       ),
     },
   ];
+
+  const BackButton = () => (
+    <Grid item xs={6}>
+      <Button
+        variant="outlined"
+        startIcon={<ArrowBackIcon />}
+        onClick={() => handleBack()}
+        disabled={activeStep === 0}
+      >
+        Previous
+      </Button>
+    </Grid>
+  );
+
+  const NextButton = () => (
+    <Grid
+      item
+      xs={6}
+      direction="column"
+      sx={{
+        display: "flex",
+        "justify-content": "flex-end",
+        "align-items": "flex-end",
+      }}
+    >
+      {activeStep === steps.length - 1 ? (
+        <Button
+          variant="outlined"
+          endIcon={<SendIcon />}
+          onClick={() => console.log(library)} // TODO
+        >
+          Finish
+        </Button>
+      ) : (
+        <Button
+          variant="outlined"
+          endIcon={<ArrowForwardIcon />}
+          onClick={() => handleNext()}
+          disabled={!canAdvance}
+        >
+          Next
+        </Button>
+      )}
+    </Grid>
+  );
 
   return (
     <Container component="main" maxWidth="lg">
@@ -136,69 +190,15 @@ export default function PostTool() {
       <Stepper activeStep={activeStep} orientation="horizontal" sx={{ mt: 2 }}>
         {steps.map((step) => (
           <Step key={step.label}>
-            <StepLabel>{step.label}</StepLabel>
+            <StepLabel icon={step.icon}>{step.label}</StepLabel>
           </Step>
         ))}
       </Stepper>
       {steps[activeStep].fragment}
       <Grid container>
-        <Grid item xs={6}>
-          <Button variant="outlined" onClick={() => handleBack()}>
-            Previous
-          </Button>
-        </Grid>
-        <Grid
-          item
-          xs={6}
-          direction="column"
-          sx={{
-            display: "flex",
-            "justify-content": "flex-end",
-            "align-items": "flex-end",
-          }}
-        >
-          <Button
-            variant="outlined"
-            onClick={() => handleNext()}
-            disabled={!canAdvance}
-          >
-            Next
-          </Button>
-        </Grid>
+        <BackButton />
+        <NextButton />
       </Grid>
-      {/* <Paper elevation={0} sx={{ p: 2, maxHeight: 800, overflow: "auto" }}>
-        <Stack spacing={2}>
-          <SettingsAccordion
-            name="API"
-            description="Describe your tool's endpoints"
-          >
-            <BaseToolAccordion onParentUpdate={onApiChange} data={api} />
-          </SettingsAccordion>
-          <SettingsAccordion
-            name="Library"
-            description="Describe your tool's library commands"
-          >
-            <BaseToolAccordion onParentUpdate={onLibraryChange} data={library}>
-              <CommandGroups onParentUpdate={onLibraryChange} data={library} />
-            </BaseToolAccordion>
-          </SettingsAccordion>
-        </Stack>
-      </Paper>
-      <Box sx={{ mt: 2 }} textAlign="right">
-        <Button
-          variant="outlined"
-          endIcon={<SendIcon />}
-          onClick={() => {
-            console.log({ api: api, library: library });
-          }}
-        >
-          Submit
-        </Button>
-      </Box> */}
     </Container>
   );
-}
-
-function areFieldsFilled(fields) {
-  return Object.values(fields).every((value) => value !== "");
 }

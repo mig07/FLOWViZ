@@ -12,15 +12,16 @@ import Switch from "@mui/material/Switch";
 import TextFieldMultiInput from "./textFieldMultiInput";
 import { FormControlLabel } from "@mui/material";
 import Command from "./command";
+import onArrayCountUpdate from "./util";
 
-function CommandGroup({ index = 0, data = {}, onParentUpdate = () => { } }) {
+function CommandGroup({ index = 0, data = {}, onParentUpdate = () => {} }) {
   const group = data;
-  const onGroupsUpdate = onParentUpdate;
+  const onCommandGroupUpdate = onParentUpdate;
 
   const [count, setCount] = React.useState(1);
   const [checked, setChecked] = React.useState(false);
 
-  const freshCommand = (index) => {
+  const generateCommand = (index) => {
     return {
       name: `Command ${index}`,
       invocation: [],
@@ -31,19 +32,17 @@ function CommandGroup({ index = 0, data = {}, onParentUpdate = () => { } }) {
   };
 
   const onCommandsCountUpdate = (event) => {
-    const value = Number(event.target.value);
-    if (value < 1) return;
-
-    let commands = group.commands;
-    if (value < commands.length) {
-      commands.pop();
-    } else {
-      commands.push(freshCommand(commands.length));
-    }
-
-    setCount(value);
-    onGroupsUpdate(index, (group) => (group.commands = commands));
+    onArrayCountUpdate(
+      event,
+      group.commands,
+      count,
+      onCommandGroupUpdate,
+      setCount,
+      generateCommand
+    );
   };
+
+  console.log(group);
 
   return (
     <SettingsAccordion>
@@ -58,7 +57,7 @@ function CommandGroup({ index = 0, data = {}, onParentUpdate = () => { } }) {
             const value = event.target.value;
             let g = group;
             g.name = value;
-            onGroupsUpdate(index, g);
+            onCommandGroupUpdate(index, g);
           }}
         />
         <TextFieldMultiInput
@@ -66,10 +65,9 @@ function CommandGroup({ index = 0, data = {}, onParentUpdate = () => { } }) {
           label="Invocation"
           data={group.invocation}
           onParentUpdate={(collection) => {
-            console.log(collection);
             let g = group;
             g.invocation = collection;
-            onGroupsUpdate(index, g);
+            onCommandGroupUpdate(index, g);
           }}
         />
         <TextField
@@ -77,13 +75,13 @@ function CommandGroup({ index = 0, data = {}, onParentUpdate = () => { } }) {
           id="order"
           name="order"
           label="order"
-          InputProps={{ inputProps: { min: 1 } }}
+          InputProps={{ inputProps: { min: 1, max: 10 } }}
           defaultValue={index}
           onChange={(event) => {
             const value = Number(event.target.value);
             let g = group;
             g.order = value;
-            onGroupsUpdate(index, g);
+            onCommandGroupUpdate(index, g);
           }}
         />
         <FormControlLabel
@@ -92,10 +90,10 @@ function CommandGroup({ index = 0, data = {}, onParentUpdate = () => { } }) {
               checked={checked}
               onChange={(event) => {
                 const value = event.target.checked;
-                setChecked(value)
+                setChecked(value);
                 let g = group;
                 g.allowCommandRep = value;
-                onGroupsUpdate(index, g);
+                onCommandGroupUpdate(index, g);
               }}
             />
           }
@@ -108,7 +106,7 @@ function CommandGroup({ index = 0, data = {}, onParentUpdate = () => { } }) {
           <TextField
             margin="normal"
             type="number"
-            InputProps={{ inputProps: { min: 1 } }}
+            InputProps={{ inputProps: { min: 1, max: 20 } }}
             defaultValue={count}
             onChange={onCommandsCountUpdate}
           />

@@ -3,10 +3,22 @@ import SettingsAccordion from "./settingsAccordion";
 import { Stack, TextField } from "@mui/material";
 import TextFieldMultiInput from "./textFieldMultiInput";
 
-function Command({data = {}, index= 0, onParentUpdate = () => {}}) {
-  
-  const command = data
-  const onGroupCommandsUpdate = onParentUpdate
+function Command({ data = {}, index = 0, onParentUpdate = () => {} }) {
+  const command = data;
+  const onGroupCommandsUpdate = onParentUpdate;
+
+  const onPropUpdate = (event, prop) => {
+    const value = event.target.value;
+    let c = command;
+    c[prop] = value;
+    onGroupCommandsUpdate(index, c);
+  };
+
+  const onPropCollectionUpdate = (collection, prop) => {
+    let c = command;
+    c[prop] = collection;
+    onGroupCommandsUpdate(index, c);
+  };
 
   return (
     <SettingsAccordion>
@@ -17,51 +29,39 @@ function Command({data = {}, index= 0, onParentUpdate = () => {}}) {
           name="commandName"
           label="Name"
           defaultValue={command.name}
-          onChange={(event) => {
-            let c = command
-            c.name = event.target.value
-            onGroupCommandsUpdate(index, c)
-          }}
+          onChange={(event) => onPropUpdate(event, "name")}
         />
         <TextFieldMultiInput
           name="invocation"
           label="Invocation"
           data={command.invocation}
-          onParentUpdate={(collection) => {
-            let c = command
-            c.invocation = collection
-            onGroupCommandsUpdate(index, c)
-          }}
+          onParentUpdate={(collection) =>
+            onPropCollectionUpdate(collection, "invocation")
+          }
         />
         <TextFieldMultiInput
           name="allowedValues"
           label="Values"
           data={command.values}
-          onParentUpdate={(collection) => {
-            let c = command
-            c.values = collection
-            onGroupCommandsUpdate(index, c)
-          }}
+          onParentUpdate={(collection) =>
+            onPropCollectionUpdate(collection, "values")
+          }
         />
         <TextFieldMultiInput
           name="allowedCommands"
           label="Allowed sub-commands"
           data={command.subCommands}
-          onParentUpdate={(collection) => {
-            let c = command
-            c.values = collection
-            onGroupCommandsUpdate(index, c)
-          }}
+          onParentUpdate={(collection) =>
+            onPropCollectionUpdate(collection, "subCommands")
+          }
         />
         <TextFieldMultiInput
           name="allowedCommandSets"
           label="Allowed sub-command sets"
           data={command.subCommandSets}
-          onParentUpdate={(collection) => {
-            let c = command
-            c.values = collection
-            onGroupCommandsUpdate(index, c)
-          }}
+          onParentUpdate={(collection) =>
+            onPropCollectionUpdate(collection, "subCommandSets")
+          }
         />
       </Stack>
     </SettingsAccordion>
