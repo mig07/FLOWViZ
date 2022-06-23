@@ -13,6 +13,8 @@ export default function useFetch(url, options) {
   const [reqState, setReqState] = useState(null);
   const [error, setError] = useState(null);
 
+  const emptyResponses = ["", {}, []];
+
   useEffect(async () => {
     setReqState(RequestState.starting);
 
@@ -24,9 +26,8 @@ export default function useFetch(url, options) {
       );
 
       // If response comes empty, then it is considered an error
-      if (!response || response === "" || response === "{}") {
-        NoResourceFoundException();
-        return;
+      if (!response || emptyResponses.includes(response)) {
+        throw NoResourceFoundException();
       }
 
       // Saving response data into state
@@ -38,6 +39,6 @@ export default function useFetch(url, options) {
       setReqState(RequestState.success);
     }
   }, [url]);
-
+  console.log([data, reqState, error]);
   return [data, reqState, error];
 }

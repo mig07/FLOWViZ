@@ -42,7 +42,11 @@ export default function App() {
             <Route path={"/about"} element={<About />} />
             <Route path={"/login"} element={<Login />} />
             <Route path={"/register"} element={<Register />} />
-            <Route exact path={"/workflow"} element={<WorkflowList />} />
+            <Route
+              exact
+              path={"/workflow"}
+              element={<WorkflowList config={Config.server} />}
+            />
             <Route
               path={"/whiteboard"}
               element={
