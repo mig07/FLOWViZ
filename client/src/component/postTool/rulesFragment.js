@@ -13,6 +13,8 @@ export default function Rules({
   onLibraryUpdate = () => {},
   generateCommandGroup,
 }) {
+  const [commandCount, setCommandCount] = useState(1);
+
   const MethodChoice = () => (
     <>
       <Typography variant="h6" textAlign="center" sx={{ mt: 2, mb: 2 }}>
@@ -46,6 +48,8 @@ export default function Rules({
       library={library}
       onLibraryUpdate={onLibraryUpdate}
       generateCommandGroup={generateCommandGroup}
+      commandCount={commandCount}
+      setCommandCount={setCommandCount}
     />
   );
 

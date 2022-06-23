@@ -1,5 +1,4 @@
 import * as React from "react";
-import { useState } from "react";
 import { Stack, Typography, TextField, Divider, Box } from "@mui/material";
 import { Container } from "@mui/material";
 import CommandGroup from "./commandGroup";
@@ -10,18 +9,18 @@ export default function CommandGroups({
   library,
   onLibraryUpdate = () => {},
   generateCommandGroup,
+  commandCount,
+  setCommandCount = () => {},
 }) {
   const groups = data;
-
-  const [count, setCount] = useState(1);
 
   const onCommandGroupsCountUpdate = (event) => {
     onArrayCountUpdate(
       event,
       library,
-      count,
+      commandCount,
       onLibraryUpdate,
-      setCount,
+      setCommandCount,
       generateCommandGroup
     );
   };
@@ -43,7 +42,7 @@ export default function CommandGroups({
             margin="normal"
             type="number"
             InputProps={{ inputProps: { min: 1, max: 10 } }}
-            defaultValue={count}
+            value={commandCount}
             onChange={onCommandGroupsCountUpdate}
           />
         </Box>
