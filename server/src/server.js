@@ -1,60 +1,65 @@
 /* Server config */
-const config = require('./config/flowviz-server-dev-config.json')
-const serverConfig = config.server
-const dbConfig = config.dataSource
-const dev = config.dev
-const port = serverConfig.port
+const config = require("./config/flowviz-server-dev-config.json");
+const serverConfig = config.server;
+const dbConfig = config.dataSource;
+const dev = config.dev;
+const port = serverConfig.port;
 
 /* Libraries */
-const express = require('express');
-const bodyParser = require('body-parser')
-const fetch = require('node-fetch');
-const morgan = require('morgan')
-const cors = require('cors')
-const mongoose = require('mongoose')
+const express = require("express");
+const bodyParser = require("body-parser");
+const fetch = require("node-fetch");
+const morgan = require("morgan");
+const cors = require("cors");
+const mongoose = require("mongoose");
 
-mongoose.connect(`mongodb://${dbConfig.address}:${dbConfig.port}`, { useNewUrlParser: true })
-const db = mongoose.connection
-db.on('error', (error) => console.error(error))
-db.once('open', () => console.log('Connected to Database'))
+/* Connecting to MongoDB */
+mongoose.connect(`mongodb://${dbConfig.address}:${dbConfig.port}`, {
+  useNewUrlParser: true,
+});
+const db = mongoose.connection;
+db.on("error", (error) => console.error(error));
+db.once("open", () => console.log("Connected to Database"));
 
 /* Initializing express server */
-const app = express()
+const app = express();
 
 /* Cross-Origin Request */
-app.use(cors())
+app.use(cors());
 
 /* Express middleware config */
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.json());
-app.use(morgan('dev'));
-
-/* Validator for JSON contracts */
-const validator = require('./util/validator.js')
+app.use(morgan("dev"));
 
 /* Server custom exception object */
-const ApiException = require('./exception/apiException');
+const ApiException = require("./exception/apiException");
 
 /* Server modules */
 
 // Library
-const toolDb = require('./datasource/toolDbDataSource.js')()
-const toolService = require('./service/toolService.js')(toolDb, ApiException)
-const toolController = require('./controller/toolController.js')(toolService)
+const toolDb = require("./datasource/toolDbDataSource.js")();
+const toolService = require("./service/toolService.js")(toolDb, ApiException);
+const toolController = require("./controller/toolController.js")(toolService);
 
 // Workflow
-const workflowDb = require('./datasource/workflowDbDataSource.js')(fetch)
-const workflowService = require('./service/workflowService.js')(workflowDb, validator, ApiException)
-const workflowController = require('./controller/workflowController')(workflowService);
+const workflowDb = require("./datasource/workflowDbDataSource.js")(fetch);
+const workflowService = require("./service/workflowService.js")(
+  workflowDb,
+  ApiException
+);
+const workflowController = require("./controller/workflowController")(
+  workflowService
+);
 
 // API's endpoints
-require('./routes.js')(app, toolController, workflowController, dev)
+require("./routes.js")(app, toolController, workflowController, dev);
 
 /* Server initialization */
 app.listen(port, (err) => {
-  console.log(`Booting ${serverConfig.name}...`)  
+  console.log(`Booting ${serverConfig.name}...`);
   if (err) {
-    console.log("Error!", err)
+    console.log("Error!", err);
   }
-  console.log(`Listening to port ${port}`)
-})
+  console.log(`Listening to port ${port}`);
+});

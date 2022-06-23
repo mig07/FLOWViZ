@@ -1,4 +1,4 @@
-module.exports = (libraryService, workflowService) => {
+module.exports = (workflowService) => {
   function getWorkflows(req, res, next) {
     workflowService
       .getWorkflows()
@@ -11,7 +11,7 @@ module.exports = (libraryService, workflowService) => {
   }
 
   function getWorkflow(req, res, next) {
-    const workflowId = req.params.id
+    const workflowId = req.params.id;
 
     workflowService
       .getWorkflow(workflowId)
