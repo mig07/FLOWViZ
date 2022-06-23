@@ -1,14 +1,13 @@
-const ApiException = require('./apiException')
+const ApiException = require("./apiException");
 
 function apiExceptionHandler(err, req, res, next) {
-    
-    console.log(err)
+  console.log(err);
 
-    if (err instanceof ApiException) {
-        res.status(err.statusCode).json(err.message)
-    }
+  if (err instanceof ApiException) {
+    res.status(err.statusCode).json(err.message);
+  }
 
-    res.status(500).json('Something went wrong');
+  res.status(500).json("An internal error has occurred");
 }
 
-module.exports = apiExceptionHandler
+module.exports = apiExceptionHandler;
