@@ -1,8 +1,8 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema
+const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
 
-const WorkflowStepSchema = require('./WorkflowStep')
+const WorkflowStepSchema = require("./workflowStep");
 
-const WorkflowSchema = new Schema([WorkflowStepSchema])
+const WorkflowSchema = new Schema([WorkflowStepSchema]);
 
-module.exports = mongoose.model('Workflow', WorkflowSchema)
+module.exports = mongoose.model("Workflow", WorkflowSchema);
