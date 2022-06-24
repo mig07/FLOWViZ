@@ -1,12 +1,10 @@
+const onSuccess = require("./controllerUtils");
+
 module.exports = (workflowService) => {
   function getWorkflows(req, res, next) {
     workflowService
       .getWorkflows()
-      .then((data) => {
-        res.statusCode = 200;
-        res.setHeader("content-type", "application/json");
-        res.end(JSON.stringify(data));
-      })
+      .then((data) => onSuccess(res, data))
       .catch((err) => next(err));
   }
 
@@ -15,11 +13,7 @@ module.exports = (workflowService) => {
 
     workflowService
       .getWorkflow(workflowId)
-      .then((data) => {
-        res.statusCode = 200;
-        res.setHeader("content-type", "application/json");
-        res.end(JSON.stringify(data));
-      })
+      .then((data) => onSuccess(res, data))
       .catch((err) => next(err));
   }
 
@@ -28,11 +22,7 @@ module.exports = (workflowService) => {
 
     workflowService
       .postWorkflow(workflow)
-      .then((data) => {
-        res.statusCode = 201;
-        res.setHeader("content-type", "application/json");
-        res.end(JSON.stringify(data));
-      })
+      .then((data) => onSuccess(res, data, 201))
       .catch((err) => next(err));
   }
 
