@@ -1,12 +1,10 @@
-const process = require("../schema/process-schema.json");
-
 module.exports = (workflowDb, ApiException) => {
   async function getWorkflows() {
     return await workflowDb.getWorkflows();
   }
 
   async function getWorkflow(id) {
-    return await workflowDb.getWorkflow(id);
+    return getOne(workflowDb.getWorkflow, id, "workflow");
   }
 
   async function postWorkflow(workflow) {
