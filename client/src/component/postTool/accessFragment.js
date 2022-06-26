@@ -11,8 +11,7 @@ export default function Access({
   const requiredFields = [address];
 
   React.useEffect(() => {
-    const hasAllRequiredFields = requiredFields.every((field) => field !== "");
-    setCanAdvance(hasAllRequiredFields);
+    validateInputs(requiredFields, setCanAdvance);
   }, requiredFields);
 
   return (

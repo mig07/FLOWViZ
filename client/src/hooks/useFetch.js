@@ -13,22 +13,19 @@ export default function useFetch(url, options) {
   const [reqState, setReqState] = useState(null);
   const [error, setError] = useState(null);
 
-  const emptyResponses = ["", {}, []];
-
   useEffect(async () => {
     setReqState(RequestState.starting);
 
     try {
       setReqState(RequestState.fetching);
 
-      const response = await fetch(url, options).then((response) =>
-        response.json()
-      );
-
-      // If response comes empty, then it is considered an error
-      if (!response || emptyResponses.includes(response)) {
-        throw NoResourceFoundException();
-      }
+      const response = await fetch(url, options).then((response) => {
+        console.log(response);
+        if (!response.ok) {
+          throw new Error(response.status);
+        }
+        return response.json();
+      });
 
       // Saving response data into state
       setData(response);
@@ -39,6 +36,5 @@ export default function useFetch(url, options) {
       setReqState(RequestState.success);
     }
   }, [url]);
-  console.log([data, reqState, error]);
   return [data, reqState, error];
 }

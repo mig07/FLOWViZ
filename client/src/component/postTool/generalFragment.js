@@ -11,8 +11,7 @@ export default function General({
   const requiredFields = [name, description];
 
   React.useEffect(() => {
-    const hasAllRequiredFields = requiredFields.every((field) => field !== "");
-    setCanAdvance(hasAllRequiredFields);
+    validateInputs(requiredFields, setCanAdvance);
   }, requiredFields);
 
   return (

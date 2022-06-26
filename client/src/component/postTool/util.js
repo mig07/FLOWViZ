@@ -25,15 +25,7 @@ export default function onArrayCountUpdate(
   onCollectionUpdate(col);
 }
 
-export function validateInputs(
-  requiredFields,
-  setCanAdvance,
-  onParentUpdate,
-  onParentUpdateValue
-) {
+export function validateInputs(requiredFields, setCanAdvance) {
   const hasAllRequiredFields = requiredFields.every((field) => field !== "");
   setCanAdvance(hasAllRequiredFields);
-  if (hasAllRequiredFields) {
-    onParentUpdate(onParentUpdateValue);
-  }
 }

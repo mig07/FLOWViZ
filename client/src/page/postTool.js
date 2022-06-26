@@ -24,7 +24,7 @@ import Submission from "../component/common/submission";
 import CheckCircleOutlineRoundedIcon from "@mui/icons-material/CheckCircleOutlineRounded";
 
 export default function PostTool() {
-  const [activeStep, setActiveStep] = useState(3);
+  const [activeStep, setActiveStep] = useState(0);
   const [canAdvance, setCanAdvance] = useState(false);
   const [configMethod, setConfigMethod] = useState("");
 
@@ -43,7 +43,7 @@ export default function PostTool() {
   };
 
   const [general, setGeneral] = useState({
-    name: "Test",
+    name: "",
     description: "",
   });
 
