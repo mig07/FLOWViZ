@@ -1,4 +1,4 @@
-const ApiException = require("./apiException");
+const ApiException = require("../exception/apiException");
 
 function apiExceptionHandler(err, req, res, next) {
   console.log(err);
