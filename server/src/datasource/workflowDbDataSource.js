@@ -5,8 +5,8 @@ module.exports = (workflowSystemConfig, fetch) => {
     return Workflow.find({});
   }
 
-  function getWorkflow(name) {
-    return Workflow.findOne({ name: name });
+  function getWorkflow(id) {
+    return Workflow.findOne({ id: id });
   }
 
   function postWorkflow(workflow) {}

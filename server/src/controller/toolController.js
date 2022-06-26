@@ -18,7 +18,13 @@ module.exports = (service) => {
   }
 
   function addTool(req, res, next) {
-    const tool = req.body;
+    const body = req.body;
+
+    if (!body) {
+      next(ApiException.badRequest("The request has no body."));
+    }
+
+    const tool = body;
 
     service
       .addTool(tool)

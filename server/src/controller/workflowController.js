@@ -1,3 +1,4 @@
+const ApiException = require("../exception/apiException");
 const onSuccess = require("./controllerUtils");
 
 module.exports = (workflowService) => {
@@ -18,7 +19,13 @@ module.exports = (workflowService) => {
   }
 
   function postWorkflow(req, res, next) {
-    const workflow = req.body;
+    const body = req.body;
+
+    if (!body) {
+      next(ApiException.badRequest("The request has no body."));
+    }
+
+    const workflow = body;
 
     workflowService
       .postWorkflow(workflow)
