@@ -42,8 +42,6 @@ function CommandGroup({ index = 0, data = {}, onParentUpdate = () => {} }) {
     );
   };
 
-  console.log(group);
-
   return (
     <SettingsAccordion>
       <Stack sx={{ p: 2 }} spacing={2}>

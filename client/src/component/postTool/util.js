@@ -27,13 +27,13 @@ export default function onArrayCountUpdate(
 
 export function validateInputs(
   requiredFields,
-  onCanAdvance,
+  setCanAdvance,
   onParentUpdate,
-  parentDataStruct
+  onParentUpdateValue
 ) {
   const hasAllRequiredFields = requiredFields.every((field) => field !== "");
-  onCanAdvance(hasAllRequiredFields);
+  setCanAdvance(hasAllRequiredFields);
   if (hasAllRequiredFields) {
-    onParentUpdate(parentDataStruct);
+    onParentUpdate(onParentUpdateValue);
   }
 }

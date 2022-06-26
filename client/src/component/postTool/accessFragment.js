@@ -11,10 +11,8 @@ export default function Access({
   const requiredFields = [address];
 
   React.useEffect(() => {
-    validateInputs(requiredFields, setCanAdvance, onAccessUpdate, {
-      address: address,
-      port: port,
-    });
+    const hasAllRequiredFields = requiredFields.every((field) => field !== "");
+    setCanAdvance(hasAllRequiredFields);
   }, requiredFields);
 
   return (
@@ -28,7 +26,7 @@ export default function Access({
           label="Tool address"
           name="address"
           autoComplete="address"
-          defaultValue={address}
+          value={address}
           onChange={(event) =>
             onAccessUpdate({
               address: event.target.value,
@@ -42,7 +40,7 @@ export default function Access({
           label="Tool port"
           name="port"
           autoComplete="port"
-          defaultValue={port}
+          value={port}
           onChange={(event) =>
             onAccessUpdate({
               address: address,

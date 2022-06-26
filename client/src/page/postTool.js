@@ -20,10 +20,11 @@ import BadgeOutlinedIcon from "@mui/icons-material/BadgeOutlined";
 import CellTowerIcon from "@mui/icons-material/CellTower";
 import FactCheckOutlinedIcon from "@mui/icons-material/FactCheckOutlined";
 import SendIcon from "@mui/icons-material/Send";
-import onArrayCountUpdate from "../component/postTool/util";
+import Submission from "../component/common/submission";
+import CheckCircleOutlineRoundedIcon from "@mui/icons-material/CheckCircleOutlineRounded";
 
 export default function PostTool() {
-  const [activeStep, setActiveStep] = useState(2);
+  const [activeStep, setActiveStep] = useState(3);
   const [canAdvance, setCanAdvance] = useState(false);
   const [configMethod, setConfigMethod] = useState("");
 
@@ -32,7 +33,6 @@ export default function PostTool() {
   };
 
   const handleNext = () => {
-    if (!canAdvance) return;
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
     setCanAdvance(false);
   };
@@ -43,7 +43,7 @@ export default function PostTool() {
   };
 
   const [general, setGeneral] = useState({
-    name: "",
+    name: "Test",
     description: "",
   });
 
@@ -55,6 +55,8 @@ export default function PostTool() {
   const onGeneralUpdate = (gen) => {
     setGeneral(gen);
   };
+
+  console.log(general);
 
   const onAccessUpdate = (acc) => {
     setAccess(acc);
@@ -147,22 +149,36 @@ export default function PostTool() {
     </Grid>
   );
 
+  const SubmitToolSuccess = () => {
+    return (
+      <Submission
+        text={`${general.name}'s tool was successfully added.`}
+        Icon={CheckCircleOutlineRoundedIcon}
+      />
+    );
+  };
+
+  const SubmitToolError = (error) => {
+    return <Submission text={`An error has occurred: ${error}.`} />;
+  };
+
+  const onSubmitTool = () => {};
+
   const NextButton = () => (
     <Grid
       item
       xs={6}
-      direction="column"
       sx={{
         display: "flex",
-        "justify-content": "flex-end",
-        "align-items": "flex-end",
+        justifyContent: "flex-end",
+        alignItems: "flex-end",
       }}
     >
-      {activeStep === steps.length - 1 ? (
+      {activeStep === 2 ? (
         <Button
           variant="outlined"
           endIcon={<SendIcon />}
-          onClick={() => console.log(library)} // TODO
+          onClick={() => handleNext()}
         >
           Finish
         </Button>
@@ -187,18 +203,28 @@ export default function PostTool() {
         <Divider />
         <Toolbar />
       </>
-      <Stepper activeStep={activeStep} orientation="horizontal" sx={{ mt: 2 }}>
-        {steps.map((step) => (
-          <Step key={step.label}>
-            <StepLabel icon={step.icon}>{step.label}</StepLabel>
-          </Step>
-        ))}
-      </Stepper>
-      {steps[activeStep].fragment}
-      <Grid container>
-        <BackButton />
-        <NextButton />
-      </Grid>
+      {activeStep === 3 ? (
+        <SubmitToolSuccess general={general} />
+      ) : (
+        <>
+          <Stepper
+            activeStep={activeStep}
+            orientation="horizontal"
+            sx={{ mt: 2 }}
+          >
+            {steps.map((step) => (
+              <Step key={step.label}>
+                <StepLabel icon={step.icon}>{step.label}</StepLabel>
+              </Step>
+            ))}
+          </Stepper>
+          <React.Fragment>{steps[activeStep].fragment}</React.Fragment>
+          <Grid container>
+            <BackButton />
+            <NextButton />
+          </Grid>
+        </>
+      )}
     </Container>
   );
 }
