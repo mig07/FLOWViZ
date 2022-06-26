@@ -18,7 +18,6 @@ import TableRow from "@mui/material/TableRow";
 import * as React from "react";
 import Loading from "../component/common/loading";
 import PageTitle from "../component/common/pageTitle";
-import ResourceNotFound from "../component/common/resourceNotFound";
 import Request from "../service/request";
 
 const WorkflowStates = {
@@ -90,7 +89,7 @@ export default function WorkflowList({ config }) {
   const url = `${config.appProtocol}://${config.address}:${config.port}/workflow`;
 
   const onSuccess = (workflows) => {
-    rows.map((workflow) => (
+    workflows.map((workflow) => (
       <TableRow
         key={workflow.name}
         sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -104,6 +103,10 @@ export default function WorkflowList({ config }) {
         <TableCell>{getState(workflow.state)}</TableCell>
       </TableRow>
     ));
+  };
+
+  const onError = (error) => {
+    return <></>;
   };
 
   return (
@@ -123,7 +126,8 @@ export default function WorkflowList({ config }) {
               </TableRow>
             </TableHead>
             <TableBody>
-              {rows.map((row) => (
+              {Request(url, {}, onError, onSuccess, <Loading />)}
+              {/* {rows.map((row) => (
                 <TableRow
                   key={row.name}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -136,7 +140,7 @@ export default function WorkflowList({ config }) {
                   <TableCell>{row.finishDate}</TableCell>
                   <TableCell>{getState(row.state)}</TableCell>
                 </TableRow>
-              ))}
+              ))} */}
             </TableBody>
           </Table>
         </TableContainer>
