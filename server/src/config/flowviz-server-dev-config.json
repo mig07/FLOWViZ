@@ -1,17 +1,21 @@
 {
-    "dev": true,
-    "server": {
-        "name": "FLOWViZ Server",
-        "port": 3000
-    },    
-    "dataSource" : {
-		"address" : "localhost",
-		"port" : 27017,
-		"librariesIndex" : "library"
-	},
-    "airflow": {
-        "address" : "localhost",
-        "port" : 8080,
-        "base" : "api/v1"
-    }
+  "dev": true,
+  "server": {
+    "name": "FLOWViZ Server",
+    "port": 3000
+  },
+  "dataSource": {
+    "address": "localhost",
+    "port": 27017,
+    "librariesIndex": "library"
+  },
+  "airflow": {
+    "address": "localhost",
+    "port": 8080,
+    "base": "api/v1"
+  },
+  "rabbitmq": {
+    "address": "localhost",
+    "port": 5672
+  }
 }
