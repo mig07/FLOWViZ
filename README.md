@@ -16,15 +16,29 @@ docker pull mongo
 docker run --name mongodb -d -p 27017:27017 mongo
 ```
 
+## Configuring queue message broker - RabbitMQ
+
+1. Download RabbitMQ image
+
+```sh
+docker pull rabbitmq
+```
+
+2. Run and create RabbitMQ container, exposing ports 5672 and 15672
+
+```sh
+docker run -d --hostname rabbithost --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:management
+```
+
 ## Building and running on localhost
 
 1. Install dependencies:
 
 ```sh
-npm install or npm i
+npm i
 ```
 
-2. Run it:
+2. Run it (both on client and server):
 
 ```sh
 npm start
@@ -46,7 +60,7 @@ sudo apt-get update && sudo apt-get install tmux
 
 2. Execute the start.sh script
 
-Note: if there are no permission, execute:
+**Note**: if there are no execution permissions, execute:
 ```sh
 chmod +x start.sh
 ```
