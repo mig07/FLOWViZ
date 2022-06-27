@@ -1,14 +1,14 @@
-module.exports = (workflowDb, ApiException) => {
+module.exports = (WorkflowDb, ApiException) => {
   async function getWorkflows() {
-    return await workflowDb.getWorkflows();
+    return await WorkflowDb.getWorkflows();
   }
 
   async function getWorkflow(id) {
-    return getOne(workflowDb.getWorkflow, id, "workflow");
+    return getOne(WorkflowDb.getWorkflow, id, "workflow");
   }
 
   async function postWorkflow(workflow) {
-    return await workflowDb.postWorkflow(workflow);
+    return await WorkflowDb.postWorkflow(workflow);
   }
 
   return {

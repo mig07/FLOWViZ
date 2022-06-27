@@ -1,3 +1,6 @@
+const { checkSchema } = require("express-validator");
+const { workflowStep } = require("./schema/workflow/workflow");
+
 module.exports = (app, toolController, workflowController, dev) => {
   const exceptionMiddleware = require("./middleware/exceptionMiddleware")(dev);
 
@@ -17,7 +20,11 @@ module.exports = (app, toolController, workflowController, dev) => {
   app.get("/workflow/:name", workflowController.getWorkflow);
 
   // POSTs
-  app.post("/workflow", workflowController.postWorkflow);
+  app.post(
+    "/workflow",
+    checkSchema(workflowStep),
+    workflowController.postWorkflow
+  );
 
   /* Express middleware error handler */
   app.use(exceptionMiddleware.interceptor);

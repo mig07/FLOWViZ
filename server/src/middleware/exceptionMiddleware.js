@@ -12,6 +12,7 @@ module.exports = (dev) => {
     }
 
     res.status(500).json("An internal error has occurred");
+    next();
   }
 
   return {

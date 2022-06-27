@@ -2,7 +2,7 @@ const ToolContract = require("../schema/toolContract/ToolContract");
 
 module.exports = () => {
   function getTools() {
-    return ToolContract.find({});
+    return ToolContract.find({}).select("-_id name description");
   }
 
   function getTool(toolName) {

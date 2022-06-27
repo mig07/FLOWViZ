@@ -1,33 +1,16 @@
 const ToolContract = require("../schema/toolContract/ToolContract");
 const getOne = require("./serviceUtils");
 
-module.exports = (toolDb, ApiException) => {
+module.exports = (ToolDb, ApiException) => {
   async function getTools() {
-    const tools = await toolDb.getTools();
-
-    return tools.map((tool) => {
-      return {
-        name: tool.name,
-        description: tool.description,
-      };
-    });
+    return await ToolDb.getTools();
   }
 
   async function getTool(toolName) {
-    return getOne(toolDb.getTool, toolName, "tool");
+    return getOne(ToolDb.getTool, toolName, "tool");
   }
 
   async function addTool(tool) {
-    const name = tool.name;
-
-    const t = await toolDb.getTool(name);
-
-    if (t) {
-      throw ApiException.conflict(
-        `A library with name ${name} already exists.`
-      );
-    }
-
     const contract = new ToolContract({
       name: tool.name,
       description: tool.description,
@@ -35,7 +18,7 @@ module.exports = (toolDb, ApiException) => {
       library: tool.library,
     });
 
-    return await toolDb.addTool(contract);
+    return await ToolDb.addTool(contract);
   }
 
   return {

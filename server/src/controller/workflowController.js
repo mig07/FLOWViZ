@@ -1,5 +1,6 @@
-const ApiException = require("../exception/apiException");
 const onSuccess = require("./controllerUtils");
+const { validationResult } = require("express-validator");
+const ApiException = require("../exception/apiException");
 
 module.exports = (workflowService) => {
   function getWorkflows(req, res, next) {
@@ -19,17 +20,18 @@ module.exports = (workflowService) => {
   }
 
   function postWorkflow(req, res, next) {
-    const body = req.body;
+    const errors = validationResult(req);
 
-    if (!body) {
-      next(ApiException.badRequest("The request has no body."));
+    if (!errors.isEmpty()) {
+      next(ApiException.badRequest("Validation failed!"));
+      return;
     }
 
-    const workflow = body;
+    const workflow = req.body;
 
     workflowService
       .postWorkflow(workflow)
-      .then((data) => onSuccess(res, data, 201))
+      .then((data) => onSuccess(res, data, (code = 201)))
       .catch((err) => next(err));
   }
 
