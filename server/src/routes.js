@@ -3,6 +3,7 @@ const { workflowStep } = require("./schema/workflow/workflow");
 
 module.exports = (app, toolController, workflowController, dev) => {
   const exceptionMiddleware = require("./middleware/exceptionMiddleware")(dev);
+  const workflowMiddleware = require("./middleware/workflowValidationMiddleware");
 
   /* Library Endpoints */
 
@@ -23,6 +24,7 @@ module.exports = (app, toolController, workflowController, dev) => {
   app.post(
     "/workflow",
     checkSchema(workflowStep),
+    workflowMiddleware,
     workflowController.postWorkflow
   );
 

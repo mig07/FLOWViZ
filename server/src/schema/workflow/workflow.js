@@ -1,5 +1,3 @@
-const { body } = require("express-validator");
-
 const workflowStep = {
   id: {
     exists: { errorMessage: "id is required." },

@@ -35,6 +35,8 @@ app.use(morgan("dev"));
 /* Server custom exception object */
 const ApiException = require("./exception/apiException");
 
+const rabbitmq = require("amqplib/callback_api");
+
 /* Server modules */
 
 // Library
@@ -43,7 +45,7 @@ const toolService = require("./service/toolService.js")(toolDb, ApiException);
 const toolController = require("./controller/toolController.js")(toolService);
 
 // Workflow
-const workflowDb = require("./datasource/workflowDbDataSource.js")(fetch);
+const workflowDb = require("./datasource/workflowDbDataSource.js")(rabbitmq);
 const workflowService = require("./service/workflowService.js")(
   workflowDb,
   ApiException

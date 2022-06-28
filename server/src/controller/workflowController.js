@@ -1,5 +1,4 @@
 const onSuccess = require("./controllerUtils");
-const { validationResult } = require("express-validator");
 const ApiException = require("../exception/apiException");
 
 module.exports = (workflowService) => {
@@ -20,13 +19,6 @@ module.exports = (workflowService) => {
   }
 
   function postWorkflow(req, res, next) {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      next(ApiException.badRequest("Validation failed!"));
-      return;
-    }
-
     const workflow = req.body;
 
     workflowService
