@@ -9,6 +9,7 @@ module.exports = (WorkflowDb, ApiException) => {
 
   async function postWorkflow(workflow) {
     const executionOrder = getExecutionOrder(workflow);
+    console.log(executionOrder);
     return await WorkflowDb.postWorkflow(workflow);
   }
 
@@ -40,7 +41,7 @@ module.exports = (WorkflowDb, ApiException) => {
     execOrder.forEach((step, index, execOrder) => {
       if (index === lastElemIdx) return;
       res += Array.isArray(step) ? `[${step}]` : step;
-      if (index < lastElemIdx.length - 1) {
+      if (index < lastElemIdx - 1) {
         res += " >> ";
       }
     });
