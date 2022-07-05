@@ -1,10 +1,14 @@
 const { checkSchema } = require("express-validator");
 const { workflowStep } = require("./schema/workflow/workflow");
 
-module.exports = (app, toolController, workflowController, dev) => {
-  const exceptionMiddleware = require("./middleware/exceptionMiddleware")(dev);
-  const workflowMiddleware = require("./middleware/workflowValidationMiddleware");
-
+module.exports = (
+  app,
+  toolController,
+  workflowController,
+  authController,
+  exceptionMiddleware,
+  workflowMiddleware
+) => {
   /* Library Endpoints */
 
   // GETs
@@ -27,6 +31,12 @@ module.exports = (app, toolController, workflowController, dev) => {
     workflowMiddleware,
     workflowController.postWorkflow
   );
+
+  /* Auth Endpoints */
+
+  // POSTs
+  app.post("/register", authController.register);
+  app.post("/login", authController.login);
 
   /* Express middleware error handler */
   app.use(exceptionMiddleware.interceptor);

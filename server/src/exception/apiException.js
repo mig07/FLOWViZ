@@ -8,6 +8,10 @@ class ApiException {
     return new ApiException(400, msg);
   }
 
+  static unauthorized(msg) {
+    return new ApiException(401, msg);
+  }
+
   static notFound(msg) {
     return new ApiException(404, msg);
   }
