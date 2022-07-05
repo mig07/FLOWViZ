@@ -3,12 +3,12 @@ module.exports = (authDataSource) => {
     return await authDataSource.register(user);
   }
 
-  async function login(user) {
-    return await authDataSource.login(user);
+  async function getUserByName(username) {
+    return await authDataSource.getUserByName(username);
   }
 
   return {
     register: register,
-    login: login,
+    getUserByName: getUserByName,
   };
 };

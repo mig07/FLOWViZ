@@ -28,17 +28,27 @@ module.exports = (jwt, authService, argonUtils, secret) => {
   }
 
   function login(req, res, next) {
-    const user = {
-      username: req.body.username,
-      password: req.body.password,
-    };
+    const username = req.body.username;
+    const password = req.body.password;
 
     authService
-      .login(user)
+      .getUserByName(username)
+      .then((dbUser) =>
+        argonUtils
+          .verify(dbUser.password, password)
+          .then((isValid) => {
+            if (!isValid) {
+              throw ApiException.unauthorized("Wrong password.");
+            }
+          })
+          .catch((err) => {
+            throw err;
+          })
+      )
       .then(() => {
         onSuccess(
           res,
-          res.json({ jwt: jwt.sign({ id: user.username }, secret) }),
+          { jwt: jwt.sign({ id: username }, secret) },
           (code = 201)
         );
       })

@@ -8,7 +8,7 @@ const ToolContractSchema = new Schema({
   name: {
     type: String,
     minlength: 3,
-    maxlength: 20,
+    maxlength: 30,
     required: true,
     unique: true,
   },

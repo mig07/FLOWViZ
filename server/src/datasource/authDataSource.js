@@ -1,8 +1,29 @@
 const ApiException = require("../exception/apiException");
 const UserModel = require("../schema/user/user");
-const argon2 = require("argon2");
+const JwtStrategy = require("passport-jwt").Strategy;
+const ExtractJwt = require("passport-jwt").ExtractJwt;
 
-module.exports = () => {
+module.exports = (passport, secret) => {
+  const opts = {
+    jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+    secretOrKey: secret,
+  };
+
+  passport.use(
+    new JwtStrategy(opts, (jwt_payload, done) => {
+      UserModel.findOne({ username: jwt_payload.id }, (err, user) => {
+        if (err) {
+          return done(err, false);
+        }
+        if (user) {
+          return done(null, user);
+        } else {
+          return done(null, false);
+        }
+      });
+    })
+  );
+
   function register(user) {
     const u = new UserModel(user);
     return u
@@ -18,20 +39,15 @@ module.exports = () => {
       });
   }
 
-  function login(user) {
-    const name = user.username;
-    return UserModel.findOne({ username: name })
+  function getUserByName(username) {
+    return UserModel.findOne({ username: username })
       .then((dbUser) => {
-        return argon2
-          .verify(dbUser.password, user.password)
-          .then((isValid) => {
-            if (!isValid) {
-              throw ApiException.unauthorized("Wrong password.");
-            }
-          })
-          .catch((err) => {
-            throw err;
-          });
+        if (!dbUser) {
+          throw ApiException.notFound(
+            `The user with name '${username}' does not exist.`
+          );
+        }
+        return dbUser;
       })
       .catch((err) => {
         throw err;
@@ -40,6 +56,6 @@ module.exports = () => {
 
   return {
     register: register,
-    login: login,
+    getUserByName: getUserByName,
   };
 };

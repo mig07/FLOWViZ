@@ -7,7 +7,8 @@ module.exports = (
   workflowController,
   authController,
   exceptionMiddleware,
-  workflowMiddleware
+  workflowMiddleware,
+  passport
 ) => {
   /* Library Endpoints */
 

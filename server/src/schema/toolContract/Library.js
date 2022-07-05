@@ -6,7 +6,7 @@ const CommandSchema = new Schema({
   name: {
     type: String,
     minlength: 2,
-    maxlength: 20,
+    maxlength: 30,
     required: true,
     unique: true,
   },
@@ -25,7 +25,7 @@ const CommandGroupSchema = new Schema({
   name: {
     type: String,
     minlength: 3,
-    maxlength: 20,
+    maxlength: 30,
     required: true,
     unique: true,
   },
@@ -38,11 +38,11 @@ const CommandGroupSchema = new Schema({
 
 const LibrarySchema = new Schema({
   machineAddress: { type: String, minlength: 3, maxlength: 30, required: true },
-  image: { type: String, minlength: 3, maxlength: 20, unique: true },
+  image: { type: String, minlength: 3, maxlength: 30, unique: true },
   name: {
     type: String,
     minlength: 3,
-    maxlength: 20,
+    maxlength: 30,
     required: true,
     unique: true,
   },
