@@ -34,6 +34,7 @@ module.exports = (jwt, authService, argonUtils, secret) => {
     authService
       .getUserByName(username)
       .then((dbUser) =>
+        // Again, the passed password does not get propagated any further.
         argonUtils
           .verify(dbUser.password, password)
           .then((isValid) => {
@@ -46,6 +47,7 @@ module.exports = (jwt, authService, argonUtils, secret) => {
           })
       )
       .then(() => {
+        // The user is authentic, the jwt is signed and returned to the client.
         onSuccess(
           res,
           { jwt: jwt.sign({ id: username }, secret) },
