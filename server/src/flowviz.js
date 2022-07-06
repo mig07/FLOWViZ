@@ -1,25 +1,26 @@
 /**
- *
- * @param {The server router (e.g. Express Router)} router
- * @param {The session / account authenticator (e.g. Passport)} authenticator
+ * A configurator module to expose the framework, when using it as a npm package.
+ * @param {JSON object to insert previously created objects required for the
+ * phylogenetic tool and FLOWViZ (e.g. dependencies, middlewares, ...)} config
  */
-module.exports = (router, authenticator) => {
+module.exports = (config) => {
   require(`dotenv`).config();
+  var conf = config || {};
 
-  var app = router;
-  var passport = authenticator;
+  var express = conf.express || require("express");
+  var app = conf.router || express();
+  var passport = conf.authenticator || require("passport");
 
   /* Server config */
-  const config = require("./config/flowviz-server-dev-config.json");
-  const dbConfig = config.dataSource;
-  const dev = config.dev;
+  const accessConfig = require("./config/flowviz-server-dev-config.json");
+  const dbConfig = accessConfig.dataSource;
+  const dev = accessConfig.dev;
 
   /* Dependencies */
-  const express = require("express");
-  const bodyParser = require("body-parser");
-  const morgan = require("morgan");
-  const cors = require("cors");
-  const mongoose = require("mongoose");
+  const bodyParser = conf.bodyParser || require("body-parser");
+  const morgan = conf.morgan || require("morgan");
+  const cors = conf.cors || require("cors");
+  const mongoose = conf.mongoose || require("mongoose");
 
   /* Creating connection with MongoDB */
   mongoose.connect(`mongodb://${dbConfig.address}:${dbConfig.port}`, {
@@ -31,11 +32,6 @@ module.exports = (router, authenticator) => {
 
   /* Initializing express server */
 
-  // If the express router was not specified
-  if (!router) {
-    app = express();
-  }
-
   // FLOWViZ required express middlewares
   app.use(cors());
   app.use(bodyParser.urlencoded({ extended: false }));
@@ -43,8 +39,7 @@ module.exports = (router, authenticator) => {
   app.use(morgan("dev"));
 
   // If no authenticator module was specified, use the one included.
-  if (!authenticator) {
-    passport = require("passport");
+  if (!conf.authenticator) {
     require("./auth/passport")(app, passport);
   }
 
@@ -52,8 +47,8 @@ module.exports = (router, authenticator) => {
   require("./modules")(app, dev);
 
   /* Server initialization */
-  if (!router) {
-    const serverConfig = config.server;
+  if (!conf.express) {
+    const serverConfig = accessConfig.server;
     const port = serverConfig.port;
     app.listen(port, (err) => {
       console.log(`Booting ${serverConfig.name}...`);
