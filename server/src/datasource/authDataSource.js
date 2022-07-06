@@ -30,6 +30,7 @@ module.exports = (passport, secret) => {
       .save()
       .then((data) => console.log(data))
       .catch((err) => {
+        // MongoDb correspondent error for duplicate file.
         if (err.code === 11000) {
           throw ApiException.conflict(
             `The user with username '${user.username}' already exists.`

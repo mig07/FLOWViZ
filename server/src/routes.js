@@ -5,10 +5,8 @@ module.exports = (
   app,
   toolController,
   workflowController,
-  authController,
   exceptionMiddleware,
-  workflowMiddleware,
-  passport
+  workflowMiddleware
 ) => {
   /* Library Endpoints */
 
@@ -32,12 +30,6 @@ module.exports = (
     workflowMiddleware,
     workflowController.postWorkflow
   );
-
-  /* Auth Endpoints */
-
-  // POSTs
-  app.post("/register", authController.register);
-  app.post("/login", authController.login);
 
   /* Express middleware error handler */
   app.use(exceptionMiddleware.interceptor);

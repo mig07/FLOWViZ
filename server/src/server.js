@@ -1,4 +1,4 @@
-require(`dotenv`).config({ path: "./.env" });
+require(`dotenv`).config();
 
 /* Server config */
 const config = require("./config/flowviz-server-dev-config.json");
@@ -10,10 +10,7 @@ const port = serverConfig.port;
 /* Libraries */
 const express = require("express");
 const bodyParser = require("body-parser");
-const jwt = require("jsonwebtoken");
-
 const passport = require("passport");
-
 const morgan = require("morgan");
 const cors = require("cors");
 const mongoose = require("mongoose");
@@ -32,9 +29,6 @@ db.once("open", () => console.log("Connected to Database"));
 /* Initializing express server */
 const app = express();
 
-/* JWT Secret */
-const secret = process.env.JWT_SECRET;
-
 /* Cross-Origin Request */
 app.use(cors());
 
@@ -46,21 +40,10 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(morgan("dev"));
 
-const rabbitmq = require("amqplib/callback_api");
+/* Authentication module */
+require("./auth/passport")(app, passport);
 
 /* Server modules */
-
-// Auth
-const authUtils = require("./authUtils")();
-
-const authDs = require("./datasource/authDataSource")(passport, secret);
-const authService = require("./service/authService")(authDs);
-const authController = require("./controller/authController")(
-  jwt,
-  authService,
-  authUtils,
-  secret
-);
 
 // Library
 const toolDb = require("./datasource/toolDbDataSource.js")();
@@ -68,7 +51,7 @@ const toolService = require("./service/toolService.js")(toolDb, ApiException);
 const toolController = require("./controller/toolController.js")(toolService);
 
 // Workflow
-const workflowDb = require("./datasource/workflowDbDataSource.js")(rabbitmq);
+const workflowDb = require("./datasource/workflowDbDataSource.js")();
 const workflowService = require("./service/workflowService.js")(
   workflowDb,
   ApiException
@@ -82,10 +65,8 @@ require("./routes.js")(
   app,
   toolController,
   workflowController,
-  authController,
   exceptionMiddleware,
-  workflowMiddleware,
-  passport
+  workflowMiddleware
 );
 
 /* Server initialization */

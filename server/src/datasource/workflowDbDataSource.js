@@ -1,6 +1,6 @@
 const Workflow = require("../schema/workflow/workflow");
 
-module.exports = (rabbitmq) => {
+module.exports = () => {
   function getWorkflows() {
     return Workflow.find({});
   }
