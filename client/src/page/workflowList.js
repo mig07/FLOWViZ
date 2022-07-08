@@ -89,6 +89,7 @@ export default function WorkflowList({ config }) {
   const url = `${config.appProtocol}://${config.address}:${config.port}/workflow`;
 
   const onSuccess = (workflows) => {
+    if (!workflows || workflows.length === 0) return;
     workflows.map((workflow) => (
       <TableRow
         key={workflow.name}
