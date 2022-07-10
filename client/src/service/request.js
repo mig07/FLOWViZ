@@ -1,3 +1,4 @@
+import React from "react";
 import useFetch from "../hooks/useFetch";
 import { RequestState } from "../hooks/useFetch";
 
@@ -12,4 +13,6 @@ export default function Request(url, options, onError, onSuccess, onLoading) {
     case RequestState.success:
       return onSuccess(data);
   }
+
+  return <></>;
 }

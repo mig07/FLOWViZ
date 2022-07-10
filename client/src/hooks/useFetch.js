@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import NoResourceFoundException from "../exception/NoResourceFoundException";
 
 export const RequestState = {
   starting: "starting",
