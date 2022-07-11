@@ -20,10 +20,12 @@ export default function Login() {
     setter(value);
   };
 
-  const onError = (error) => <InfoBar type="error" text={error} />;
+  const onError = (error) => {
+    return <InfoBar type="error" text={error} />;
+  };
 
   const onSuccess = (data) => (
-    <InfoBar type="success" text="Login successful" />
+    <InfoBar type="success" text="Successfully logged in!" />
   );
 
   const options = {
@@ -87,8 +89,8 @@ export default function Login() {
           }
           label="Remember me"
         />
+        {submitting ? <OnLogin /> : <></>}
       </UserForm>
-      {submitting ? <OnLogin /> : <></>}
     </>
   );
 }

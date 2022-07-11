@@ -5,6 +5,10 @@ import { RequestState } from "../hooks/useFetch";
 export default function Request(url, options, onError, onSuccess, onLoading) {
   const [data, requestState, error] = useFetch(url, options);
 
+  console.log(data);
+  console.log(requestState);
+  console.log(error);
+
   switch (requestState) {
     case RequestState.fetching:
       return onLoading;

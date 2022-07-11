@@ -18,20 +18,21 @@ export default function useFetch(url, options) {
     try {
       setReqState(RequestState.fetching);
 
-      const response = await fetch(url, options).then((res) => {
-        if (!res.ok) {
-          throw new Error(res.status);
-        }
-        return res.json();
-      });
+      const response = await fetch(url, options);
+      const res = await response.json();
+
+      if (!response.ok) {
+        setError(res);
+        setReqState(RequestState.error);
+        return;
+      }
 
       // Saving response data into state
-      setData(response);
+      setReqState(RequestState.success);
+      setData(res);
     } catch (error) {
       setError(error);
       setReqState(RequestState.error);
-    } finally {
-      setReqState(RequestState.success);
     }
   }, [url]);
   return [data, reqState, error];
