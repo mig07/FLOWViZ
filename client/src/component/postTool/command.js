@@ -15,7 +15,7 @@ function Command({ data = {}, index = 0, onParentUpdate = () => {} }) {
   };
 
   const onPropCollectionUpdate = (collection, prop) => {
-    let c = { ...command };
+    let c = command;
     c[prop] = collection;
     onGroupCommandsUpdate(index, c);
   };

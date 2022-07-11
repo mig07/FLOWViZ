@@ -18,7 +18,7 @@ function CommandGroup({ index = 0, data = {}, onParentUpdate = () => {} }) {
   const group = data;
   const onCommandGroupUpdate = onParentUpdate;
 
-  const [cmdCount, setCmdCount] = React.useState(1);
+  const [count, setCount] = React.useState(1);
   const [checked, setChecked] = React.useState(false);
 
   const generateCommand = (index) => {
@@ -35,12 +35,14 @@ function CommandGroup({ index = 0, data = {}, onParentUpdate = () => {} }) {
     onArrayCountUpdate(
       event,
       group.commands,
-      cmdCount,
+      count,
       onCommandGroupUpdate,
-      setCmdCount,
+      setCount,
       generateCommand
     );
   };
+
+  console.log(group);
 
   return (
     <SettingsAccordion>
@@ -105,7 +107,7 @@ function CommandGroup({ index = 0, data = {}, onParentUpdate = () => {} }) {
             margin="normal"
             type="number"
             InputProps={{ inputProps: { min: 1, max: 20 } }}
-            defaultValue={cmdCount}
+            defaultValue={count}
             onChange={onCommandsCountUpdate}
           />
         </Box>

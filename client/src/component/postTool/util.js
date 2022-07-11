@@ -2,19 +2,23 @@ export default function onArrayCountUpdate(
   event,
   collection,
   count,
-  onCollectionUpdate = () => {},
-  onElemCountUpdate = () => {},
-  elemBuilder = () => {}
+  onCollectionUpdate,
+  onElemCountUpdate,
+  elemBuilder
 ) {
   const value = Number(event.target.value);
   if (value < 1) return;
 
-  let col = [...collection];
+  let col = collection;
 
   const diff = value - count;
 
+  console.log(diff);
+
   if (diff < 0) {
-    col = col.slice(0, col.length + diff);
+    for (var k = diff; k < 0; k++) {
+      col.pop();
+    }
   } else {
     for (var i = count; i < value; i++) {
       col.push(elemBuilder(count));
@@ -25,7 +29,15 @@ export default function onArrayCountUpdate(
   onCollectionUpdate(col);
 }
 
-export function validateInputs(requiredFields, setCanAdvance) {
+export function validateInputs(
+  requiredFields,
+  onCanAdvance,
+  onParentUpdate,
+  parentDataStruct
+) {
   const hasAllRequiredFields = requiredFields.every((field) => field !== "");
-  setCanAdvance(hasAllRequiredFields);
+  onCanAdvance(hasAllRequiredFields);
+  if (hasAllRequiredFields) {
+    onParentUpdate(parentDataStruct);
+  }
 }
