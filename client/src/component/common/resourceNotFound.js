@@ -1,10 +1,11 @@
-import { Container, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 import * as React from "react";
+import CenteredContainer from "./centeredContainer";
 
 export default function ResourceNotFound(error) {
   return (
-    <Container>
+    <CenteredContainer maxWidth="lg">
       <Typography variant="body">{error}</Typography>
-    </Container>
+    </CenteredContainer>
   );
 }
