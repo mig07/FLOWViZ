@@ -19,7 +19,13 @@ module.exports = (jwt, authService, argonUtils, secret) => {
 
         authService
           .register(user)
-          .then((data) => onSuccess(res, data, (code = 201)))
+          .then((data) =>
+            onSuccess(
+              res,
+              { jwt: jwt.sign({ id: user.username }, secret) },
+              (code = 201)
+            )
+          )
           .catch((err) => {
             next(err);
           });
