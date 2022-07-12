@@ -1,3 +1,5 @@
+const ApiException = require("../exception/apiException");
+
 async function getOne(fetchFn, id, entityDesignation) {
   const entity = await fetchFn(id);
 
