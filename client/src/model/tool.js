@@ -7,11 +7,8 @@ export default function Tool({ config, toolName, children }) {
   const [tool, setTool] = useState({
     name: "",
     description: "",
-    library: {
-      name: "",
-      commandGroups: [],
-    },
     api: [],
+    library: [],
   });
 
   useEffect(() => {
