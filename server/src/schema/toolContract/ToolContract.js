@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const ApiSchema = require("./Api");
-const LibrarySchema = require("./Library");
+const CommandGroupSchema = require("./Library");
 
 const ToolContractSchema = new Schema({
   name: {
@@ -12,9 +12,9 @@ const ToolContractSchema = new Schema({
     required: true,
     unique: true,
   },
-  description: { type: String, minlength: 10, maxlength: 100, required: true },
-  api: ApiSchema,
-  library: LibrarySchema,
+  description: { type: String, minlength: 0, maxlength: 100 },
+  library: [CommandGroupSchema],
+  api: [ApiSchema],
 });
 
 module.exports = mongoose.model("ToolContract", ToolContractSchema);
