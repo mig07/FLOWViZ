@@ -135,7 +135,7 @@ function getLibrary(tool) {
 
   if (!library) return [];
 
-  const commandGroups = library.commandGroups;
+  const commandGroups = library;
   const cmdGroup = commandGroups.find((cmdGroup) => cmdGroup.order === 0);
   const firstCmd = cmdGroup.commands[0];
   const firstCmdName = firstCmd.name;
