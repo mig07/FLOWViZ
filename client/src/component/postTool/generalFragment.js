@@ -28,10 +28,10 @@ export default function General({
           defaultValue={name}
           value={name}
           onChange={(event) =>
-            onGeneralUpdate({
+            onGeneralUpdate((prevState) => ({
+              ...prevState,
               name: event.target.value,
-              description: description,
-            })
+            }))
           }
         />
         <TextField
@@ -44,10 +44,10 @@ export default function General({
           defaultValue={description}
           value={description}
           onChange={(event) =>
-            onGeneralUpdate({
-              name: name,
+            onGeneralUpdate((prevState) => ({
+              ...prevState,
               description: event.target.value,
-            })
+            }))
           }
         />
       </Stack>

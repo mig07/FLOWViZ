@@ -1,5 +1,9 @@
 import { Container, Stack, TextField, Typography } from "@mui/material";
 import * as React from "react";
+import FormGroup from "@mui/material/FormGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
+
 import { validateInputs } from "./util";
 
 export default function Access({
@@ -7,9 +11,9 @@ export default function Access({
   setCanAdvance = () => {},
   address,
   port,
+  isContainer = true,
 }) {
   const requiredFields = [address];
-
   React.useEffect(() => {
     validateInputs(requiredFields, setCanAdvance);
   }, requiredFields);
@@ -47,6 +51,35 @@ export default function Access({
             })
           }
         />
+        <FormGroup>
+          <FormControlLabel
+            control={<Checkbox value={isContainer} />}
+            label="Container"
+          />
+        </FormGroup>
+        {isContainer ? (
+          <>
+            <TextField
+              required
+              margin="normal"
+              id="image"
+              label="Docker image"
+              name="image"
+              autoComplete="image"
+              value={""}
+            />
+            <TextField
+              margin="normal"
+              id="container"
+              label="Docker container"
+              name="container"
+              autoComplete="container"
+              value={""}
+            />
+          </>
+        ) : (
+          <></>
+        )}
       </Stack>
     </Container>
   );

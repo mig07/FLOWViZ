@@ -19,11 +19,15 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import BadgeOutlinedIcon from "@mui/icons-material/BadgeOutlined";
 import CellTowerIcon from "@mui/icons-material/CellTower";
 import FactCheckOutlinedIcon from "@mui/icons-material/FactCheckOutlined";
+import HowToRegIcon from "@mui/icons-material/HowToReg";
 import SendIcon from "@mui/icons-material/Send";
-import onArrayCountUpdate from "../component/postTool/util";
+import Request from "../service/request";
+import Loading from "../component/common/loading";
+import InfoBar from "../component/common/infoBar";
+import Submission from "../component/common/submission";
 
 export default function PostTool() {
-  const [activeStep, setActiveStep] = useState(2);
+  const [activeStep, setActiveStep] = useState(0);
   const [canAdvance, setCanAdvance] = useState(false);
   const [configMethod, setConfigMethod] = useState("");
 
@@ -44,6 +48,7 @@ export default function PostTool() {
 
   const [general, setGeneral] = useState({
     name: "",
+    type: "",
     description: "",
   });
 
@@ -67,6 +72,7 @@ export default function PostTool() {
       name: `Command Set ${index}`,
       invocation: [],
       order: index,
+      allowCommandRep: false,
       commands: [
         {
           name: "Command 0",
@@ -88,6 +94,8 @@ export default function PostTool() {
   const onLibraryUpdate = (updatedLib) => {
     setLibrary(updatedLib);
   };
+
+  const [submitting, setSubmitting] = useState(false);
 
   const steps = [
     {
@@ -147,6 +155,36 @@ export default function PostTool() {
     </Grid>
   );
 
+  const onSuccess = (data) => (
+    <Submission
+      text={`Successfully added ${general.name}`}
+      Icon={HowToRegIcon}
+    />
+  );
+
+  const onError = (error) => <InfoBar type="error" text={error} />;
+
+  const options = {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      name: general.name,
+      type: configMethod,
+      description: general.description,
+      library: library,
+      api: api,
+    }),
+  };
+
+  const OnSubmit = () =>
+    Request(
+      "http://localhost:3000/tool",
+      options,
+      onError,
+      onSuccess,
+      <Loading />
+    );
+
   const NextButton = () => (
     <Grid
       item
@@ -162,7 +200,7 @@ export default function PostTool() {
         <Button
           variant="outlined"
           endIcon={<SendIcon />}
-          onClick={() => console.log(library)} // TODO
+          onClick={() => setSubmitting(true)}
         >
           Finish
         </Button>
@@ -187,18 +225,25 @@ export default function PostTool() {
         <Divider />
         <Toolbar />
       </>
-      <Stepper activeStep={activeStep} orientation="horizontal" sx={{ mt: 2 }}>
-        {steps.map((step) => (
-          <Step key={step.label}>
-            <StepLabel icon={step.icon}>{step.label}</StepLabel>
-          </Step>
-        ))}
-      </Stepper>
-      {steps[activeStep].fragment}
-      <Grid container>
-        <BackButton />
-        <NextButton />
-      </Grid>
+      <>
+        <Stepper
+          activeStep={activeStep}
+          orientation="horizontal"
+          sx={{ mt: 2 }}
+        >
+          {steps.map((step) => (
+            <Step key={step.label}>
+              <StepLabel icon={step.icon}>{step.label}</StepLabel>
+            </Step>
+          ))}
+        </Stepper>
+        {steps[activeStep].fragment}
+        <Grid container>
+          <BackButton />
+          <NextButton />
+        </Grid>
+        {submitting ? <OnSubmit /> : <></>}
+      </>
     </Container>
   );
 }

@@ -13,8 +13,6 @@ export default function onArrayCountUpdate(
 
   const diff = value - count;
 
-  console.log(diff);
-
   if (diff < 0) {
     for (var k = diff; k < 0; k++) {
       col.pop();
@@ -29,15 +27,7 @@ export default function onArrayCountUpdate(
   onCollectionUpdate(col);
 }
 
-export function validateInputs(
-  requiredFields,
-  onCanAdvance,
-  onParentUpdate,
-  parentDataStruct
-) {
+export function validateInputs(requiredFields, setCanAdvance) {
   const hasAllRequiredFields = requiredFields.every((field) => field !== "");
-  onCanAdvance(hasAllRequiredFields);
-  if (hasAllRequiredFields) {
-    onParentUpdate(parentDataStruct);
-  }
+  setCanAdvance(hasAllRequiredFields);
 }
