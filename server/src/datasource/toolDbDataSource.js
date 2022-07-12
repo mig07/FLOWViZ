@@ -1,12 +1,14 @@
 const ToolContract = require("../schema/toolContract/ToolContract");
 
 module.exports = () => {
-  function getTools() {
-    return ToolContract.find({}).select("-_id name description");
+  function getTools(type) {
+    return ToolContract.find({ type: type }).select("-_id name description");
   }
 
   function getTool(toolName) {
-    return ToolContract.findOne({ name: toolName });
+    return ToolContract.findOne({ name: toolName }).select(
+      "-_id name description api library"
+    );
   }
 
   function addTool(tool) {

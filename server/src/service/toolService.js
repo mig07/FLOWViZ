@@ -6,8 +6,8 @@ module.exports = (ToolDb, ApiException) => {
    * Returns a list of tools from the data source
    * @returns {A list of tools from MongoDB}
    */
-  async function getTools() {
-    return await ToolDb.getTools();
+  async function getTools(type) {
+    return await ToolDb.getTools(type);
   }
 
   /**
@@ -24,12 +24,12 @@ module.exports = (ToolDb, ApiException) => {
    * @param {The tool JSON structure} tool
    */
   async function addTool(tool) {
-    const contract = new ToolContract({
+    const contract = {
       name: tool.name,
       description: tool.description,
-      api: tool.api,
       library: tool.library,
-    });
+      api: tool.api,
+    };
 
     return await ToolDb.addTool(contract);
   }
