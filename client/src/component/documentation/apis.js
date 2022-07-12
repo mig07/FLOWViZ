@@ -5,12 +5,14 @@ import Loading from "../common/loading";
 import ResourceNotFound from "../common/resourceNotFound";
 import ToolCardGrid from "./toolCardGrid";
 
-export default function Apis() {
+export default function Apis({ config }) {
+  const url = `${config.appProtocol}://${config.address}:${config.port}/tool`;
+
   return (
     <>
       <Typography variant="h3" marginTop={5} align="center">
-        Available Apis
-        {/* {Request("", {}, ResourceNotFound, ToolCardGrid, <Loading />)} */}
+        Available APIs
+        {Request(url, {}, ResourceNotFound, ToolCardGrid, <Loading />)}
       </Typography>
     </>
   );

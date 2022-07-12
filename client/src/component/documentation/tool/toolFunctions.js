@@ -1,16 +1,17 @@
-import * as React from 'react';
-import Library from './library';
-import Api from './api';
+import * as React from "react";
+import Library from "./library";
+import Api from "./api";
 
-export default function ToolFunctions(props) {
+export default function ToolFunctions({ tool }) {
+  console.log(tool);
 
-    const library = props.tool.library
-    const api = props.tool.api
+  const library = tool.library;
+  const api = tool.api;
 
-    return (
-        <>
-            <Api api={api}/>
-            <Library library={library}/>
-        </>  
-    )
+  return (
+    <>
+      <Api api={api} />
+      <Library library={library} />
+    </>
+  );
 }

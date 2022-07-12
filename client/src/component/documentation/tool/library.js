@@ -3,9 +3,9 @@ import Typography from "@mui/material/Typography";
 import { Divider } from "@mui/material";
 import { Box } from "@mui/system";
 
-export default function Library(props) {
-  const library = props.library;
-  const commandGroups = library.commandGroups;
+export default function Library({ library }) {
+  console.log(library)
+  const commandGroups = library;
 
   const noLibrary = (
     <Typography variant="body1" marginTop={5} align="left">
@@ -21,7 +21,7 @@ export default function Library(props) {
       <Divider />
       <Typography variant="body1" marginTop={5} align="center">
         {library.name}
-        {library.commandGroups
+        {commandGroups
           .sort((a, b) => a.order - b.order)
           .map((commandGroup) => ` [${commandGroup.name}]`)}
       </Typography>
