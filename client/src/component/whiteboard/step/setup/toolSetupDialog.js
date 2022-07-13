@@ -97,7 +97,7 @@ export default function ToolSetupDialog({
       >
         <DialogTitle id="scroll-dialog-title">Workflow Step Setup</DialogTitle>
         <DialogContent dividers={scroll === "paper"}>
-          {tool.library && tool.api ? (
+          {/* {tool.library && tool.api ? (
             <Container>
               <Typography variant="h6">Method</Typography>
               <Button onClick={(event) => setSetupMethod("api")}>API</Button>
@@ -106,16 +106,17 @@ export default function ToolSetupDialog({
               </Button>
             </Container>
           ) : tool.library ? (
-            <ToolLibraryDialog
-              commands={commands}
-              commandGroups={commandGroups}
-              onAddCommand={onAddCommand}
-              onRemoveCommand={onRemoveCommand}
-              onUpdateCommand={onUpdateCommand}
             />
-          ) : (
-            <></>
-          )}
+            ) : (
+              <></>
+              )} */}
+          <ToolLibraryDialog
+            commands={commands}
+            commandGroups={commandGroups}
+            onAddCommand={onAddCommand}
+            onRemoveCommand={onRemoveCommand}
+            onUpdateCommand={onUpdateCommand}
+          />
         </DialogContent>
         <DialogActions>
           <Button onClick={onCancel}>Cancel</Button>

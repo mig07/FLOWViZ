@@ -1,5 +1,5 @@
 import * as React from "react";
-import { styled, useTheme } from '@mui/material/styles';
+import { styled, useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -17,7 +17,7 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   justifyContent: "flex-start",
 }));
 
-export default function ToolDrawer({tools = []}) {
+export default function ToolDrawer({ tools = [] }) {
   const onDragStart = (event) => {
     event.dataTransfer.setData(
       "application/reactflow",
@@ -28,7 +28,7 @@ export default function ToolDrawer({tools = []}) {
 
   return (
     <Box sx={{ display: "flex" }}>
-      <CssBaseline />      
+      <CssBaseline />
       <Drawer
         sx={{
           width: drawerWidth,

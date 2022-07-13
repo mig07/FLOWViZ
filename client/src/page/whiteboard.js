@@ -110,6 +110,8 @@ export default function Whiteboard({ config, setDrawerList }) {
     [reactFlowInstance]
   );
 
+  console.log(edges);
+
   return (
     <>
       <ReactFlowProvider>
@@ -148,9 +150,9 @@ export default function Whiteboard({ config, setDrawerList }) {
         <Button
           variant="outlined"
           endIcon={<SendIcon />}
-          onClick={() => getWorkflowRequest(nodes, edges)}
+          onClick={() => console.log(getWorkflowRequest(nodes, edges))}
         >
-          Commit
+          Submit
         </Button>
       </Box>
     </>
@@ -163,26 +165,32 @@ function getWorkflowRequest(nodes, edges) {
   nodes.forEach((node) => {
     const nodeId = node.id;
 
-    const nodeNextSteps = edges.map((edge) => {
+    const children = edges.map((edge) => {
       if (edge.source.includes(nodeId)) {
-        return edge.target;
+        const name = nodes.find((node) => node.id === edge.target).data.setup
+          .stepName;
+        return name;
       }
     });
 
-    const nodePreviousSteps = edges.map((edge) => {
+    const parents = edges.map((edge) => {
       if (edge.target.includes(nodeId)) {
-        return edge.source;
+        const name = nodes.find((node) => node.id === edge.source).data.setup
+          .stepName;
+
+        return name;
       }
     });
 
     const step = {
-      stepId: nodeId,
-      config: node.data.setup,
-      nextSteps: nodeNextSteps,
-      previousSteps: nodePreviousSteps,
+      id: node.data.setup.stepName,
+      action: node.data.setup.config,
+      children: children,
+      parents: parents,
     };
     workflow.push(step);
   });
+  console.log(workflow);
   return workflow;
 }
 
