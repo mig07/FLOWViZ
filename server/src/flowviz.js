@@ -22,6 +22,8 @@ module.exports = (config) => {
   const cors = conf.cors || require("cors");
   const mongoose = conf.mongoose || require("mongoose");
 
+  /* Utilities */
+
   /* Creating connection with MongoDB */
   mongoose.connect(`mongodb://${dbConfig.address}:${dbConfig.port}`, {
     useNewUrlParser: true,
@@ -34,8 +36,8 @@ module.exports = (config) => {
 
   // FLOWViZ required express middlewares
   app.use(cors());
-  app.use(bodyParser.urlencoded({ extended: false }));
   app.use(express.json());
+  app.use(bodyParser.urlencoded({ extended: false }));
   app.use(morgan("dev"));
 
   // If no authenticator module was specified, use the one included.

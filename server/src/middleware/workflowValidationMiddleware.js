@@ -3,10 +3,7 @@ const ApiException = require("../exception/apiException");
 
 module.exports = (req, res, next) => {
   const errors = [];
-  workflow = req.body;
-  workflow.forEach((step) => {
-    errors.push(validationResult(step).array());
-  });
+  errors.push(validationResult(req.body));
 
   if (!errors || errors.length <= 0) {
     const errorMsgs = errors.array().map((err) => err.msg);

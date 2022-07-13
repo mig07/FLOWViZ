@@ -1,6 +1,9 @@
 /* Api exception custom object */
 const ApiException = require("./exception/apiException");
 
+/* HTTP requester utility class */
+const httpRequest = require("./util/httpRequest");
+
 module.exports = (app, dev) => {
   // Library
   const toolDb = require("./datasource/toolDbDataSource.js")();
@@ -8,7 +11,10 @@ module.exports = (app, dev) => {
   const toolController = require("./controller/toolController.js")(toolService);
 
   // Workflow
-  const workflowDb = require("./datasource/workflowDbDataSource.js")();
+  const workflowDb = require("./datasource/workflowDbDataSource.js")(
+    httpRequest,
+    dev.airflow
+  );
   const workflowService = require("./service/workflowService.js")(
     workflowDb,
     ApiException

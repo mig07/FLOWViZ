@@ -1,6 +1,6 @@
 const Workflow = require("../schema/workflow/workflow");
 
-module.exports = () => {
+module.exports = (httpRequest, airflow) => {
   function getWorkflows() {
     return Workflow.find({});
   }
@@ -9,7 +9,10 @@ module.exports = () => {
     return Workflow.findOne({ id: id });
   }
 
-  function postWorkflow(workflow) {}
+  function postWorkflow(workflow) {
+    const uri = `http://${airflow.address}:${airflow.port}/${airflow.base}/${airflow.dagRunGenerator}`;
+    return httpRequest.post(uri, workflow);
+  }
 
   return {
     getWorkflows: getWorkflows,

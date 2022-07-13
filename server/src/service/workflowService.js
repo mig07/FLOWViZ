@@ -1,4 +1,5 @@
 const getOne = require("./serviceUtils");
+const mapStepToDockerOperator = require("../mappers/stepToDockerOperator");
 
 module.exports = (WorkflowDb, ApiException) => {
   /**
@@ -25,8 +26,9 @@ module.exports = (WorkflowDb, ApiException) => {
    */
   async function postWorkflow(workflow) {
     const executionOrder = getExecutionOrder(workflow);
-    console.log(executionOrder);
-    return await WorkflowDb.postWorkflow(workflow);
+    const airflowRequest = convertToAirflowRequest(workflow);
+    console.log(airflowRequest);
+    //return await WorkflowDb.postWorkflow(workflow);
   }
 
   return {
@@ -36,6 +38,20 @@ module.exports = (WorkflowDb, ApiException) => {
   };
 };
 
+function convertToAirflowRequest(workflow) {
+  return mapStepToDockerOperator(workflow);
+  /* const type = workflow.type;
+
+  switch (type) {
+    case "container":
+      break;
+    case "":
+      break;
+    default:
+      break;
+  } */
+}
+
 /**
  * Gets the execution order, already formatted for the Airflow syntax
  * @param {The workflow parameter} workflow
@@ -43,7 +59,7 @@ module.exports = (WorkflowDb, ApiException) => {
  */
 function getExecutionOrder(workflow) {
   let res = [];
-  workflow.forEach((step) => {
+  workflow.tasks.forEach((step) => {
     const children = step.children;
     const parents = step.parents;
     const startNode = !parents || parents.length === 0;

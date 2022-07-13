@@ -12,7 +12,8 @@
   "airflow": {
     "address": "localhost",
     "port": 8080,
-    "base": "api/v1"
+    "base": "api/v1",
+    "dagRunGenerator": "dags/dag_generator/dagRuns"
   },
   "rabbitmq": {
     "address": "localhost",

@@ -21,6 +21,8 @@ module.exports = (workflowService) => {
   function postWorkflow(req, res, next) {
     const workflow = req.body;
 
+    console.log(workflow);
+
     workflowService
       .postWorkflow(workflow)
       .then((data) => onSuccess(res, data, (code = 201)))
