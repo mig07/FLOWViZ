@@ -2,9 +2,9 @@
 const ApiException = require("./exception/apiException");
 
 /* HTTP requester utility class */
-const httpRequest = require("./util/httpRequest");
+const httpRequest = require("./util/httpRequest")();
 
-module.exports = (app, dev) => {
+module.exports = (app, accessConfig) => {
   // Library
   const toolDb = require("./datasource/toolDbDataSource.js")();
   const toolService = require("./service/toolService.js")(toolDb, ApiException);
@@ -13,7 +13,7 @@ module.exports = (app, dev) => {
   // Workflow
   const workflowDb = require("./datasource/workflowDbDataSource.js")(
     httpRequest,
-    dev.airflow
+    accessConfig.airflow
   );
   const workflowService = require("./service/workflowService.js")(
     workflowDb,
@@ -24,7 +24,9 @@ module.exports = (app, dev) => {
   );
 
   /* Express middleware config */
-  const exceptionMiddleware = require("./middleware/exceptionMiddleware")(dev);
+  const exceptionMiddleware = require("./middleware/exceptionMiddleware")(
+    accessConfig.dev
+  );
   const workflowMiddleware = require("./middleware/workflowValidationMiddleware");
 
   // API's endpoints

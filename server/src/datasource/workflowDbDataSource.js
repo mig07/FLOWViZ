@@ -1,4 +1,9 @@
 const Workflow = require("../schema/workflow/workflow");
+const fetch = require("node-fetch");
+require(`dotenv`).config();
+
+const airflowUsername = process.env.AIRFLOW_USERNAME;
+const airflowPassword = process.env.AIRFLOW_PASSWORD;
 
 module.exports = (httpRequest, airflow) => {
   function getWorkflows() {
@@ -11,7 +16,12 @@ module.exports = (httpRequest, airflow) => {
 
   function postWorkflow(workflow) {
     const uri = `http://${airflow.address}:${airflow.port}/${airflow.base}/${airflow.dagRunGenerator}`;
-    return httpRequest.post(uri, workflow);
+
+    const auth = Buffer(`${airflowUsername}:${airflowPassword}`).toString(
+      "base64"
+    );
+
+    return httpRequest.post(uri, workflow, `Basic ${auth}`);
   }
 
   return {

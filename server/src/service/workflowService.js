@@ -1,5 +1,5 @@
 const getOne = require("./serviceUtils");
-const mapStepToDockerOperator = require("../mappers/stepToDockerOperator");
+const mapWorkflowReqToAirflowWorkflow = require("../mappers/mapWorkflowReqToAirflowWorkflow");
 
 module.exports = (WorkflowDb, ApiException) => {
   /**
@@ -26,9 +26,8 @@ module.exports = (WorkflowDb, ApiException) => {
    */
   async function postWorkflow(workflow) {
     const executionOrder = getExecutionOrder(workflow);
-    const airflowRequest = convertToAirflowRequest(workflow);
-    console.log(airflowRequest);
-    //return await WorkflowDb.postWorkflow(workflow);
+    let airflowRequest = convertToAirflowWorkflow(workflow, executionOrder);
+    return await WorkflowDb.postWorkflow(airflowRequest);
   }
 
   return {
@@ -38,8 +37,8 @@ module.exports = (WorkflowDb, ApiException) => {
   };
 };
 
-function convertToAirflowRequest(workflow) {
-  return mapStepToDockerOperator(workflow);
+function convertToAirflowWorkflow(workflow, executionOrder) {
+  return { conf: mapWorkflowReqToAirflowWorkflow(workflow, executionOrder) };
   /* const type = workflow.type;
 
   switch (type) {

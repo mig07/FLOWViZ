@@ -26,17 +26,38 @@ class DockerOperatorParams {
     this.docker_url = docker_url;
     this.network_mode = network_mode;
   }
+
+  toJson() {
+    return {
+      image: this.image,
+      api_version: this.api_version,
+      mounts: this.mounts,
+      command: this.command,
+      auto_remove: this.auto_remove,
+      docker_url: this.docker_url,
+      network_mode: this.network_mode,
+    };
+  }
 }
 
 class DockerOperator {
-  id;
+  task_id;
   operator_import = "airflow.providers.docker.operators.docker";
   operator_type = "DockerOperator";
   operator_params;
 
-  constructor(id, operator_params = DockerOperatorParams) {
-    this.id = id;
+  constructor(id, operator_params) {
+    this.task_id = id;
     this.operator_params = operator_params;
+  }
+
+  toJson() {
+    return {
+      task_id: this.task_id,
+      operator_import: this.operator_import,
+      operator_type: this.operator_type,
+      operator_params: this.operator_params,
+    };
   }
 }
 
