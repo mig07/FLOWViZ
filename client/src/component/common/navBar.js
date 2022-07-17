@@ -27,7 +27,7 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   padding: theme.spacing(0, 1),
   // necessary for content to be below app bar
   ...theme.mixins.toolbar,
-  justifyContent: "flex-end",
+  justifyContent: "flex",
 }));
 
 const AppBar = styled(MuiAppBar, {
@@ -100,13 +100,13 @@ export default function NavBar({ drawerList, children }) {
         open={open}
       >
         <DrawerHeader>
+          <IconButton onClick={handleDrawerClose}>
+            <ChevronLeftIcon />
+          </IconButton>
           <LibraryBooksIcon />
           <Typography variant="h6" align="left">
             Available tools
           </Typography>
-          <IconButton onClick={handleDrawerClose}>
-            <ChevronLeftIcon />
-          </IconButton>
         </DrawerHeader>
         <Divider />
         <List>
