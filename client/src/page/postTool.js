@@ -155,15 +155,6 @@ export default function PostTool() {
     </Grid>
   );
 
-  const onSuccess = (data) => (
-    <Submission
-      text={`Successfully added ${general.name}`}
-      Icon={HowToRegIcon}
-    />
-  );
-
-  const onError = (error) => <InfoBar type="error" text={error} />;
-
   const options = {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -175,6 +166,46 @@ export default function PostTool() {
       api: api,
     }),
   };
+
+  const onError = (error) => (
+    <Container component="main" maxWidth="lg">
+      <Toolbar />
+      <>
+        <Typography variant="h2">Add tool</Typography>
+        <Divider />
+        <Toolbar />
+      </>
+      <>
+        <Stepper
+          activeStep={activeStep}
+          orientation="horizontal"
+          sx={{ mt: 2 }}
+        >
+          {steps.map((step) => (
+            <Step key={step.label}>
+              <StepLabel icon={step.icon}>{step.label}</StepLabel>
+            </Step>
+          ))}
+        </Stepper>
+        {steps[activeStep].fragment}
+        <Grid container>
+          <BackButton />
+          <NextButton />
+        </Grid>
+      </>
+      <InfoBar type="error" text={error} />
+    </Container>
+  );
+
+  const onSuccess = (data) => (
+    <React.Fragment>
+      <Toolbar />
+      <Submission
+        text={`Successfully added ${general.name}`}
+        Icon={HowToRegIcon}
+      />
+    </React.Fragment>
+  );
 
   const OnSubmit = () =>
     Request(
@@ -217,7 +248,9 @@ export default function PostTool() {
     </Grid>
   );
 
-  return (
+  return submitting ? (
+    <OnSubmit />
+  ) : (
     <Container component="main" maxWidth="lg">
       <Toolbar />
       <>
@@ -242,7 +275,6 @@ export default function PostTool() {
           <BackButton />
           <NextButton />
         </Grid>
-        {submitting ? <OnSubmit /> : <></>}
       </>
     </Container>
   );

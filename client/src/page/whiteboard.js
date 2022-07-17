@@ -15,6 +15,10 @@ import Loading from "../component/common/loading";
 import ToolNode from "../component/whiteboard/step/toolNode";
 import NoResourceFoundException from "../exception/NoResourceFoundException";
 import Request from "../service/request";
+import HowToRegIcon from "@mui/icons-material/HowToReg";
+import InfoBar from "../component/common/infoBar";
+import Submission from "../component/common/submission";
+import WorkflowSubmitDialog from "../component/whiteboard/workflowSubmitDialog";
 
 let id = -1;
 const getId = () => `node${++id}`;
@@ -40,6 +44,15 @@ export default function Whiteboard({ config, setDrawerList }) {
 
   // States if the workflow can be commited
   const [canAdvance, setCanAdvance] = useState(false);
+
+  // Workflow name for workflow identification
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [workflowName, setWorkflowName] = useState("");
+
+  const onWorkflowNameUpdate = (event) => {
+    const value = event.target.value;
+    setWorkflowName(value);
+  };
 
   useEffect(() => {
     if (!isWorkflowValid(nodes, edges)) {
@@ -110,8 +123,6 @@ export default function Whiteboard({ config, setDrawerList }) {
     [reactFlowInstance]
   );
 
-  console.log(edges);
-
   return (
     <>
       <ReactFlowProvider>
@@ -150,16 +161,52 @@ export default function Whiteboard({ config, setDrawerList }) {
         <Button
           variant="outlined"
           endIcon={<SendIcon />}
-          onClick={() => console.log(getWorkflowRequest(nodes, edges))}
+          onClick={() => setDialogOpen(true)}
         >
           Submit
         </Button>
       </Box>
+      <WorkflowSubmitDialog
+        workflowName={workflowName}
+        onWorkflowNameUpdate={onWorkflowNameUpdate}
+        setCanAdvance={setCanAdvance}
+        open={dialogOpen}
+        onApply={() => {
+          requestWorkflow(nodes, edges, config, workflowName);
+          setDialogOpen(false);
+        }}
+        onCancel={() => setDialogOpen(false)}
+      />
     </>
   );
 }
 
-function getWorkflowRequest(nodes, edges) {
+function requestWorkflow(nodes, edges, config, workflowName) {
+  const workflowRequest = getWorkflowRequest(workflowName, nodes, edges);
+
+  const url = `${config.appProtocol}://${config.address}:${config.port}/workflow`;
+
+  const onError = (error) => <InfoBar type="error" text={error} />;
+
+  const onSuccess = (data) => (
+    <React.Fragment>
+      <Submission
+        text={`Successfully added ${workflowName}`}
+        Icon={HowToRegIcon}
+      />
+    </React.Fragment>
+  );
+
+  const options = {
+    method: "POST",
+    headers: { "Content-type": "application/json" },
+    body: JSON.stringify(workflowRequest),
+  };
+
+  Request(url, options, onError, onSuccess, <Loading />);
+}
+
+function getWorkflowRequest(name, nodes, edges) {
   const workflow = [];
 
   nodes.forEach((node) => {
@@ -190,8 +237,10 @@ function getWorkflowRequest(nodes, edges) {
     };
     workflow.push(step);
   });
-  console.log(workflow);
-  return workflow;
+  return {
+    name: name,
+    tasks: workflow,
+  };
 }
 
 function isWorkflowValid(nodes, edges) {
