@@ -10,10 +10,10 @@ module.exports = (workflowService) => {
   }
 
   function getWorkflow(req, res, next) {
-    const workflowId = req.params.id;
+    const name = req.params.name;
 
     workflowService
-      .getWorkflow(workflowId)
+      .getWorkflow(name)
       .then((data) => onSuccess(res, data))
       .catch((err) => next(err));
   }
@@ -23,10 +23,7 @@ module.exports = (workflowService) => {
 
     workflowService
       .postWorkflow(workflow)
-      .then((data) => {
-        console.log(data);
-        return onSuccess(res, data, (code = 201));
-      })
+      .then((data) => onSuccess(res, data, (code = 201)))
       .catch((err) => next(err));
   }
 

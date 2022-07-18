@@ -1,19 +1,23 @@
 const fetch = require("node-fetch");
 
 module.exports = () => {
-  function get(url, nextAction = () => {}) {
-    return fetch(url)
-      .then(nextAction)
-      .catch((err) => {
-        throw err;
-      });
+  function get(url, auth) {
+    const options = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: auth || "",
+      },
+    };
+
+    return fetch(url, options);
   }
 
   function post(
     url,
     body,
     auth,
-    nextAction = () => {},
     headers = { "Content-Type": "application/json" }
   ) {
     const options = {

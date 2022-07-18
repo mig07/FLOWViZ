@@ -12,11 +12,11 @@ module.exports = (WorkflowDb, ApiException) => {
 
   /**
    * Returns a specified workflow from the data source
-   * @param {The workflow ID} id
+   * @param {The workflow name} name
    * @returns {The specified workflow}
    */
-  async function getWorkflow(id) {
-    return getOne(WorkflowDb.getWorkflow, id, "workflow");
+  async function getWorkflow(name) {
+    return getOne(WorkflowDb.getWorkflow, name, "workflow");
   }
 
   /**
