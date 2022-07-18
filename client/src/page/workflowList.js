@@ -16,9 +16,11 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import * as React from "react";
+import InfoBar from "../component/common/infoBar";
 import Loading from "../component/common/loading";
 import PageTitle from "../component/common/pageTitle";
 import Request from "../service/request";
+import CenteredContainer from "../component/common/centeredContainer";
 
 const WorkflowStates = {
   cancelled: "cancelled",
@@ -26,34 +28,6 @@ const WorkflowStates = {
   running: "running",
   completed: "completed",
 };
-
-function createData(name, description, creationDate, finishDate, state) {
-  return { name, description, creationDate, finishDate, state };
-}
-
-const rows = [
-  createData(
-    "MyFirstPipeline",
-    "This is my first pipeline",
-    new Date().toDateString(),
-    "-",
-    WorkflowStates.queued
-  ),
-  createData(
-    "ExamplePipeline",
-    "This is an example pipeline",
-    new Date().toDateString(),
-    "-",
-    WorkflowStates.queued
-  ),
-  createData(
-    "TrimmomaticPipeline",
-    "A trimmomatic pipeline",
-    new Date().toDateString(),
-    "-",
-    WorkflowStates.cancelled
-  ),
-];
 
 const componentStyle = {
   TableCell: {
@@ -88,8 +62,17 @@ const getState = (value) => {
 export default function WorkflowList({ config }) {
   const url = `${config.appProtocol}://${config.address}:${config.port}/workflow`;
 
+  const onError = (error) => {
+    return <InfoBar type="error" text={error} />;
+  };
+
   const onSuccess = (workflows) => {
-    if (!workflows || workflows.length === 0) return;
+    if (!workflows || workflows.length === 0)
+      return (
+        <CenteredContainer>
+          <Typography>You do not have any workflows</Typography>
+        </CenteredContainer>
+      );
     workflows.map((workflow) => (
       <TableRow
         key={workflow.name}
@@ -104,10 +87,6 @@ export default function WorkflowList({ config }) {
         <TableCell>{getState(workflow.state)}</TableCell>
       </TableRow>
     ));
-  };
-
-  const onError = (error) => {
-    return <></>;
   };
 
   return (
@@ -128,20 +107,6 @@ export default function WorkflowList({ config }) {
             </TableHead>
             <TableBody>
               {Request(url, {}, onError, onSuccess, <Loading />)}
-              {/* {rows.map((row) => (
-                <TableRow
-                  key={row.name}
-                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                >
-                  <TableCell component="th" scope="row">
-                    {row.name}
-                  </TableCell>
-                  <TableCell>{row.description}</TableCell>
-                  <TableCell>{row.creationDate}</TableCell>
-                  <TableCell>{row.finishDate}</TableCell>
-                  <TableCell>{getState(row.state)}</TableCell>
-                </TableRow>
-              ))} */}
             </TableBody>
           </Table>
         </TableContainer>
