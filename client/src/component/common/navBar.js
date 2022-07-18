@@ -14,6 +14,7 @@ import ListItemText from "@mui/material/ListItemText";
 import * as React from "react";
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import NavBarAuthButtons from "./navBarAuthButtons";
 import NavBarButtons from "./navBarButtons";
 import NavBarTitle from "./navBarTitle";
 
@@ -47,7 +48,7 @@ const AppBar = styled(MuiAppBar, {
   }),
 }));
 
-export default function NavBar({ drawerList, children }) {
+export default function NavBar({ drawerList, auth, children }) {
   const navigate = useNavigate();
   const location = useLocation();
   const currentPage = location.pathname;
@@ -148,7 +149,12 @@ export default function NavBar({ drawerList, children }) {
         <Toolbar>
           {hasDrawer ? drawerIcon : <></>}
           <NavBarTitle navigateTo={navigateTo} />
-          <NavBarButtons navigateTo={navigateTo} />
+          <NavBarButtons navigateTo={navigateTo} currentPage={currentPage} />
+          <NavBarAuthButtons
+            navigateTo={navigateTo}
+            currentPage={currentPage}
+            //auth={{ username: "Miguel Luís" }}
+          />
         </Toolbar>
       </AppBar>
       <Toolbar />

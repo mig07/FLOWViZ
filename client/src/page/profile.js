@@ -11,6 +11,7 @@ import {
 import PageTitle from "../component/common/pageTitle";
 import PersonRemoveIcon from "@mui/icons-material/PersonRemove";
 import SyncLockIcon from "@mui/icons-material/SyncLock";
+import UserAvatar from "../component/common/userAvatar";
 
 const profile = {
   username: "Miguel Luís",
@@ -26,10 +27,11 @@ export default function Profile({ config }) {
     return (
       <Grid container maxWidth="lg" spacing={5} sx={{ mt: 2 }}>
         <Grid item>
-          <Avatar
-            alt={user.user.username}
-            style={{ width: 256, height: 256 }}
-            {...strAvatar(user.user.username)}
+          <UserAvatar
+            username={user.user.username}
+            width={256}
+            height={256}
+            fontSize={120}
           />
         </Grid>
         <Grid item>
@@ -65,35 +67,4 @@ export default function Profile({ config }) {
       <OnSuccess user={profile} />
     </Container>
   );
-}
-
-function strToColor(str) {
-  let hash = 0;
-  let i;
-
-  /* eslint-disable no-bitwise */
-  for (i = 0; i < str.length; i += 1) {
-    hash = str.charCodeAt(i) + ((hash << 5) - hash);
-  }
-
-  let color = "#";
-
-  for (i = 0; i < 3; i += 1) {
-    const value = (hash >> (i * 8)) & 0xff;
-    color += `00${value.toString(16)}`.slice(-2);
-  }
-  /* eslint-enable no-bitwise */
-
-  return color;
-}
-
-function strAvatar(name) {
-  return {
-    sx: {
-      fontSize: 120,
-      bgcolor: strToColor(name),
-    },
-
-    children: `${name.split(" ")[0][0]}${name.split(" ")[1][0]}`,
-  };
 }

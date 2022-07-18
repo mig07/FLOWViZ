@@ -10,42 +10,20 @@ const pageButtonsGroups = [
       {
         name: "Home",
         url: "/",
-        isDefault: true,
       },
       {
         name: "Documentation",
         url: "/documentation",
-        isDefault: false,
       },
       {
         name: "About",
         url: "/about",
-        isDefault: false,
-      },
-    ],
-  },
-  {
-    position: "right",
-    pageButtons: [
-      {
-        name: "Login",
-        url: "/login",
-        isDefault: false,
-      },
-      {
-        name: "Register",
-        url: "/register",
-        isDefault: false,
       },
     ],
   },
 ];
 
-export default function NavBarButtons({ navigateTo }) {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const currentPage = location.pathname;
-
+export default function NavBarButtons({ navigateTo, currentPage }) {
   return pageButtonsGroups.map((pageButtonsGroup) => (
     <Box
       key={pageButtonsGroup.position}
