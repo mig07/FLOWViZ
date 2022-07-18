@@ -12,7 +12,7 @@ export default function Apis({ config }) {
     <>
       <Typography variant="h3" marginTop={5} align="center">
         Available APIs
-        {Request(url, {}, ResourceNotFound, ToolCardGrid, <Loading />)}
+        {/* {Request(url, {}, ResourceNotFound, ToolCardGrid, <Loading />)} */}
       </Typography>
     </>
   );
