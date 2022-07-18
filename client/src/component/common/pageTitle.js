@@ -1,11 +1,13 @@
 import React from "react";
-import { Divider, Typography } from "@mui/material";
+import { Box, Divider, Typography } from "@mui/material";
 
-export default function PageTitle({ name }) {
+export default function PageTitle({ name, variant = "h2", sx = {} }) {
   return (
-    <>
-      <Typography variant="h2">{name}</Typography>
+    <Box sx={sx}>
+      <Typography variant={variant} sx={sx}>
+        {name}
+      </Typography>
       <Divider />
-    </>
+    </Box>
   );
 }
