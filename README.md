@@ -70,7 +70,13 @@ Debian distros:
 sudo apt-get update && sudo apt-get install tmux
 ```
 
-2. Execute the start.sh script
+2. Enable tmux mouse scroll (optional)
+
+```sh
+echo "set -g mouse on" >> ~/.tmux.conf && tmux source-file ~/.tmux.conf
+```
+
+3. Execute the start.sh script
 
 **Note**: if there are no execution permissions, execute:
 ```sh
