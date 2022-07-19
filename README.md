@@ -30,6 +30,18 @@ docker pull rabbitmq
 docker run -d --hostname rabbithost --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:management
 ```
 
+## Add server's dot-env environment variables
+
+1. Create a file called `.env` in `server/` folder.
+
+2. Fill it with the variables below (change what's between the curly brackets and remove them):
+
+```sh
+JWT_SECRET={jwt_secret}
+AIRFLOW_USERNAME={airflow_username}
+AIRFLOW_PASSWORD={airflow_password}
+```
+
 ## Building and running on localhost
 
 1. Install dependencies:
