@@ -3,6 +3,13 @@ const Schema = mongoose.Schema;
 const WorkflowStepSchema = require('./workflowStep')
 
 const WorkflowSchema = new Schema({
+    username: {
+        type: String,
+        minlength: 3,
+        maxlength: 20,
+        required: true,
+        unique: true,
+    }, 
     name: {
         type: String,
         minlength: 3,
