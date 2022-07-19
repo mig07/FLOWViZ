@@ -34,7 +34,7 @@ docker run -d --hostname rabbithost --name rabbitmq -p 5672:5672 -p 15672:15672 
 
 1. Create a file called `.env` in `server/` folder.
 
-2. Fill it with the variables below (change what's between the curly brackets and remove them):
+2. Fill it with the variables below (removed the curly brackets and change what's between them):
 
 ```sh
 JWT_SECRET={jwt_secret}
