@@ -1,53 +1,22 @@
-require(`dotenv`).config();
+const DbWorkflow = require("../schema/mongodb/workflow/workflow");
 
-const airflowUsername = process.env.AIRFLOW_USERNAME;
-const airflowPassword = process.env.AIRFLOW_PASSWORD;
+module.exports = () => {
 
-module.exports = (httpRequest, airflow) => {
-  function AirflowUriManager() {
-    const baseUri = `http://${airflow.address}:${airflow.port}/${airflow.base}`;
-    this.getWorkflows = () => `${baseUri}`;
-    this.getWorkflow = (name) => `${baseUri}/${name}`;
-    this.postWorkflow = () => `${baseUri}/${airflow.dagRunGenerator}`;
+  function getDbWorkflows(username) {
+    return DbWorkflow.find({username: username}).select("-_id");
   }
 
-  const airflowUriManager = new AirflowUriManager();
-
-  const auth = Buffer(`${airflowUsername}:${airflowPassword}`).toString(
-    "base64"
-  );
-
-  const authHeader = `Basic ${auth}`;
-
-  function getWorkflows() {
-    return httpRequest
-      .get(airflowUriManager.getWorkflows(), authHeader)
-      .then((data) => data.json())
-      .catch((err) => {
-        throw err;
-      });
+  function getDbWorkflow(username, name) {
+    return DbWorkflow.find({username: username, name: name}).select("-_id");
   }
 
-  function getWorkflow(name) {
-    return httpRequest
-      .get(airflowUriManager.getWorkflow(name), authHeader)
-      .then((data) => data.json())
-      .catch((err) => {
-        throw err;
-      });
-  }
-
-  function postWorkflow(workflow) {
-    return httpRequest
-      .post(airflowUriManager.postWorkflow(), workflow, authHeader)
-      .catch((err) => {
-        throw err;
-      });
+  function postDbWorkflow(workflow) {
+    return new DbWorkflow(workflow).save();
   }
 
   return {
-    getWorkflows: getWorkflows,
-    getWorkflow: getWorkflow,
-    postWorkflow: postWorkflow,
+    getDbWorkflows: getDbWorkflows,
+    getDbWorkflow: getDbWorkflow,
+    postDbWorkflow: postDbWorkflow,
   };
 };
