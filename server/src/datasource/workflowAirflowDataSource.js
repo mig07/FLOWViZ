@@ -23,6 +23,7 @@ module.exports = (httpRequest, airflow) => {
     return httpRequest
       .get(airflowUriManager.getWorkflows(), authHeader)
       .then((data) => data.json())
+      .then((data) => data.dags)
       .catch((err) => {
         throw err;
       });

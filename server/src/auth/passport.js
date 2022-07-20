@@ -17,6 +17,12 @@ module.exports = (app, passport) => {
   );
 
   /* Auth Endpoints */
+  // GETs
+  app.get(
+    "/profile",
+    passport.authenticate("jwt", { session: false }),
+    authController.profile
+  );
 
   // POSTs
   app.post("/register", authController.register);

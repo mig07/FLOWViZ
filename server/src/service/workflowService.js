@@ -1,13 +1,13 @@
 const getOne = require("./serviceUtils");
 const mapWorkflowReqToAirflowWorkflow = require("../mappers/mapWorkflowReqToAirflowWorkflow");
 
-module.exports = (WorkflowDb, ApiException) => {
+module.exports = (WorkflowDb, Airflow, ApiException) => {
   /**
    * Returns a list of workflows from the data source
    * @returns {A list of workflows from the data source}
    */
-  async function getWorkflows() {
-    return await WorkflowDb.getWorkflows();
+  async function getWorkflows(username) {
+    return await WorkflowDb.getDbWorkflows(username);
   }
 
   /**
@@ -15,8 +15,8 @@ module.exports = (WorkflowDb, ApiException) => {
    * @param {The workflow name} name
    * @returns {The specified workflow}
    */
-  async function getWorkflow(name) {
-    return getOne(WorkflowDb.getWorkflow, name, "workflow");
+  async function getWorkflow(username, workflowName) {
+    return WorkflowDb.getDbWorkflow(username, workflowName);
   }
 
   /**
@@ -24,10 +24,18 @@ module.exports = (WorkflowDb, ApiException) => {
    * workflow system execution
    * @param {The workflow JSON structure} id
    */
-  async function postWorkflow(workflow) {
-    const executionOrder = getExecutionOrder(workflow);
+  async function postWorkflow(username, workflow) {
+    const wflow = {
+      username: username,
+      name: workflow.name,
+      tasks: workflow.tasks,
+    };
+
+    return await WorkflowDb.postDbWorkflow(wflow);
+
+    /* const executionOrder = getExecutionOrder(workflow);
     let airflowRequest = convertToAirflowWorkflow(workflow, executionOrder);
-    return await WorkflowDb.postWorkflow(airflowRequest);
+    return await WorkflowDb.postWorkflow(airflowRequest); */
   }
 
   return {

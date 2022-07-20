@@ -6,7 +6,8 @@ module.exports = (
   toolController,
   workflowController,
   exceptionMiddleware,
-  workflowMiddleware
+  workflowMiddleware,
+  passport
 ) => {
   /* Library Endpoints */
 
@@ -20,13 +21,22 @@ module.exports = (
   /* Workflow Endpoints */
 
   // GETs
-  app.get("/workflow", workflowController.getWorkflows);
-  app.get("/workflow/:name", workflowController.getWorkflow);
+  app.get(
+    "/workflow",
+    passport.authenticate("jwt", { session: false }),
+    workflowController.getWorkflows
+  );
+  app.get(
+    "/workflow/:name",
+    passport.authenticate("jwt", { session: false }),
+    workflowController.getWorkflow
+  );
 
   // POSTs
   app.post(
     "/workflow",
     checkSchema(workflowStep),
+    passport.authenticate("jwt", { session: false }),
     workflowMiddleware,
     workflowController.postWorkflow
   );

@@ -20,7 +20,7 @@ module.exports = (passport, secret) => {
         } else {
           return done(null, false);
         }
-      });
+      }).select("-_id username");
     })
   );
 

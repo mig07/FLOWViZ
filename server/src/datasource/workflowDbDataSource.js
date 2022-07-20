@@ -1,17 +1,18 @@
-const DbWorkflow = require("../schema/mongodb/workflow/workflow");
+const Workflow = require("../schema/mongodb/workflow/workflow");
 
 module.exports = () => {
-
   function getDbWorkflows(username) {
-    return DbWorkflow.find({username: username}).select("-_id");
+    return Workflow.find({ username: username }).select("-_id");
   }
 
-  function getDbWorkflow(username, name) {
-    return DbWorkflow.find({username: username, name: name}).select("-_id");
+  function getDbWorkflow(username, workflowName) {
+    return Workflow.findOne({ username: username, name: workflowName }).select(
+      "-_id"
+    );
   }
 
   function postDbWorkflow(workflow) {
-    return new DbWorkflow(workflow).save();
+    return new Workflow(workflow).save();
   }
 
   return {

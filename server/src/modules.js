@@ -4,17 +4,14 @@ const ApiException = require("./exception/apiException");
 /* HTTP requester utility class */
 const httpRequest = require("./util/httpRequest")();
 
-module.exports = (app, accessConfig) => {
+module.exports = (app, accessConfig, passport) => {
   // Library
   const toolDb = require("./datasource/toolDbDataSource.js")();
   const toolService = require("./service/toolService.js")(toolDb, ApiException);
   const toolController = require("./controller/toolController.js")(toolService);
 
   // Workflow
-  const workflowDb = require("./datasource/workflowDbDataSource.js")(
-    httpRequest,
-    accessConfig.airflow
-  );
+  const workflowDb = require("./datasource/workflowDbDataSource.js")();
   const workflowService = require("./service/workflowService.js")(
     workflowDb,
     ApiException
@@ -35,6 +32,7 @@ module.exports = (app, accessConfig) => {
     toolController,
     workflowController,
     exceptionMiddleware,
-    workflowMiddleware
+    workflowMiddleware,
+    passport
   );
 };

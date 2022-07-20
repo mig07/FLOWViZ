@@ -63,6 +63,10 @@ module.exports = (jwt, authService, argonUtils, secret) => {
       .catch((err) => next(err));
   }
 
+  function profile(req, res, next) {
+    onSuccess(res, req.user);
+  }
+
   function logout(req, res, next) {
     req.logout();
   }
@@ -70,6 +74,7 @@ module.exports = (jwt, authService, argonUtils, secret) => {
   return {
     register: register,
     login: login,
+    profile: profile,
     logout: logout,
   };
 };

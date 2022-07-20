@@ -46,7 +46,7 @@ module.exports = (config) => {
   }
 
   /* Loading FLOWViZ modules */
-  require("./modules")(app, accessConfig);
+  require("./modules")(app, accessConfig, passport);
 
   /* Server initialization */
   if (!conf.express) {
