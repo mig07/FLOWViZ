@@ -7,7 +7,6 @@ const Task = new Schema({
     minlength: 3,
     maxlength: 30,
     required: true,
-    unique: true,
   },
   action: Object,
   parents: [String],

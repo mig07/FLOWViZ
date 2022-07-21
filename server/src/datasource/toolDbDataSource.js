@@ -1,4 +1,4 @@
-const ToolContract = require("../schema/toolContract/ToolContract");
+const ToolContract = require("../schema/mongodb/tool/ToolContract");
 
 module.exports = () => {
   function getTools(type) {

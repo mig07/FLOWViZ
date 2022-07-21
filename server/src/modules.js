@@ -12,8 +12,14 @@ module.exports = (app, accessConfig, passport) => {
 
   // Workflow
   const workflowDb = require("./datasource/workflowDbDataSource.js")();
+  const airflowDataSource =
+    require("./datasource/workflowAirflowDataSource.js")(
+      httpRequest,
+      accessConfig.airflow
+    );
   const workflowService = require("./service/workflowService.js")(
     workflowDb,
+    airflowDataSource,
     ApiException
   );
   const workflowController = require("./controller/workflowController")(

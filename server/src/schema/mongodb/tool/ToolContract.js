@@ -13,6 +13,7 @@ const ToolContractSchema = new Schema({
     unique: true,
   },
   description: { type: String, minlength: 0, maxlength: 100 },
+  type: { type: String, minlength: 0, maxlength: 30 },
   library: [CommandGroupSchema],
   api: [ApiSchema],
 });

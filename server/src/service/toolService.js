@@ -1,4 +1,3 @@
-const ToolContract = require("../schema/toolContract/ToolContract");
 const getOne = require("./serviceUtils");
 
 module.exports = (ToolDb, ApiException) => {
