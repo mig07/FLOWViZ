@@ -7,7 +7,13 @@ class WorkflowService {
   }
 
   getWorkflows(onError, onSuccess, loading) {
-    return Request(this.baseUrl, {}, onError, onSuccess, loading);
+    return Request(
+      this.baseUrl,
+      httpOptions.getAuth(),
+      onError,
+      onSuccess,
+      loading
+    );
   }
 
   getWorkflow(workflowName, onError, onSuccess, loading) {

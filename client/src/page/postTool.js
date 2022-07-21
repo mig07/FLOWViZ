@@ -195,13 +195,21 @@ export default function PostTool() {
   const options = {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      name: general.name,
-      type: configMethod,
-      description: general.description,
-      library: library,
-      api: api,
-    }),
+    body: JSON.stringify(
+      configMethod === "api"
+        ? {
+            name: general.name,
+            description: general.description,
+            type: configMethod,
+            api: api,
+          }
+        : {
+            name: general.name,
+            description: general.description,
+            type: configMethod,
+            library: library,
+          }
+    ),
   };
 
   const onError = (error) => (

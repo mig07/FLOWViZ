@@ -21,6 +21,7 @@ import Loading from "../component/common/loading";
 import PageTitle from "../component/common/pageTitle";
 import Request from "../service/request";
 import CenteredContainer from "../component/common/centeredContainer";
+import WorkflowService from "../service/workflowService";
 
 const WorkflowStates = {
   cancelled: "cancelled",
@@ -62,6 +63,8 @@ const getState = (value) => {
 export default function WorkflowList({ config }) {
   const url = `${config.appProtocol}://${config.address}:${config.port}/workflow`;
 
+  const workflowService = new WorkflowService(config);
+
   const onError = (error) => {
     return <InfoBar type="error" text={error} />;
   };
@@ -73,20 +76,22 @@ export default function WorkflowList({ config }) {
           <Typography>You do not have any workflows</Typography>
         </CenteredContainer>
       );
-    workflows.map((workflow) => (
-      <TableRow
-        key={workflow.name}
-        sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-      >
-        <TableCell component="th" scope="row">
-          {workflow.name}
-        </TableCell>
-        <TableCell>{workflow.description}</TableCell>
-        <TableCell>{workflow.creationDate}</TableCell>
-        <TableCell>{workflow.finishDate}</TableCell>
-        <TableCell>{getState(workflow.state)}</TableCell>
-      </TableRow>
-    ));
+    return workflows.map((workflow) => {
+      return (
+        <TableRow
+          key={workflow.name}
+          sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+        >
+          <TableCell component="th" scope="row">
+            {workflow.name}
+          </TableCell>
+          <TableCell>{workflow.description}</TableCell>
+          <TableCell>{workflow.creationDate}</TableCell>
+          <TableCell>{workflow.finishDate}</TableCell>
+          <TableCell>{getState(workflow.state)}</TableCell>
+        </TableRow>
+      );
+    });
   };
 
   return (
@@ -106,7 +111,7 @@ export default function WorkflowList({ config }) {
               </TableRow>
             </TableHead>
             <TableBody>
-              {Request(url, {}, onError, onSuccess, <Loading />)}
+              {workflowService.getWorkflows(onError, onSuccess, <Loading />)}
             </TableBody>
           </Table>
         </TableContainer>
