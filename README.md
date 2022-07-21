@@ -16,20 +16,6 @@ docker pull mongo
 docker run --name mongodb -d -p 27017:27017 mongo
 ```
 
-## Configuring queue message broker - RabbitMQ
-
-1. Download RabbitMQ image
-
-```sh
-docker pull rabbitmq
-```
-
-2. Run and create RabbitMQ container, exposing ports 5672 and 15672
-
-```sh
-docker run -d --hostname rabbithost --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:management
-```
-
 ## Add server's dot-env environment variables
 
 1. Create a file called `.env` in `server/` folder.
@@ -68,6 +54,11 @@ sudo pacman -Sy tmux
 Debian distros:
 ```sh
 sudo apt-get update && sudo apt-get install tmux
+```
+
+macOS:
+```sh
+brew install tmux
 ```
 
 2. Enable tmux mouse scroll (optional)
