@@ -10,7 +10,7 @@ import {
   Typography,
 } from "@mui/material";
 import * as React from "react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Access from "../component/postTool/accessFragment";
 import General from "../component/postTool/generalFragment";
 import Rules from "../component/postTool/rulesFragment";
@@ -29,7 +29,7 @@ import Submission from "../component/common/submission";
 export default function PostTool() {
   const [activeStep, setActiveStep] = useState(0);
   const [canAdvance, setCanAdvance] = useState(false);
-  const [configMethod, setConfigMethod] = useState("");
+  const [configMethod, setConfigMethod] = useState("api");
 
   const onConfigMethodUpdate = (method) => {
     setConfigMethod(method);
@@ -52,20 +52,46 @@ export default function PostTool() {
     description: "",
   });
 
-  const [access, setAccess] = useState({
-    address: "",
-    port: "",
-  });
-
   const onGeneralUpdate = (gen) => {
     setGeneral(gen);
   };
 
-  const onAccessUpdate = (acc) => {
-    setAccess(acc);
+  const [libraryAccess, setLibraryAccess] = useState({
+    address: "",
+    port: "",
+    isContainer: false,
+    dockerDaemon: "",
+    dockerImage: "",
+    dockerContainer: "",
+    dockerVolumes: [],
+  });
+
+  const onLibraryAccessUpdate = (acc) => {
+    setLibraryAccess(acc);
   };
 
-  const [api, setApi] = useState([]);
+  const [apiAccess, setApiAccess] = useState({
+    url: "",
+    apiKey: "",
+  });
+
+  const onApiAccessUpdate = (acc) => {
+    setApiAccess(acc);
+  };
+
+  const generateEndpoint = (index) => {
+    return {
+      name: `Endpoint ${index}`,
+      description: [],
+      method: "",
+      path: "",
+      headers: {},
+      body: {},
+    };
+  };
+
+  const [api, setApi] = useState([generateEndpoint(0)]);
+  console.log(api);
 
   const generateCommandGroup = (index) => {
     return {
@@ -117,10 +143,20 @@ export default function PostTool() {
       description: "Where the tool is located and how it can be accessed.",
       fragment: (
         <Access
-          onAccessUpdate={onAccessUpdate}
+          url={apiAccess.url}
+          apiKey={apiAccess.apiKey}
+          address={libraryAccess.address}
+          port={libraryAccess.port}
+          isContainer={libraryAccess.isContainer}
+          dockerDaemon={libraryAccess.dockerDaemon}
+          dockerImage={libraryAccess.dockerImage}
+          dockerContainer={libraryAccess.dockerContainer}
+          dockerVolumes={libraryAccess.dockerVolumes}
+          configMethod={configMethod}
+          onLibraryAccessUpdate={onLibraryAccessUpdate}
+          onApiAccessUpdate={onApiAccessUpdate}
           setCanAdvance={setCanAdvance}
-          address={access.address}
-          port={access.port}
+          onMethodChoice={onConfigMethodUpdate}
         />
       ),
     },
@@ -134,9 +170,10 @@ export default function PostTool() {
           api={api}
           library={library}
           configMethod={configMethod}
-          onMethodChoice={onConfigMethodUpdate}
           onLibraryUpdate={onLibraryUpdate}
           generateCommandGroup={generateCommandGroup}
+          onApiUpdate={onApiUpdate}
+          generateEndpoint={generateEndpoint}
         />
       ),
     },

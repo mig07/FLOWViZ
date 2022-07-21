@@ -29,7 +29,7 @@ const authenticatedButtons = [
   },
 ];
 
-const authSection = (navigateTo, currentPage, auth) => {
+const authSection = (navigateTo, currentPage, username) => {
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef(null);
 
@@ -89,12 +89,7 @@ const authSection = (navigateTo, currentPage, auth) => {
         aria-haspopup="true"
         onClick={handleToggle}
       >
-        <UserAvatar
-          username={auth.username}
-          width={32}
-          height={32}
-          fontSize={16}
-        />
+        <UserAvatar username={username} width={32} height={32} fontSize={16} />
       </Button>
       <Popper
         open={open}
@@ -125,7 +120,14 @@ const authSection = (navigateTo, currentPage, auth) => {
                   >
                     Profile
                   </MenuItem>
-                  <MenuItem onClick={handleClose}>Logout</MenuItem>
+                  <MenuItem
+                    onClick={(event) => {
+                      localStorage.setItem("auth", "{}");
+                      handleClose(event);
+                    }}
+                  >
+                    Logout
+                  </MenuItem>
                 </MenuList>
               </ClickAwayListener>
             </Paper>
@@ -151,7 +153,11 @@ const notAuthSection = (navigateTo, currentPage) => {
   });
 };
 
-export default function NavBarAuthButtons({ navigateTo, currentPage, auth }) {
+export default function NavBarAuthButtons({
+  navigateTo,
+  currentPage,
+  username,
+}) {
   return (
     <Box
       key={"right"}
@@ -161,9 +167,9 @@ export default function NavBarAuthButtons({ navigateTo, currentPage, auth }) {
         justifyContent: "right",
       }}
     >
-      {!auth
+      {!username
         ? notAuthSection(navigateTo, currentPage)
-        : authSection(navigateTo, currentPage, auth)}
+        : authSection(navigateTo, currentPage, username)}
     </Box>
   );
 }

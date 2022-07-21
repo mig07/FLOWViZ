@@ -28,8 +28,8 @@ export default function useFetch(url, options) {
       }
 
       // Saving response data into state
-      setReqState(RequestState.success);
       setData(res);
+      setReqState(RequestState.success);
     } catch (error) {
       setError(error);
       setReqState(RequestState.error);

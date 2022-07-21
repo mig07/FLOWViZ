@@ -7,7 +7,7 @@ import Loading from "../component/common/loading";
 import UserForm from "../component/common/userForm";
 import Request from "../service/request";
 
-export default function Login() {
+export default function Register() {
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");

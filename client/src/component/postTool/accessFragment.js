@@ -1,27 +1,129 @@
-import { Container, Stack, TextField, Typography } from "@mui/material";
+import {
+  Container,
+  Stack,
+  TextField,
+  Toolbar,
+  Typography,
+} from "@mui/material";
 import * as React from "react";
 import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
+import FormControl from "@mui/material/FormControl";
+import FormLabel from "@mui/material/FormLabel";
 import Checkbox from "@mui/material/Checkbox";
 
 import { validateInputs } from "./util";
 
 export default function Access({
-  onAccessUpdate = () => {},
-  setCanAdvance = () => {},
+  url,
+  apiKey,
   address,
   port,
-  isContainer = true,
+  isContainer,
+  dockerDaemon,
+  dockerImage,
+  dockerContainer,
+  dockerVolumes,
+  configMethod,
+  onLibraryAccessUpdate = () => {},
+  onApiAccessUpdate = () => {},
+  setCanAdvance = () => {},
+  onMethodChoice = () => {},
 }) {
-  const requiredFields = [address];
+  const requiredFields = configMethod === "api" ? [url, apiKey] : [address];
+
   React.useEffect(() => {
     validateInputs(requiredFields, setCanAdvance);
   }, requiredFields);
 
-  return (
-    <Container sx={{ p: 2 }}>
-      <Stack sx={{ p: 2 }}>
-        <Typography variant="h5">Access</Typography>
+  const MethodChoice = () => {
+    return (
+      <>
+        <FormControl>
+          <FormLabel id="config-method-label">
+            Choose your configuration method
+          </FormLabel>
+          <RadioGroup
+            row
+            aria-labelledby="config-method-buttons-group-label"
+            defaultValue="api"
+            value={configMethod}
+            name="radio-buttons-group"
+          >
+            <FormControlLabel
+              value="api"
+              control={<Radio />}
+              label="API"
+              onChange={() => onMethodChoice("api")}
+            />
+            <FormControlLabel
+              value="library"
+              control={<Radio />}
+              label="Library"
+              onChange={() => onMethodChoice("library")}
+            />
+          </RadioGroup>
+        </FormControl>
+        <Toolbar />
+      </>
+    );
+  };
+
+  const DockerForm = () => {
+    return (
+      <>
+        <TextField
+          required
+          margin="normal"
+          id="image"
+          label="Docker image"
+          name="image"
+          autoComplete="image"
+          value={dockerImage}
+          onChange={(event) =>
+            onLibraryAccessUpdate((prevState) => ({
+              ...prevState,
+              dockerImage: event.target.value,
+            }))
+          }
+        />
+        <TextField
+          margin="normal"
+          id="container"
+          label="Docker container"
+          name="container"
+          autoComplete="container"
+          value={dockerContainer}
+          onChange={(event) =>
+            onLibraryAccessUpdate((prevState) => ({
+              ...prevState,
+              dockerContainer: event.target.value,
+            }))
+          }
+        />
+        <TextField
+          margin="normal"
+          id="volumes"
+          label="Volumes"
+          name="volumes"
+          autoComplete="volumes"
+          value={dockerContainer}
+          onChange={(event) =>
+            onLibraryAccessUpdate((prevState) => ({
+              ...prevState,
+              dockerContainer: event.target.value,
+            }))
+          }
+        />
+      </>
+    );
+  };
+
+  const LibraryAccessForm = () => {
+    return (
+      <>
         <TextField
           margin="normal"
           required
@@ -31,10 +133,10 @@ export default function Access({
           autoComplete="address"
           value={address}
           onChange={(event) =>
-            onAccessUpdate({
+            onLibraryAccessUpdate((prevState) => ({
+              ...prevState,
               address: event.target.value,
-              port: port,
-            })
+            }))
           }
         />
         <TextField
@@ -43,51 +145,95 @@ export default function Access({
           label="Tool port"
           name="port"
           autoComplete="port"
+          defaultValue={port}
           value={port}
           onChange={(event) =>
-            onAccessUpdate({
-              address: address,
+            onLibraryAccessUpdate((prevState) => ({
+              ...prevState,
               port: event.target.value,
-            })
+            }))
           }
         />
         <FormGroup>
           <FormControlLabel
-            control={<Checkbox value={isContainer} />}
+            control={
+              <Checkbox
+                value={isContainer}
+                onChange={(event) =>
+                  onLibraryAccessUpdate((prevState) => ({
+                    ...prevState,
+                    isContainer: event.target.checked,
+                  }))
+                }
+              />
+            }
             label="Container"
           />
         </FormGroup>
-        {isContainer ? (
-          <>
-            <TextField
-              required
-              margin="normal"
-              id="image"
-              label="Docker image"
-              name="image"
-              autoComplete="image"
-              value={""}
-            />
-            <TextField
-              margin="normal"
-              id="container"
-              label="Docker container"
-              name="container"
-              autoComplete="container"
-              value={""}
-            />
-            <TextField
-              margin="normal"
-              id="volumes"
-              label="Volumes"
-              name="volumes"
-              autoComplete="volumes"
-              value={""}
-            />
-          </>
-        ) : (
-          <></>
-        )}
+        {isContainer ? DockerForm() : <></>}
+      </>
+    );
+  };
+
+  const ApiAccessForm = () => {
+    return (
+      <>
+        <TextField
+          margin="normal"
+          required
+          id="url"
+          label="URL"
+          name="url"
+          autoComplete="url"
+          value={url}
+          onChange={(event) =>
+            onApiAccessUpdate((prevState) => ({
+              ...prevState,
+              url: event.target.value,
+            }))
+          }
+        />
+        <TextField
+          margin="normal"
+          id="key"
+          label="API key"
+          name="key"
+          autoComplete="api key"
+          value={apiKey}
+          onChange={(event) =>
+            onApiAccessUpdate((prevState) => ({
+              ...prevState,
+              apiKey: event.target.value,
+            }))
+          }
+        />
+      </>
+    );
+  };
+
+  const AccessForm = () => {
+    switch (configMethod) {
+      case "api":
+        return ApiAccessForm();
+      case "library":
+        return LibraryAccessForm(
+          address,
+          port,
+          isContainer,
+          onLibraryAccessUpdate
+        );
+
+      default:
+        return <></>;
+    }
+  };
+
+  return (
+    <Container sx={{ p: 2 }}>
+      <Stack sx={{ p: 2 }}>
+        <MethodChoice />
+        <Typography variant="h5">Access</Typography>
+        {AccessForm()}
       </Stack>
     </Container>
   );

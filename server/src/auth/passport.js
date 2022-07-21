@@ -27,4 +27,5 @@ module.exports = (app, passport) => {
   // POSTs
   app.post("/register", authController.register);
   app.post("/login", authController.login);
+  app.post("/logout", authController.logout);
 };

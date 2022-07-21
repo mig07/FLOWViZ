@@ -4,42 +4,17 @@ import CommandGroups from "./commandGroups";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useState } from "react";
 import onArrayCountUpdate from "./util";
+import Endpoints from "./endpoints";
 
 export default function Rules({
   api,
   library,
   configMethod,
-  onMethodChoice = () => {},
   onLibraryUpdate = () => {},
   generateCommandGroup,
+  onApiUpdate = () => {},
+  generateEndpoint,
 }) {
-  const MethodChoice = () => (
-    <>
-      <Typography variant="h6" textAlign="center" sx={{ mt: 2, mb: 2 }}>
-        Choose your configuration method
-      </Typography>
-      <Grid
-        container
-        spacing={2}
-        direction="row"
-        alignItems="center"
-        justifyContent="center"
-      >
-        <Grid item>
-          <Button variant="outlined" onClick={() => onMethodChoice("api")}>
-            API
-          </Button>
-        </Grid>
-        <Grid item>
-          <Button variant="outlined" onClick={() => onMethodChoice("library")}>
-            Library
-          </Button>
-        </Grid>
-      </Grid>
-      <Toolbar />
-    </>
-  );
-
   const LibraryConfig = () => (
     <CommandGroups
       data={library}
@@ -49,7 +24,14 @@ export default function Rules({
     />
   );
 
-  const ApiConfig = () => <></>;
+  const ApiConfig = () => (
+    <Endpoints
+      data={api}
+      api={api}
+      onApiUpdate={onApiUpdate}
+      generateEndpoint={generateEndpoint}
+    />
+  );
 
   const Method = () => {
     switch (configMethod) {
@@ -64,7 +46,6 @@ export default function Rules({
 
   return (
     <>
-      <MethodChoice />
       <Method />
       <Toolbar />
     </>

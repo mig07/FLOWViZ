@@ -12,6 +12,7 @@ import Home from "./page/home";
 import Login from "./page/login";
 import NotFound from "./page/notFound";
 import PostTool from "./page/postTool";
+import Profile from "./page/profile";
 import Register from "./page/register";
 import ToolPage from "./page/toolPage";
 import Whiteboard from "./page/whiteboard";
@@ -42,6 +43,10 @@ export default function App() {
             <Route path={"/about"} element={<About />} />
             <Route path={"/login"} element={<Login />} />
             <Route path={"/register"} element={<Register />} />
+            <Route
+              path={"/profile"}
+              element={<Profile config={Config.server} />}
+            />
             <Route
               exact
               path={"/workflow"}

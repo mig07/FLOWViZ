@@ -8,27 +8,29 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
+import Request from "../service/request";
 import PageTitle from "../component/common/pageTitle";
 import PersonRemoveIcon from "@mui/icons-material/PersonRemove";
 import SyncLockIcon from "@mui/icons-material/SyncLock";
 import UserAvatar from "../component/common/userAvatar";
-
-const profile = {
-  username: "Miguel Luís",
-  email: "miguelfluis7@gmail.com",
-};
+import InfoBar from "../component/common/infoBar";
+import Loading from "../component/common/loading";
+import AuthService from "../service/authService";
 
 export default function Profile({ config }) {
-  const url = `${config.appProtocol}://${config.address}:${config.port}/profile`;
+  const authService = new AuthService(config);
 
-  const onError = (error) => {};
+  const onError = (error) => {
+    <InfoBar type="error" text={error} />;
+  };
 
-  const OnSuccess = (user) => {
+  const onSuccess = (user) => {
+    console.log(user);
     return (
       <Grid container maxWidth="lg" spacing={5} sx={{ mt: 2 }}>
         <Grid item>
           <UserAvatar
-            username={user.user.username}
+            username={user.username}
             width={256}
             height={256}
             fontSize={120}
@@ -36,8 +38,8 @@ export default function Profile({ config }) {
         </Grid>
         <Grid item>
           <Stack direction="column" spacing={2}>
-            <Typography variant="h6">Name: {user.user.username}</Typography>
-            <Typography variant="h6">Email: {user.user.email}</Typography>
+            <Typography variant="h6">Name: {user.username || "-"}</Typography>
+            <Typography variant="h6">Email: {user.email || "-"}</Typography>
             <Stack direction="row" spacing={2}>
               <Button
                 variant="outlined"
@@ -64,7 +66,8 @@ export default function Profile({ config }) {
     <Container maxWidth="lg">
       <Toolbar />
       <PageTitle name="Profile" />
-      <OnSuccess user={profile} />
+
+      {authService.profile(onError, onSuccess, <Loading />)}
     </Container>
   );
 }

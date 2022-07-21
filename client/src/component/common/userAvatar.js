@@ -32,12 +32,14 @@ function strToColor(str) {
 }
 
 function strAvatar(name, fontSize) {
+  const letters = name.split(" ").map((word) => word[0]);
+
   return {
     sx: {
       fontSize: fontSize,
       bgcolor: strToColor(name),
     },
 
-    children: `${name.split(" ")[0][0]}${name.split(" ")[1][0]}`,
+    children: letters,
   };
 }

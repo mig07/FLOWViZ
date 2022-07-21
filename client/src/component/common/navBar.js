@@ -142,6 +142,10 @@ export default function NavBar({ drawerList, auth, children }) {
     setOpen(false); // Close drawer nav bar gap when changing page
   };
 
+  const username = !localStorage.getItem("auth")
+    ? ""
+    : JSON.parse(localStorage.getItem("auth")).username;
+
   return (
     <>
       <CssBaseline />
@@ -153,7 +157,7 @@ export default function NavBar({ drawerList, auth, children }) {
           <NavBarAuthButtons
             navigateTo={navigateTo}
             currentPage={currentPage}
-            //auth={{ username: "Miguel Luís" }}
+            username={username === "" ? null : username}
           />
         </Toolbar>
       </AppBar>

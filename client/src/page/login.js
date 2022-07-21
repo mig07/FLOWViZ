@@ -3,6 +3,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import TextField from "@mui/material/TextField";
 import React from "react";
 import { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import UserForm from "../component/common/userForm";
 import Checkbox from "@mui/material/Checkbox";
 import InfoBar from "../component/common/infoBar";
@@ -15,6 +16,8 @@ export default function Login() {
   const [isTrusted, setIsTrusted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
+  const navigate = useNavigate();
+
   const onFieldChange = (event, setter) => {
     const value = event.target.value;
     setter(value);
@@ -24,9 +27,11 @@ export default function Login() {
     return <InfoBar type="error" text={error} />;
   };
 
-  const onSuccess = (data) => (
-    <InfoBar type="success" text="Successfully logged in!" />
-  );
+  const onSuccess = (data) => {
+    localStorage.setItem("auth", JSON.stringify(data));
+    navigate("/");
+    return <InfoBar type="success" text="Successfully logged in!" />;
+  };
 
   const options = {
     method: "POST",
