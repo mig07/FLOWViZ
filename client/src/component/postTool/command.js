@@ -2,6 +2,7 @@ import * as React from "react";
 import SettingsAccordion from "./settingsAccordion";
 import { Stack, TextField } from "@mui/material";
 import TextFieldMultiInput from "./textFieldMultiInput";
+import TextFieldWithTooltip from "../common/textFieldWithTooltip";
 
 function Command({ data = {}, index = 0, onParentUpdate = () => {} }) {
   const command = data;
@@ -23,13 +24,13 @@ function Command({ data = {}, index = 0, onParentUpdate = () => {} }) {
   return (
     <SettingsAccordion>
       <Stack sx={{ m: 2 }}>
-        <TextField
-          margin="normal"
+        <TextFieldWithTooltip
           id="commandName"
           name="commandName"
           label="Name"
           defaultValue={command.name}
           onChange={(event) => onPropUpdate(event, "name")}
+          tooltip={"The name of the command"}
         />
         <TextFieldMultiInput
           name="invocation"
@@ -38,6 +39,7 @@ function Command({ data = {}, index = 0, onParentUpdate = () => {} }) {
           onParentUpdate={(collection) =>
             onPropCollectionUpdate(collection, "invocation")
           }
+          tooltip={"The invocation of the command"}
         />
         <TextFieldMultiInput
           name="allowedValues"
@@ -46,6 +48,7 @@ function Command({ data = {}, index = 0, onParentUpdate = () => {} }) {
           onParentUpdate={(collection) =>
             onPropCollectionUpdate(collection, "values")
           }
+          tooltip={"The allowed values which can proceed the command"}
         />
         <TextFieldMultiInput
           name="allowedCommands"
@@ -54,6 +57,9 @@ function Command({ data = {}, index = 0, onParentUpdate = () => {} }) {
           onParentUpdate={(collection) =>
             onPropCollectionUpdate(collection, "subCommands")
           }
+          tooltip={
+            "The allowed commands that can be invoked after this command"
+          }
         />
         <TextFieldMultiInput
           name="allowedCommandSets"
@@ -61,6 +67,9 @@ function Command({ data = {}, index = 0, onParentUpdate = () => {} }) {
           data={command.subCommandSets}
           onParentUpdate={(collection) =>
             onPropCollectionUpdate(collection, "subCommandSets")
+          }
+          tooltip={
+            "The allowed commands groups that can be invoked after this command"
           }
         />
       </Stack>

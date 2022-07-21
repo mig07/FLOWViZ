@@ -2,8 +2,15 @@ import * as React from "react";
 import { Box, Container, Stack, TextField, Chip } from "@mui/material";
 import { IconButton } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
+import TextFieldWithTooltip from "../common/textFieldWithTooltip";
 
-function TextFieldMultiInput({ name = "", label = "", data = [], onParentUpdate = () => { } }) {
+function TextFieldMultiInput({
+  name = "",
+  label = "",
+  data = [],
+  tooltip,
+  onParentUpdate = () => {},
+}) {
   const collection = data;
 
   const [input, setInput] = React.useState("");
@@ -34,14 +41,12 @@ function TextFieldMultiInput({ name = "", label = "", data = [], onParentUpdate 
   return (
     <>
       <Box display="flex" alignItems="center">
-        <TextField
-          margin="normal"
-          autoFocus={false}
+        <TextFieldWithTooltip
           id={name}
-          name={name}
           label={label}
           value={input}
           onChange={onSetInput}
+          tooltip={tooltip}
         />
         <IconButton onClick={onAddElement}>
           <AddIcon />
