@@ -22,7 +22,10 @@ module.exports = (jwt, authService, argonUtils, secret) => {
           .then((data) =>
             onSuccess(
               res,
-              { jwt: jwt.sign({ id: user.username }, secret) },
+              {
+                username: user.username,
+                jwt: jwt.sign({ id: user.username }, secret),
+              },
               (code = 201)
             )
           )
@@ -56,7 +59,7 @@ module.exports = (jwt, authService, argonUtils, secret) => {
         // The user is authentic, the jwt is signed and returned to the client.
         onSuccess(
           res,
-          { jwt: jwt.sign({ id: username }, secret) },
+          { username: username, jwt: jwt.sign({ id: username }, secret) },
           (code = 201)
         );
       })
