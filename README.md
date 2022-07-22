@@ -1,5 +1,20 @@
 # FLOWViZ
 
+FLOWViZ is a framework that allows you to seamlessly
+integrate others phylogenetic tools and frameworks,
+while providing workflow scheduling and execution,
+through the Apache Airflow workflow system.
+
+It is composed by two components: an express server
+and a react client,
+both written in JavaScript.
+
+**It is still a work under development**: expect incomplete or faulty features!
+If you find a bug,
+please report [here](https://github.com/mig07/FLOWViZ/issues)
+
+# Setup
+
 ## Configuring database
 
 1. Install Docker
