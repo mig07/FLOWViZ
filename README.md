@@ -35,7 +35,7 @@ docker run --name mongodb -d -p 27017:27017 mongo
 
 1. Create a file called `.env` in `server/` folder.
 
-2. Fill it with the variables below (removed the curly brackets and change what's between them):
+2. Fill it with the variables below (remove the curly brackets and change what is in between them):
 
 ```sh
 JWT_SECRET={jwt_secret}
