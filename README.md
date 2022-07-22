@@ -1,7 +1,7 @@
 # FLOWViZ
 
 FLOWViZ is a framework that allows you to seamlessly
-integrate others phylogenetic tools and frameworks,
+integrate other phylogenetic tools and frameworks,
 while providing workflow scheduling and execution,
 through the Apache Airflow workflow system.
 
