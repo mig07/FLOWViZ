@@ -1,10 +1,12 @@
 const auth = JSON.parse(localStorage.getItem("auth"));
 
+const authorization = auth ? `Bearer ${auth.jwt}` : "";
+
 const normalHeader = { "Content-type": "application/json" };
 
 const authHeader = {
   "Content-type": "application/json",
-  Authorization: `Bearer ${auth.jwt}`,
+  Authorization: authorization,
 };
 
 const options = (method, headers, body) => {
