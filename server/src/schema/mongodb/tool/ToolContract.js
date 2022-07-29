@@ -1,19 +1,14 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
+const General = require("./General");
+const Access = require("./Access");
 const ApiSchema = require("./Api");
 const CommandGroupSchema = require("./Library");
 
 const ToolContractSchema = new Schema({
-  name: {
-    type: String,
-    minlength: 3,
-    maxlength: 30,
-    required: true,
-    unique: true,
-  },
-  description: { type: String, minlength: 0, maxlength: 100 },
-  type: { type: String, minlength: 0, maxlength: 30 },
+  general: General,
+  access: Access,
   library: [CommandGroupSchema],
   api: [ApiSchema],
 });

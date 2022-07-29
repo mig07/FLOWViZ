@@ -1,4 +1,3 @@
-const { Integer } = require("json-schema");
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 

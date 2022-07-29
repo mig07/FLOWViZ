@@ -2,10 +2,8 @@ const onSuccess = require("./controllerUtils");
 
 module.exports = (service) => {
   function getTools(req, res, next) {
-    const type = req.query.type;
-
     service
-      .getTools(type)
+      .getTools()
       .then((data) => onSuccess(res, data))
       .catch((err) => next(err));
   }
