@@ -4,7 +4,6 @@ import { Divider } from "@mui/material";
 import { Box } from "@mui/system";
 
 export default function Library({ library }) {
-  console.log(library)
   const commandGroups = library;
 
   const noLibrary = (

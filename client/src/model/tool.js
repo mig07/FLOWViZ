@@ -5,8 +5,8 @@ export default function Tool({ config, toolName, children }) {
 
   // Libraries and APIs state hook
   const [tool, setTool] = useState({
-    name: "",
-    description: "",
+    general: {},
+    access: {},
     api: [],
     library: [],
   });

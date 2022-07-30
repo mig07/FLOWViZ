@@ -13,10 +13,17 @@ export default function ToolPage(props) {
   return (
     <Tool config={props.config} toolName={toolName}>
       {(tool) => {
+        console.log(tool);
+        const general = tool.general;
+        const access = tool.access;
         return (
           <Container>
             <Toolbar />
-            <ToolTitle tool={tool} />
+            <ToolTitle
+              name={general.name}
+              description={general.description}
+              type={access._type}
+            />
             <ToolFunctions tool={tool} />
           </Container>
         );
