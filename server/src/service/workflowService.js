@@ -1,7 +1,7 @@
 const getOne = require("./serviceUtils");
 const mapWorkflowReqToAirflowWorkflow = require("../mappers/mapWorkflowReqToAirflowWorkflow");
 
-module.exports = (WorkflowDb, Airflow, ApiException) => {
+module.exports = (WorkflowDb, Airflow) => {
   /**
    * Returns a list of workflows from the data source
    * @returns {A list of workflows from the data source}
@@ -25,17 +25,24 @@ module.exports = (WorkflowDb, Airflow, ApiException) => {
    * @param {The workflow JSON structure} id
    */
   async function postWorkflow(username, workflow) {
-    const wflow = {
+    const workflowName = workflow.name;
+    const executionOrder = getExecutionOrder(workflow);
+    const airflowRequest = convertToAirflowWorkflow(workflow, executionOrder);
+
+    const dbWorkflow = {
       username: username,
-      name: workflow.name,
-      tasks: workflow.tasks,
+      name: workflowName,
+      dag: airflowRequest,
     };
 
-    return await WorkflowDb.postDbWorkflow(wflow);
-
-    /* const executionOrder = getExecutionOrder(workflow);
-    let airflowRequest = convertToAirflowWorkflow(workflow, executionOrder);
-    return await WorkflowDb.postWorkflow(airflowRequest); */
+    // POST workflow to database
+    return await WorkflowDb.postDbWorkflow(dbWorkflow)
+      // Trigger Airflow to create DAG after workflow
+      // was created into the database
+      .then(() => Airflow.createWorkflow(workflowName))
+      .catch((err) => {
+        throw err;
+      });
   }
 
   return {
@@ -46,17 +53,19 @@ module.exports = (WorkflowDb, Airflow, ApiException) => {
 };
 
 function convertToAirflowWorkflow(workflow, executionOrder) {
-  return { conf: mapWorkflowReqToAirflowWorkflow(workflow, executionOrder) };
-  /* const type = workflow.type;
+  const type = workflow.type;
 
   switch (type) {
     case "container":
-      break;
-    case "":
-      break;
-    default:
-      break;
-  } */
+      // return {
+      //   conf: mapWorkflowReqToAirflowWorkflow(workflow, executionOrder),
+      // };
+      return mapWorkflowReqToAirflowWorkflow(workflow, executionOrder);
+    case "local":
+      return {};
+    case "api":
+      return {};
+  }
 }
 
 /**
