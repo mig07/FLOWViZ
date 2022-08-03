@@ -13,42 +13,21 @@ module.exports = (httpRequest, airflow) => {
 
   const airflowUriManager = new AirflowUriManager();
 
-  const auth = Buffer(`${airflowUsername}:${airflowPassword}`).toString(
+  const auth = Buffer.from(`${airflowUsername}:${airflowPassword}`).toString(
     "base64"
   );
 
   const authHeader = `Basic ${auth}`;
 
-  function getWorkflows() {
+  function createWorkflow(workflowName) {
     return httpRequest
-      .get(airflowUriManager.getWorkflows(), authHeader)
-      .then((data) => data.json())
-      .then((data) => data.dags)
-      .catch((err) => {
-        throw err;
-      });
-  }
-
-  function getWorkflow(name) {
-    return httpRequest
-      .get(airflowUriManager.getWorkflow(name), authHeader)
-      .then((data) => data.json())
-      .catch((err) => {
-        throw err;
-      });
-  }
-
-  function postWorkflow(workflow) {
-    return httpRequest
-      .post(airflowUriManager.postWorkflow(), workflow, authHeader)
+      .post(airflowUriManager.postWorkflow(), workflowName, authHeader)
       .catch((err) => {
         throw err;
       });
   }
 
   return {
-    getWorkflows: getWorkflows,
-    getWorkflow: getWorkflow,
-    postWorkflow: postWorkflow,
+    postWorkflow: createWorkflow,
   };
 };
