@@ -1,5 +1,5 @@
 import SendIcon from "@mui/icons-material/Send";
-import { Box, Button } from "@mui/material";
+import { Box, Button, Grid } from "@mui/material";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import ReactFlow, {
   addEdge,
@@ -13,12 +13,14 @@ import ReactFlow, {
 } from "react-flow-renderer";
 import Loading from "../component/common/loading";
 import ToolNode from "../component/whiteboard/step/toolNode";
-import NoResourceFoundException from "../exception/NoResourceFoundException";
+import ResourceNotFound from "../component/common/resourceNotFound";
 import Request from "../service/request";
 import HowToRegIcon from "@mui/icons-material/HowToReg";
 import InfoBar from "../component/common/infoBar";
 import Submission from "../component/common/submission";
 import WorkflowSubmitDialog from "../component/whiteboard/workflowSubmitDialog";
+import ToolService from "../service/toolService";
+import WorkflowService from "../service/workflowService";
 
 let id = -1;
 const getId = () => `node${++id}`;
@@ -33,7 +35,8 @@ const edgeOptions = {
 };
 
 export default function Whiteboard({ config, setDrawerList }) {
-  const url = `${config.appProtocol}://${config.address}:${config.port}/tool`;
+  const toolService = new ToolService(config);
+  const workflowService = new WorkflowService(config);
 
   const reactFlowWrapper = useRef(null);
 
@@ -44,6 +47,11 @@ export default function Whiteboard({ config, setDrawerList }) {
 
   // States if the workflow can be commited
   const [canAdvance, setCanAdvance] = useState(false);
+
+  // Is the user dropping a tool into the whiteboard
+  const [isToolDrop, setIsToolDrop] = useState(false);
+  const [droppingToolName, setDroppingToolName] = useState("");
+  const [droppingToolPos, setDroppingToolPos] = useState(null);
 
   // Workflow name for workflow identification
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -62,7 +70,7 @@ export default function Whiteboard({ config, setDrawerList }) {
     setCanAdvance(true);
   });
 
-  Request(url, {}, NoResourceFoundException, setDrawerList, <Loading />);
+  toolService.getTools(ResourceNotFound, setDrawerList, <Loading />);
 
   const onNodeSetupUpdate = useCallback((nodeId, setup) => {
     setNodes((nds) => {
@@ -89,6 +97,34 @@ export default function Whiteboard({ config, setDrawerList }) {
     event.dataTransfer.dropEffect = "move";
   }, []);
 
+  const OnToolDrop = () => {
+    const onSuccess = (tool) => {
+      const node = {
+        id: getId(),
+        type: "tool",
+        position: droppingToolPos,
+        data: {
+          tool: tool,
+          setup: { stepName: "", config: {} },
+          onNodeUpdate: onNodeSetupUpdate,
+        },
+      };
+
+      setNodes((nds) => nds.concat(node));
+      setDroppingToolName("");
+      setDroppingToolPos(null);
+      setIsToolDrop(false);
+    };
+
+    toolService.getTool(
+      droppingToolName,
+      ResourceNotFound,
+      onSuccess,
+      <Loading />
+    );
+    return <></>;
+  };
+
   const onDrop = useCallback(
     async (event) => {
       event.preventDefault();
@@ -101,92 +137,78 @@ export default function Whiteboard({ config, setDrawerList }) {
         y: event.clientY - reactFlowBounds.top,
       });
 
-      // TODO - change for a requester class
-      const uri = `${config.appProtocol}://${config.address}:${config.port}/tool/${toolName}`;
-      const request = await fetch(uri);
-      const tool = await request.json();
-
-      // Creating new node
-      const node = {
-        id: getId(),
-        type: "tool",
-        position: position,
-        data: {
-          tool: tool,
-          setup: { stepName: "", config: {} },
-          onNodeUpdate: onNodeSetupUpdate,
-        },
-      };
-
-      setNodes((nds) => nds.concat(node));
+      setDroppingToolName(toolName);
+      setDroppingToolPos(position);
+      setIsToolDrop(true);
     },
     [reactFlowInstance]
   );
 
   return (
-    <>
-      <ReactFlowProvider>
-        <div
-          className="reactflow-wrapper"
-          ref={reactFlowWrapper}
-          style={{ height: "90vh", width: "100vw" }}
-        >
-          <ReactFlow
-            nodes={nodes}
-            edges={edges}
-            onNodesChange={onNodesChange}
-            onEdgesChange={onEdgesChange}
-            defaultEdgeOptions={edgeOptions}
-            onConnect={onConnect}
-            onInit={setReactFlowInstance}
-            onDragOver={onDragOver}
-            onDrop={onDrop}
-            onEdgeUpdate={onEdgeUpdate}
-            deleteKeyCode={"Delete"}
-            nodeTypes={nodeTypes}
+    <Grid container>
+      <Grid item fullWidth>
+        <ReactFlowProvider>
+          <div
+            ref={reactFlowWrapper}
+            style={{ height: "80vh", width: "100vw" }}
           >
-            <MiniMap />
-            <Controls />
-            <Background variant="lines" color="#bbb" gap={20} />
-          </ReactFlow>
-        </div>
-      </ReactFlowProvider>
-      <Box
-        width="100vw"
-        display="flex"
-        justifyContent="flex-end"
-        alignItems="flex-end"
-        padding={2}
-      >
-        <Button
-          variant="outlined"
-          endIcon={<SendIcon />}
-          onClick={() => setDialogOpen(true)}
+            <ReactFlow
+              nodes={nodes}
+              edges={edges}
+              onNodesChange={onNodesChange}
+              onEdgesChange={onEdgesChange}
+              defaultEdgeOptions={edgeOptions}
+              onConnect={onConnect}
+              onInit={setReactFlowInstance}
+              onDragOver={onDragOver}
+              onDrop={onDrop}
+              onEdgeUpdate={onEdgeUpdate}
+              deleteKeyCode={"Delete"}
+              nodeTypes={nodeTypes}
+            >
+              <MiniMap />
+              <Controls />
+              <Background variant="lines" color="#bbb" gap={20} />
+            </ReactFlow>
+          </div>
+        </ReactFlowProvider>
+      </Grid>
+      <Grid item>
+        <Box
+          width="100vw"
+          display="flex"
+          justifyContent="flex-end"
+          alignItems="flex-end"
+          padding={2}
         >
-          Submit
-        </Button>
-      </Box>
-      <WorkflowSubmitDialog
-        workflowName={workflowName}
-        onWorkflowNameUpdate={onWorkflowNameUpdate}
-        setCanAdvance={setCanAdvance}
-        open={dialogOpen}
-        onApply={() => {
-          requestWorkflow(nodes, edges, config, workflowName);
-          setDialogOpen(false);
-        }}
-        onCancel={() => setDialogOpen(false)}
-      />
-    </>
+          <Button
+            variant="outlined"
+            endIcon={<SendIcon />}
+            onClick={() => setDialogOpen(true)}
+          >
+            Submit
+          </Button>
+        </Box>
+        <WorkflowSubmitDialog
+          workflowName={workflowName}
+          onWorkflowNameUpdate={onWorkflowNameUpdate}
+          setCanAdvance={setCanAdvance}
+          open={dialogOpen}
+          onApply={() => {
+            requestWorkflow(nodes, edges, config, workflowName);
+            setDialogOpen(false);
+          }}
+          onCancel={() => setDialogOpen(false)}
+        />
+        {isToolDrop ? <OnToolDrop /> : <></>}
+      </Grid>
+    </Grid>
   );
 }
 
 function requestWorkflow(nodes, edges, config, workflowName) {
   const workflowRequest = getWorkflowRequest(workflowName, nodes, edges);
-
-  const url = `${config.appProtocol}://${config.address}:${config.port}/workflow`;
-
-  const onError = (error) => <InfoBar type="error" text={error} />;
+  const workflowService = new WorkflowService(config);
 
   const onSuccess = (data) => (
     <React.Fragment>
@@ -197,13 +219,12 @@ function requestWorkflow(nodes, edges, config, workflowName) {
     </React.Fragment>
   );
 
-  const options = {
-    method: "POST",
-    headers: { "Content-type": "application/json" },
-    body: JSON.stringify(workflowRequest),
-  };
-
-  Request(url, options, onError, onSuccess, <Loading />);
+  workflowService.postWorkflow(
+    JSON.stringify(workflowRequest),
+    ResourceNotFound,
+    onSuccess,
+    <Loading />
+  );
 }
 
 function getWorkflowRequest(name, nodes, edges) {
