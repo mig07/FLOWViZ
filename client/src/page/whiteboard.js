@@ -1,6 +1,7 @@
 import SendIcon from "@mui/icons-material/Send";
 import { Box, Button, Grid } from "@mui/material";
 import React, { useCallback, useEffect, useRef, useState } from "react";
+import { styled, useTheme } from "@mui/material/styles";
 import ReactFlow, {
   addEdge,
   Background,
@@ -14,9 +15,7 @@ import ReactFlow, {
 import Loading from "../component/common/loading";
 import ToolNode from "../component/whiteboard/step/toolNode";
 import ResourceNotFound from "../component/common/resourceNotFound";
-import Request from "../service/request";
 import HowToRegIcon from "@mui/icons-material/HowToReg";
-import InfoBar from "../component/common/infoBar";
 import Submission from "../component/common/submission";
 import WorkflowSubmitDialog from "../component/whiteboard/workflowSubmitDialog";
 import ToolService from "../service/toolService";
@@ -37,6 +36,10 @@ const edgeOptions = {
 export default function Whiteboard({ config, setDrawerList }) {
   const toolService = new ToolService(config);
   const workflowService = new WorkflowService(config);
+
+  // Get NavBar height from theme
+  const theme = useTheme();
+  const appBarHeight = theme.mixins.toolbar.minHeight;
 
   const reactFlowWrapper = useRef(null);
 
@@ -146,11 +149,14 @@ export default function Whiteboard({ config, setDrawerList }) {
 
   return (
     <Grid container>
-      <Grid item fullWidth>
+      <Grid item>
         <ReactFlowProvider>
           <div
             ref={reactFlowWrapper}
-            style={{ height: "80vh", width: "100vw" }}
+            style={{
+              height: `calc(100vh - ${appBarHeight * 2}px)`,
+              width: "100vw",
+            }}
           >
             <ReactFlow
               nodes={nodes}
@@ -179,12 +185,12 @@ export default function Whiteboard({ config, setDrawerList }) {
           display="flex"
           justifyContent="flex-end"
           alignItems="flex-end"
-          padding={2}
         >
           <Button
             variant="outlined"
             endIcon={<SendIcon />}
             onClick={() => setDialogOpen(true)}
+            sx={{ mr: 2 }}
           >
             Submit
           </Button>

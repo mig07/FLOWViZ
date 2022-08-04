@@ -22,6 +22,7 @@ import Test from "./test/test";
 export default function App() {
   // Custom hook for pages with side drawer
   const [drawerList, setDrawerList] = useNavBar();
+  const copyrightBlackList = ["/whiteboard"];
 
   return (
     <ThemeProvider theme={Theme}>
@@ -64,7 +65,7 @@ export default function App() {
             <Route path={"/test"} element={<Test />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
-          <Copyright sx={{ mt: 8, mb: 4 }} />
+          {/* <Copyright sx={{ mt: 8, mb: 4 }} /> */}
         </NavBar>
       </Router>
     </ThemeProvider>

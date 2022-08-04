@@ -67,7 +67,7 @@ function ToolNode({ id, data }) {
         position={Position.Bottom}
         style={{ background: outputColor }}
       />
-      <div>{tool.name} Node</div>
+      <div>{tool.general.name} Node</div>
       <div>
         <input placeholder="Step name" onChange={onStepNameUpdate} />
         <IconButton onClick={onSetupDialogOpen("paper")}>
