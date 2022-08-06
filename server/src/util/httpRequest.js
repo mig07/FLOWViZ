@@ -14,12 +14,7 @@ module.exports = () => {
     return fetch(url, options);
   }
 
-  function post(
-    url,
-    body,
-    auth,
-    headers = { "Content-Type": "application/json" }
-  ) {
+  function post(url, body, auth) {
     const options = {
       method: "POST",
       headers: {
