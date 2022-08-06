@@ -19,15 +19,15 @@ module.exports = (httpRequest, airflow) => {
 
   const authHeader = `Basic ${auth}`;
 
-  function createWorkflow(workflowName) {
+  function createWorkflow(query) {
     return httpRequest
-      .post(airflowUriManager.postWorkflow(), workflowName, authHeader)
+      .post(airflowUriManager.postWorkflow(), query, authHeader)
       .catch((err) => {
         throw err;
       });
   }
 
   return {
-    postWorkflow: createWorkflow,
+    createWorkflow: createWorkflow,
   };
 };

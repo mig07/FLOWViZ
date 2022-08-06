@@ -1,9 +1,9 @@
 const workflowStep = {
-  name: {
-    exists: { errorMessage: "name is required." },
-    isString: { errorMessage: "name must be a String." },
+  id: {
+    exists: { errorMessage: "id is required." },
+    isString: { errorMessage: "id must be a String." },
     isLength: {
-      errorMessage: "name must be at least 2 characters long.",
+      errorMessage: "id must be at least 2 characters long.",
       options: { min: 2, max: 20 },
     },
   },

@@ -2,7 +2,7 @@ const BashOperatorModule = require("../schema/airflow/BashOperator");
 const BashOperator = DockerOperatorModule.BashOperator;
 const BashOperatorParams = DockerOperatorModule.BashOperatorParams;
 
-function mapToTaskToBashOperator(task) {
+function mapTaskToBashOperator(task) {
   //   return new BashOperator(
   //     (id = task.id),
   //     (operator_params = new BashOperatorParams(
@@ -17,4 +17,4 @@ function mapToTaskToBashOperator(task) {
   //   ).toJson();
 }
 
-module.exports = mapToTaskToDockerOperator;
+module.exports = mapTaskToBashOperator;

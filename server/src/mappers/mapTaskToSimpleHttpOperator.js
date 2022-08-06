@@ -1,8 +1,8 @@
 const SimpleHttpOperatorModule = require("../schema/airflow/SimpleHttpOperator");
-const SimpleHttpOperator = DockerOperatorModule.DockerOperator;
-const SimpleHttpOperatorParams = DockerOperatorModule.DockerOperatorParams;
+// const SimpleHttpOperator = DockerOperatorModule.DockerOperator;
+// const SimpleHttpOperatorParams = DockerOperatorModule.DockerOperatorParams;
 
-function mapToTaskToSimpleHttpOperator(task) {
+function mapTaskToSimpleHttpOperator(task) {
   //   return new SimpleHttpOperator(
   //     (id = task.id),
   //     (operator_params = new SimpleHttpOperatorParams(
@@ -17,4 +17,4 @@ function mapToTaskToSimpleHttpOperator(task) {
   //   ).toJson();
 }
 
-module.exports = mapToTaskToSimpleHttpOperator;
+module.exports = mapTaskToSimpleHttpOperator;

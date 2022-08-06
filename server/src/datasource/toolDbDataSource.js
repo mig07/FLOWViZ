@@ -2,7 +2,9 @@ const ToolContract = require("../schema/mongodb/tool/ToolContract");
 
 module.exports = () => {
   function getTools() {
-    return ToolContract.find().select("-_id general.name general.description");
+    return ToolContract.find().select(
+      "-_id -__v"
+    );
   }
 
   function getTool(toolName) {

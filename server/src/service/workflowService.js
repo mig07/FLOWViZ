@@ -1,5 +1,6 @@
 const getOne = require("./serviceUtils");
-const mapWorkflowReqToAirflowWorkflow = require("../mappers/mapWorkflowReqToAirflowWorkflow");
+const mapTaskToDockerOperator = require("../mappers/mapTaskToDockerOperator");
+const mapTaskToSimpleHttpOperator = require("../mappers/mapTaskToSimpleHttpOperator");
 
 module.exports = (WorkflowDb, Airflow) => {
   /**
@@ -25,13 +26,11 @@ module.exports = (WorkflowDb, Airflow) => {
    * @param {The workflow JSON structure} id
    */
   async function postWorkflow(username, workflow) {
-    const workflowName = workflow.name;
     const executionOrder = getExecutionOrder(workflow);
     const airflowRequest = convertToAirflowWorkflow(workflow, executionOrder);
 
     const dbWorkflow = {
       username: username,
-      name: workflowName,
       dag: airflowRequest,
     };
 
@@ -39,7 +38,7 @@ module.exports = (WorkflowDb, Airflow) => {
     return await WorkflowDb.postDbWorkflow(dbWorkflow)
       // Trigger Airflow to create DAG after workflow
       // was created into the database
-      .then(() => Airflow.createWorkflow(workflowName))
+      .then(() => Airflow.createWorkflow({ conf: { dag_id: workflow.id } }))
       .catch((err) => {
         throw err;
       });
@@ -53,19 +52,29 @@ module.exports = (WorkflowDb, Airflow) => {
 };
 
 function convertToAirflowWorkflow(workflow, executionOrder) {
-  const type = workflow.type;
+  const dagId = workflow.id;
 
-  switch (type) {
-    case "container":
-      // return {
-      //   conf: mapWorkflowReqToAirflowWorkflow(workflow, executionOrder),
-      // };
-      return mapWorkflowReqToAirflowWorkflow(workflow, executionOrder);
-    case "local":
-      return {};
-    case "api":
-      return {};
-  }
+  const tasks = [];
+
+  workflow.tasks.forEach((task) => {
+    switch (task.type) {
+      case "container":
+        tasks.push(mapTaskToDockerOperator(task));
+        break;
+      case "local":
+        tasks.push(mapTaskToBashOperator(task));
+        break;
+      case "api":
+        tasks.push(mapTaskToSimpleHttpOperator(task));
+        break;
+    }
+  });
+
+  return {
+    dag_id: dagId,
+    tasks: tasks,
+    execution_order: executionOrder,
+  };
 }
 
 /**
