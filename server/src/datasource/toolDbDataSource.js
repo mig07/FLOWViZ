@@ -6,7 +6,7 @@ module.exports = () => {
   }
 
   function getTool(toolName) {
-    return ToolContract.findOne({ name: toolName }).select("-_id");
+    return ToolContract.findOne({ name: toolName }).select("-_id -__v");
   }
 
   function addTool(tool) {
