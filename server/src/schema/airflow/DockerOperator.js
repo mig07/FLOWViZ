@@ -1,5 +1,3 @@
-const Operator = require("./Operator");
-
 class DockerOperatorParams {
   image;
   api_version;
