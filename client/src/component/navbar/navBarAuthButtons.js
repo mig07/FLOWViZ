@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
-import UserAvatar from "./userAvatar";
+import UserAvatar from "../common/userAvatar";
 
 const notAuthenticatedButtons = [
   {
@@ -122,8 +122,13 @@ const authSection = (navigateTo, currentPage, username) => {
                   </MenuItem>
                   <MenuItem
                     onClick={(event) => {
+                      //TODO
                       localStorage.setItem("auth", "{}");
-                      handleClose(event);
+                      if (currentPage !== "/") {
+                        navigateAndClose(event, "/");
+                      } else {
+                        window.location.reload(false);
+                      }
                     }}
                   >
                     Logout
