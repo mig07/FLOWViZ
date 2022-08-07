@@ -2,6 +2,7 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import HourglassTopIcon from "@mui/icons-material/HourglassTop";
 import {
+  Button,
   Container,
   Grid,
   IconButton,
@@ -16,10 +17,10 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import * as React from "react";
+import { useNavigate } from "react-router-dom";
 import InfoBar from "../component/common/infoBar";
 import Loading from "../component/common/loading";
 import PageTitle from "../component/common/pageTitle";
-import Request from "../service/request";
 import CenteredContainer from "../component/common/centeredContainer";
 import WorkflowService from "../service/workflowService";
 
@@ -61,7 +62,7 @@ const getState = (value) => {
 };
 
 export default function WorkflowList({ config }) {
-  const url = `${config.appProtocol}://${config.address}:${config.port}/workflow`;
+  const navigate = useNavigate();
 
   const workflowService = new WorkflowService(config);
 
@@ -69,7 +70,8 @@ export default function WorkflowList({ config }) {
     return <InfoBar type="error" text={error} />;
   };
 
-  const onSuccess = (workflows) => {
+  const onSuccess = (data) => {
+    const workflows = data.map((d) => d.dag);
     if (!workflows || workflows.length === 0)
       return (
         <CenteredContainer>
@@ -77,18 +79,21 @@ export default function WorkflowList({ config }) {
         </CenteredContainer>
       );
     return workflows.map((workflow) => {
+      const dagId = workflow.dag_id;
       return (
         <TableRow
-          key={workflow.name}
+          key={dagId}
           sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
         >
-          <TableCell component="th" scope="row">
-            {workflow.name}
+          <TableCell>
+            <Button onClick={() => navigate(`/workflow/${dagId}`)}>
+              {dagId}
+            </Button>
           </TableCell>
-          <TableCell>{workflow.description}</TableCell>
-          <TableCell>{workflow.creationDate}</TableCell>
-          <TableCell>{workflow.finishDate}</TableCell>
-          <TableCell>{getState(workflow.state)}</TableCell>
+          <TableCell>{workflow.description || "-"}</TableCell>
+          <TableCell>{workflow.creationDate || "-"}</TableCell>
+          <TableCell>{workflow.finishDate || "-"}</TableCell>
+          <TableCell>{getState(workflow.state) || "-"}</TableCell>
         </TableRow>
       );
     });

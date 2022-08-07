@@ -1,18 +1,22 @@
 import React from "react";
+import { useLocation } from "react-router-dom";
 import { Container, Toolbar, Typography } from "@mui/material";
 import PageTitle from "../component/common/pageTitle";
+import WorkflowService from "../service/workflowService";
+import Loading from "../component/common/loading";
 
-export default function Workflow({ name, config }) {
-  const url = `${config.appProtocol}://${config.address}:${config.port}/workflow`;
+export default function Workflow({ config }) {
+  const location = useLocation();
+  const name = location.pathname.split("/")[2]; //TODO
+
+  const workflowService = new WorkflowService(config);
 
   const onError = (error) => {};
 
-  const onSuccess = (workflows) => {};
-
-  return (
-    <>
-      <Toolbar />
-      <Container maxWidth="lg">
+  const onSuccess = (workflow) => {
+    console.log(workflow);
+    return (
+      <>
         <PageTitle name={name} />
         <PageTitle name="General data" variant="h5" sx={{ mt: 2 }} />
         <Typography>Last trigger date: </Typography>
@@ -21,6 +25,15 @@ export default function Workflow({ name, config }) {
         <Typography>Times executed: </Typography>
         <PageTitle name="DAG view" variant="h5" sx={{ mt: 2 }} />
         <PageTitle name="DAG script" variant="h5" sx={{ mt: 2 }} />
+      </>
+    );
+  };
+
+  return (
+    <>
+      <Toolbar />
+      <Container maxWidth="lg">
+        {workflowService.getWorkflow(name, onError, onSuccess, <Loading />)}
       </Container>
     </>
   );

@@ -14,7 +14,7 @@ import ReactFlow, {
 } from "react-flow-renderer";
 import Loading from "../component/common/loading";
 import ToolNode from "../component/whiteboard/step/toolNode";
-import ResourceNotFound from "../component/common/resourceNotFound";
+import GenericError from "../component/common/genericError";
 import HowToRegIcon from "@mui/icons-material/HowToReg";
 import Submission from "../component/common/submission";
 import WorkflowSubmitDialog from "../component/whiteboard/workflowSubmitDialog";
@@ -73,7 +73,7 @@ export default function Whiteboard({ config, setDrawerList }) {
     setCanAdvance(true);
   });
 
-  toolService.getTools(ResourceNotFound, setDrawerList, <Loading />);
+  toolService.getTools(GenericError, setDrawerList, <Loading />);
 
   const onNodeSetupUpdate = useCallback((nodeId, setup) => {
     setNodes((nds) => {
@@ -119,12 +119,7 @@ export default function Whiteboard({ config, setDrawerList }) {
       setIsToolDrop(false);
     };
 
-    toolService.getTool(
-      droppingToolName,
-      ResourceNotFound,
-      onSuccess,
-      <Loading />
-    );
+    toolService.getTool(droppingToolName, GenericError, onSuccess, <Loading />);
     return <></>;
   };
 
@@ -227,7 +222,7 @@ function requestWorkflow(nodes, edges, config, workflowName) {
 
   workflowService.postWorkflow(
     JSON.stringify(workflowRequest),
-    ResourceNotFound,
+    GenericError,
     onSuccess,
     <Loading />
   );

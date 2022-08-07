@@ -19,7 +19,7 @@ class WorkflowService {
   getWorkflow(workflowName, onError, onSuccess, loading) {
     return Request(
       `${this.baseUrl}/${workflowName}`,
-      {},
+      httpOptions.getAuth(),
       onError,
       onSuccess,
       loading
