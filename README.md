@@ -43,7 +43,7 @@ AIRFLOW_USERNAME={airflow_username}
 AIRFLOW_PASSWORD={airflow_password}
 ```
 
-## Building and running on localhost
+## Running on localhost
 
 1. Install dependencies:
 
@@ -51,13 +51,15 @@ AIRFLOW_PASSWORD={airflow_password}
 npm i
 ```
 
-2. Run it (both on client and server):
+2. To run both client and server (concurrently):
 
 ```sh
-npm start
+npm run dev
 ```
 
-## Building and running on localhost **with tmux**
+## Running on localhost **with tmux**
+
+Allows you to isolate each log in a terminal individual session, providing better log visibility than the concurrently way.
 
 1. Install tmux
 
