@@ -22,13 +22,13 @@ echo Creating session...
 tmux new -d -s $session
 
 # Starting server
-tmux send-keys -t $session "cd server && npm start" ENTER
+tmux send-keys -t $session "npm run server" ENTER
 
 # Spliting terminal window, creating a new pane for client
 tmux split-window -h
 
 # Starting client
-tmux send-keys -t $session "cd client && npm start" ENTER
+tmux send-keys -t $session "npm run client" ENTER
 
 # Attaching session
 echo Attaching session...
