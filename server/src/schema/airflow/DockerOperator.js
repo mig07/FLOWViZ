@@ -1,3 +1,5 @@
+const Mounts = require("./Mounts");
+
 class DockerOperatorParams {
   image;
   api_version;
@@ -18,7 +20,7 @@ class DockerOperatorParams {
   ) {
     this.image = image;
     this.api_version = api_version;
-    this.mounts = mounts;
+    this.mounts = new Mounts(mounts);
     this.command = command;
     this.auto_remove = auto_remove;
     this.docker_url = docker_url;
@@ -27,13 +29,13 @@ class DockerOperatorParams {
 
   toJson() {
     return {
-      image: this.image,
-      api_version: this.api_version,
-      mounts: this.mounts,
-      command: this.command,
-      auto_remove: this.auto_remove,
-      docker_url: this.docker_url,
-      network_mode: this.network_mode,
+      image: stringify(this.image),
+      api_version: stringify(this.api_version),
+      mounts: this.mounts.toArray(),
+      command: stringify(this.command),
+      auto_remove: stringify(this.auto_remove),
+      docker_url: stringify(this.docker_url),
+      network_mode: stringify(this.network_mode),
     };
   }
 }
@@ -57,6 +59,10 @@ class DockerOperator {
       operator_params: this.operator_params,
     };
   }
+}
+
+function stringify(val) {
+  return `'${val}'`;
 }
 
 module.exports = {
