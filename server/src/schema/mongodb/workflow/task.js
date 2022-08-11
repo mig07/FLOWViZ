@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const Task = new Schema(
   {
-    id: {
+    task_id: {
       type: String,
       minlength: 3,
       maxlength: 30,
