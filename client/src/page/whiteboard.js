@@ -56,9 +56,11 @@ export default function Whiteboard({ config, setDrawerList }) {
   const [droppingToolName, setDroppingToolName] = useState("");
   const [droppingToolPos, setDroppingToolPos] = useState(null);
 
-  // Workflow name for workflow identification
+  // Workflow name and datetimes for workflow submission
   const [dialogOpen, setDialogOpen] = useState(false);
   const [workflowName, setWorkflowName] = useState("");
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
 
   const onWorkflowNameUpdate = (event) => {
     const value = event.target.value;
@@ -193,6 +195,10 @@ export default function Whiteboard({ config, setDrawerList }) {
         <WorkflowSubmitDialog
           workflowName={workflowName}
           onWorkflowNameUpdate={onWorkflowNameUpdate}
+          workflowStartDateTime={startDate}
+          setWorkflowStartDateTime={setStartDate}
+          workflowEndDateTime={endDate}
+          setWorkflowEndDateTime={setEndDate}
           setCanAdvance={setCanAdvance}
           open={dialogOpen}
           onApply={() => {
