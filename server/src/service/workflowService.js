@@ -23,13 +23,16 @@ module.exports = (WorkflowDb, Airflow) => {
   /**
    * Sends a workflow to Apache Airflow, while formatting parameters for a correct
    * workflow system execution
-   * @param {The workflow JSON structure} id
    */
   async function postWorkflow(username, workflow) {
+    const id = workflow.id;
+    const description = workflow.description;
     const executionOrder = getExecutionOrder(workflow);
     const airflowRequest = convertToAirflowWorkflow(workflow, executionOrder);
 
     const dbWorkflow = {
+      dag_id: id,
+      description: description,
       username: username,
       dag: airflowRequest,
     };
@@ -38,7 +41,11 @@ module.exports = (WorkflowDb, Airflow) => {
     return await WorkflowDb.postDbWorkflow(dbWorkflow)
       // Trigger Airflow to create DAG after workflow
       // was created into the database
-      .then(() => Airflow.createWorkflow({ conf: { dag_id: workflow.id } }))
+      .then(() =>
+        Airflow.triggerEtl({
+          conf: { dag_id: workflow.id, username: username },
+        })
+      )
       .catch((err) => {
         throw err;
       });
@@ -52,9 +59,12 @@ module.exports = (WorkflowDb, Airflow) => {
 };
 
 function convertToAirflowWorkflow(workflow, executionOrder) {
-  const dagId = workflow.id;
-
   const tasks = [];
+
+  const airflow_imports = [
+    "from airflow.providers.docker.operators.docker import DockerOperator",
+    "from docker.types import Mount",
+  ];
 
   workflow.tasks.forEach((task) => {
     switch (task.type) {
@@ -71,7 +81,9 @@ function convertToAirflowWorkflow(workflow, executionOrder) {
   });
 
   return {
-    dag_id: dagId,
+    start_date: workflow.start_date,
+    end_date: workflow.end_date,
+    airflow_imports: airflow_imports,
     tasks: tasks,
     execution_order: executionOrder,
   };

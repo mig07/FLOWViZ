@@ -19,7 +19,7 @@ module.exports = (httpRequest, airflow) => {
 
   const authHeader = `Basic ${auth}`;
 
-  function createWorkflow(query) {
+  function triggerEtl(query) {
     return httpRequest
       .post(airflowUriManager.postWorkflow(), query, authHeader)
       .catch((err) => {
@@ -28,6 +28,6 @@ module.exports = (httpRequest, airflow) => {
   }
 
   return {
-    createWorkflow: createWorkflow,
+    triggerEtl: triggerEtl,
   };
 };
