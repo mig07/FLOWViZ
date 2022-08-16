@@ -31,7 +31,7 @@ class DockerOperatorParams {
     return {
       image: stringify(this.image),
       api_version: stringify(this.api_version),
-      mounts: this.mounts.toArray(),
+      mounts: this.mounts.toJson(),
       command: stringify(this.command),
       auto_remove: stringify(this.auto_remove),
       docker_url: stringify(this.docker_url),

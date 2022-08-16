@@ -61,11 +61,6 @@ module.exports = (WorkflowDb, Airflow) => {
 function convertToAirflowWorkflow(workflow, executionOrder) {
   const tasks = [];
 
-  const airflow_imports = [
-    "from airflow.providers.docker.operators.docker import DockerOperator",
-    "from docker.types import Mount",
-  ];
-
   workflow.tasks.forEach((task) => {
     switch (task.type) {
       case "container":
@@ -83,10 +78,34 @@ function convertToAirflowWorkflow(workflow, executionOrder) {
   return {
     start_date: workflow.start_date,
     end_date: workflow.end_date,
-    airflow_imports: airflow_imports,
+    airflow_imports: getImportsFromTasks(tasks),
     tasks: tasks,
     execution_order: executionOrder,
   };
+}
+
+function getImportsFromTasks(tasks) {
+  const importsMap = new Map();
+
+  tasks.forEach((task) => {
+    importsMap.set(task.operator_type, task.operator_import);
+    Object.entries(task.operator_params).forEach(([key, val] = param) => {
+      if (
+        val.operator_import !== undefined &&
+        val.operator_type !== undefined
+      ) {
+        importsMap.set(val.operator_type, val.operator_import);
+      }
+    });
+  });
+
+  const airflow_imports = [];
+
+  importsMap.forEach((value, key) =>
+    airflow_imports.push(`from ${value} import ${key}`)
+  );
+
+  return airflow_imports;
 }
 
 /**
