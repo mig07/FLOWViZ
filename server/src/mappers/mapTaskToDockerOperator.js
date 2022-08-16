@@ -6,7 +6,7 @@ const DockerOperatorParams = DockerOperatorModule.DockerOperatorParams;
 function mapToTaskToDockerOperator(task) {
   const action = task.action;
   return new DockerOperator(
-    (id = task.id),
+    (task_id = task.id),
     (operator_params = new DockerOperatorParams(
       (image = action.image),
       (api_version = action.api_version),
