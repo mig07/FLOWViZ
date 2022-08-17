@@ -70,8 +70,7 @@ export default function WorkflowList({ config }) {
     return <InfoBar type="error" text={error} />;
   };
 
-  const onSuccess = (data) => {
-    const workflows = data.map((d) => d.dag);
+  const onSuccess = (workflows) => {
     if (!workflows || workflows.length === 0)
       return (
         <CenteredContainer>
