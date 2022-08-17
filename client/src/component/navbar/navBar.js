@@ -6,7 +6,17 @@ import Toolbar from "@material-ui/core/Toolbar";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
 import MenuIcon from "@mui/icons-material/Menu";
-import { Divider, Drawer, IconButton, ListItemButton } from "@mui/material";
+import {
+  Button,
+  Divider,
+  Drawer,
+  IconButton,
+  ListItemButton,
+  Menu,
+  MenuItem,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -17,6 +27,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import NavBarAuthButtons from "./navBarAuthButtons";
 import NavBarButtons from "./navBarButtons";
 import NavBarTitle from "./navBarTitle";
+import NavBarDrawer from "./navBarDrawer";
+import NavMenuButtons from "./navMenuButtons";
 
 const drawerWidth = 250;
 const drawerPages = ["/whiteboard"];
@@ -57,13 +69,16 @@ export default function NavBar({ drawerList, auth, children }) {
 
   const hasDrawer = isDrawerPage && drawerList && drawerList.length > 0;
 
-  const [open, setOpen] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.up("md"));
 
   const handleDrawerOpen = () => {
-    setOpen(true);
+    setDrawerOpen(true);
   };
   const handleDrawerClose = () => {
-    setOpen(false);
+    setDrawerOpen(false);
   };
 
   const drawerIcon = (
@@ -71,61 +86,11 @@ export default function NavBar({ drawerList, auth, children }) {
       aria-label="open drawer"
       onClick={handleDrawerOpen}
       edge="start"
-      sx={{ mr: 2, ...(open && { display: "none" }) }}
+      sx={{ mr: 2, ...(drawerOpen && { display: "none" }) }}
     >
       <MenuIcon />
     </IconButton>
   );
-
-  const PersistantDrawer = (list) => {
-    const onDragStart = (event) => {
-      event.dataTransfer.setData(
-        "application/reactflow",
-        event.target.textContent
-      );
-      event.dataTransfer.effectAllowed = "move";
-    };
-
-    return (
-      <Drawer
-        sx={{
-          width: drawerWidth,
-          flexShrink: 0,
-          "& .MuiDrawer-paper": {
-            width: drawerWidth,
-            boxSizing: "border-box",
-          },
-        }}
-        variant="persistent"
-        anchor="left"
-        open={open}
-      >
-        <DrawerHeader>
-          <IconButton onClick={handleDrawerClose}>
-            <ChevronLeftIcon />
-          </IconButton>
-          <LibraryBooksIcon />
-          <Typography variant="h6" align="left">
-            Available tools
-          </Typography>
-        </DrawerHeader>
-        <Divider />
-        <List>
-          {list.list.map((item) => (
-            <ListItem key={item.name}>
-              <ListItemButton sx={{ borderRadius: 4 }}>
-                <ListItemText
-                  onDragStart={(event) => onDragStart(event)}
-                  draggable
-                  primary={item.name}
-                />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
-      </Drawer>
-    );
-  };
 
   const useStyles = makeStyles(() => ({
     appBar: {
@@ -139,7 +104,7 @@ export default function NavBar({ drawerList, auth, children }) {
     // Avoid current page rerender
     if (page === currentPage) return;
     navigate(page);
-    setOpen(false); // Close drawer nav bar gap when changing page
+    setDrawerOpen(false); // Close drawer nav bar gap when changing page
   };
 
   const username = localStorage.getItem("auth")
@@ -149,20 +114,38 @@ export default function NavBar({ drawerList, auth, children }) {
   return (
     <>
       <CssBaseline />
-      <AppBar className={classes.appBar} position="fixed" open={open}>
+      <AppBar className={classes.appBar} position="fixed" open={drawerOpen}>
         <Toolbar>
           {hasDrawer ? drawerIcon : <></>}
           <NavBarTitle navigateTo={navigateTo} />
-          <NavBarButtons navigateTo={navigateTo} currentPage={currentPage} />
-          <NavBarAuthButtons
-            navigateTo={navigateTo}
-            currentPage={currentPage}
-            username={username}
-          />
+          {matches ? (
+            <>
+              <NavBarButtons
+                navigateTo={navigateTo}
+                currentPage={currentPage}
+              />
+              <NavBarAuthButtons
+                navigateTo={navigateTo}
+                currentPage={currentPage}
+                username={username}
+              />
+            </>
+          ) : (
+            <NavMenuButtons />
+          )}
         </Toolbar>
       </AppBar>
       <Toolbar />
-      {hasDrawer ? <PersistantDrawer list={drawerList} /> : <></>}
+      {hasDrawer ? (
+        <NavBarDrawer
+          drawerList={drawerList}
+          drawerWidth={drawerWidth}
+          open={drawerOpen}
+          handleDrawerClose={handleDrawerClose}
+        />
+      ) : (
+        <></>
+      )}
       {children}
     </>
   );

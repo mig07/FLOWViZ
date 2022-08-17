@@ -8,7 +8,7 @@ export default function NavBarTitle({ navigateTo }) {
     <Box
       sx={{
         flexGrow: 1,
-        display: { xs: "none", md: "flex" },
+        display: { xs: "block", md: "flex" },
         justifyContent: "left",
       }}
     >
