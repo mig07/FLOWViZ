@@ -48,6 +48,8 @@ function ToolNode({ id, data }) {
     data.onNodeUpdate(id, nodeSetup);
   };
 
+  const ToolSetupDialog2 = ({ children }) => {};
+
   return (
     <div className="tool-node" style={{ "border-color": nodeColor }}>
       <ToolSetupDialog

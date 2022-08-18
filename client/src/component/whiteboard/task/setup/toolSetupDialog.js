@@ -9,7 +9,11 @@ import {
 } from "@material-ui/core";
 import * as React from "react";
 import { useState } from "react";
-import ToolLibraryDialog from "./library/toolLibraryDialog";
+import ToolSetupRow from "./toolSetupRow";
+import ToolSetupStack from "./toolSetupStack";
+import ToolSetupLibraryCommand from "./library/toolSetupLibraryCommand";
+import Input from "../io/input";
+import Output from "../io/output";
 
 export default function ToolSetupDialog({
   open,
@@ -17,6 +21,7 @@ export default function ToolSetupDialog({
   scroll,
   onSetupDialogApply,
   onSetupDialogClose,
+  children,
 }) {
   const descriptionElementRef = React.useRef(null);
 
@@ -97,28 +102,30 @@ export default function ToolSetupDialog({
       >
         <DialogTitle id="scroll-dialog-title">Task Setup</DialogTitle>
         <DialogContent dividers={scroll === "paper"}>
-          {/* {tool.library && tool.api ? (
-            <Container>
-              <Typography variant="h6">Method</Typography>
-              <Button onClick={(event) => setSetupMethod("api")}>API</Button>
-              <Button onClick={(event) => setSetupMethod("library")}>
-                Library
-              </Button>
-            </Container>
-          ) : tool.library ? (
-            />
-            ) : (
-              <></>
-              )} */}
-          <ToolLibraryDialog
-            commands={commands}
-            commandGroups={commandGroups}
-            onAddCommand={onAddCommand}
-            onRemoveCommand={onRemoveCommand}
-            onUpdateCommand={onUpdateCommand}
-          />
+          <ToolSetupStack>
+            <ToolSetupRow title="Input">
+              <Input />
+            </ToolSetupRow>
+            <ToolSetupRow title="Output">
+              <Output />
+            </ToolSetupRow>
+            <ToolSetupRow title="Setup">
+              {commands.map((cmd, i) => (
+                <ToolSetupLibraryCommand
+                  key={i}
+                  index={i}
+                  commandGroups={commandGroups}
+                  state={cmd}
+                  onParentUpdate={onUpdateCommand}
+                  onRemove={onRemoveCommand}
+                />
+              ))}
+              <Button onClick={onAddCommand}>Add command</Button>
+            </ToolSetupRow>
+          </ToolSetupStack>
         </DialogContent>
         <DialogActions>
+          {children}
           <Button onClick={onCancel}>Cancel</Button>
           <Button
             onClick={() => onApply({ library: commands, api: endpoints })}

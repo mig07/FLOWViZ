@@ -1,9 +1,9 @@
-import TextFieldWithTooltip from "../../../../common/textFieldWithTooltip";
+import TextFieldWithTooltip from "../../../common/textFieldWithTooltip";
 import * as React from "react";
 import { useState } from "react";
 import { Container, Chip, Grid, IconButton, Stack } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import ChipContainer from "../../../../common/chipContainer";
+import ChipContainer from "../../../common/chipContainer";
 
 export default function Input() {
   const [inputKey, setInputKey] = useState("");

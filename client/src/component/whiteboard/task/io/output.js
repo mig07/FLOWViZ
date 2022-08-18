@@ -2,8 +2,8 @@ import { Grid, IconButton, Stack } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import * as React from "react";
 import { useState } from "react";
-import TextFieldWithTooltip from "../../../../common/textFieldWithTooltip";
-import ChipContainer from "../../../../common/chipContainer";
+import TextFieldWithTooltip from "../../../common/textFieldWithTooltip";
+import ChipContainer from "../../../common/chipContainer";
 
 export default function Output() {
   const [outputKey, setOutputKey] = useState("");
