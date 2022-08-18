@@ -13,7 +13,7 @@ import ReactFlow, {
   useNodesState,
 } from "react-flow-renderer";
 import Loading from "../component/common/loading";
-import ToolNode from "../component/whiteboard/step/toolNode";
+import ToolNode from "../component/whiteboard/task/toolNode";
 import GenericError from "../component/common/genericError";
 import HowToRegIcon from "@mui/icons-material/HowToReg";
 import Submission from "../component/common/submission";
