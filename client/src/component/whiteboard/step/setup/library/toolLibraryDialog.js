@@ -5,6 +5,8 @@ import ToolForm from "../toolForm";
 import ToolSetupRow from "../toolSetupRow";
 import ToolSetupStack from "../toolSetupStack";
 import ToolSetupLibraryCommands from "./toolSetupLibraryCommands";
+import Input from "../io/input";
+import Output from "../io/output";
 
 export default function ToolLibraryDialog({
   commands = [],
@@ -15,9 +17,13 @@ export default function ToolLibraryDialog({
 }) {
   return (
     <ToolSetupStack>
-      <ToolSetupRow title="Input"></ToolSetupRow>
-      <ToolSetupRow title="Output"></ToolSetupRow>
-      <ToolSetupRow title="Command Setup">
+      <ToolSetupRow title="Input">
+        <Input />
+      </ToolSetupRow>
+      <ToolSetupRow title="Output">
+        <Output />
+      </ToolSetupRow>
+      <ToolSetupRow title="Setup">
         <ToolSetupLibraryCommands
           commands={commands}
           commandGroups={commandGroups}

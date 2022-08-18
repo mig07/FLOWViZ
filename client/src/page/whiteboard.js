@@ -31,6 +31,10 @@ const edgeOptions = {
   style: {
     stroke: "black",
   },
+  markerEnd: {
+    type: "arrowclosed",
+    color: "black",
+  },
 };
 
 export default function Whiteboard({ config, setDrawerList }) {

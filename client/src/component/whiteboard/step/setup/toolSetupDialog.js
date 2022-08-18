@@ -95,7 +95,7 @@ export default function ToolSetupDialog({
         aria-labelledby="scroll-dialog-title"
         aria-describedby="scroll-dialog-description"
       >
-        <DialogTitle id="scroll-dialog-title">Workflow Step Setup</DialogTitle>
+        <DialogTitle id="scroll-dialog-title">Task Setup</DialogTitle>
         <DialogContent dividers={scroll === "paper"}>
           {/* {tool.library && tool.api ? (
             <Container>

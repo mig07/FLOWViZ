@@ -23,7 +23,7 @@ class ToolService {
   postTool(body, onError, onSuccess, loading) {
     return Request(
       this.baseUrl,
-      httpOptions.post(),
+      httpOptions.post(body),
       onError,
       onSuccess,
       loading

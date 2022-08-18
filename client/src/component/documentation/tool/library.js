@@ -3,7 +3,7 @@ import Typography from "@mui/material/Typography";
 import { Divider } from "@mui/material";
 import { Box } from "@mui/system";
 
-export default function Library({ library }) {
+export default function Library({ name, library }) {
   const commandGroups = library;
 
   const noLibrary = (
@@ -19,7 +19,7 @@ export default function Library({ library }) {
       </Typography>
       <Divider />
       <Typography variant="body1" marginTop={5} align="center">
-        {library.name}
+        {name}
         {commandGroups
           .sort((a, b) => a.order - b.order)
           .map((commandGroup) => ` [${commandGroup.name}]`)}

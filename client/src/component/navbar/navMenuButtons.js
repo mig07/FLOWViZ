@@ -3,7 +3,9 @@ import Button from "@material-ui/core/Button";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
 import { Typography } from "@mui/material";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 import * as React from "react";
+import { IconButton } from "@material-ui/core";
 
 export default function NavMenuButtons({ navigateTo }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -17,15 +19,15 @@ export default function NavMenuButtons({ navigateTo }) {
 
   return (
     <div>
-      <Button
+      <IconButton
         id="basic-button"
         aria-controls={open ? "basic-menu" : undefined}
         aria-haspopup="true"
         aria-expanded={open ? "true" : undefined}
         onClick={handleClick}
       >
-        Dashboard
-      </Button>
+        <MoreVertIcon />
+      </IconButton>
       <Menu
         id="basic-menu"
         anchorEl={anchorEl}

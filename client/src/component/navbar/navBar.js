@@ -43,22 +43,43 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   justifyContent: "flex",
 }));
 
-const AppBar = styled(MuiAppBar, {
-  shouldForwardProp: (prop) => prop !== "open",
-})(({ theme, open }) => ({
-  transition: theme.transitions.create(["margin", "width"], {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  ...(open && {
-    width: `calc(100% - ${drawerWidth}px)`,
-    marginLeft: `${drawerWidth}px`,
-    transition: theme.transitions.create(["margin", "width"], {
-      easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  }),
-}));
+const pageButtonsGroups = [
+  {
+    position: "center",
+    pageButtons: [
+      {
+        name: "Home",
+        url: "/",
+      },
+      {
+        name: "Documentation",
+        url: "/documentation",
+      },
+      {
+        name: "About",
+        url: "/about",
+      },
+    ],
+  },
+];
+
+const notAuthenticatedButtons = [
+  {
+    name: "Login",
+    url: "/login",
+  },
+  {
+    name: "Register",
+    url: "/register",
+  },
+];
+
+const authenticatedButtons = [
+  {
+    name: "Workflows",
+    url: "/workflow",
+  },
+];
 
 export default function NavBar({ drawerList, auth, children }) {
   const navigate = useNavigate();
@@ -73,6 +94,25 @@ export default function NavBar({ drawerList, auth, children }) {
 
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up("md"));
+
+  const AppBar = styled(MuiAppBar, {
+    shouldForwardProp: (prop) => prop !== "open",
+  })(({ theme, open }) => ({
+    transition: theme.transitions.create(["margin", "width"], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+    ...(open && {
+      width: matches
+        ? `calc(100% - ${drawerWidth}px)`
+        : `calc(100% + ${drawerWidth}px)`,
+      marginLeft: `${drawerWidth}px`,
+      transition: theme.transitions.create(["margin", "width"], {
+        easing: theme.transitions.easing.easeOut,
+        duration: theme.transitions.duration.enteringScreen,
+      }),
+    }),
+  }));
 
   const handleDrawerOpen = () => {
     setDrawerOpen(true);
