@@ -5,13 +5,16 @@ import React from "react";
 import InfoBar from "../component/common/infoBar";
 import Loading from "../component/common/loading";
 import UserForm from "../component/common/userForm";
-import Request from "../service/request";
+import AuthService from "../service/authService";
+import config from "../config/dev-config.json";
 
 export default function Register() {
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [submitting, setSubmitting] = useState(false);
+
+  const authService = new AuthService(config.server);
 
   const onFieldChange = (event, setter) => {
     const value = event.target.value;
@@ -31,22 +34,15 @@ export default function Register() {
     setSubmitting(true);
   };
 
-  const options = {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      /* email: email, */
-      username: username,
-      password: password,
-    }),
-  };
-
   const OnRegister = () => {
-    return Request(
-      "http://localhost:3000/register",
-      options,
+    return authService.register(
+      JSON.stringify({
+        /* email: email, */
+        username: username,
+        password: password,
+      }),
       onError,
-      () => onSuccess(),
+      onSuccess,
       <Loading />
     );
   };
@@ -67,7 +63,6 @@ export default function Register() {
         autoComplete="email"
         value={email}
         onChange={(event) => onFieldChange(event, setEmail)}
-        //autoFocus
       />
       <TextField
         margin="normal"
@@ -79,7 +74,6 @@ export default function Register() {
         autoComplete="username"
         value={username}
         onChange={(event) => onFieldChange(event, setUsername)}
-        //autoFocus
       />
       <TextField
         margin="normal"

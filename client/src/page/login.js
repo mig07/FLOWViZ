@@ -8,13 +8,16 @@ import UserForm from "../component/common/userForm";
 import Checkbox from "@mui/material/Checkbox";
 import InfoBar from "../component/common/infoBar";
 import Loading from "../component/common/loading";
-import Request from "../service/request";
+import AuthService from "../service/authService";
+import config from "../config/dev-config.json";
 
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isTrusted, setIsTrusted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+
+  const authService = new AuthService(config.server);
 
   const navigate = useNavigate();
 
@@ -30,16 +33,6 @@ export default function Login() {
   const onSuccess = (data) => {
     localStorage.setItem("auth", JSON.stringify(data));
     navigate("/");
-    return <InfoBar type="success" text="Successfully logged in!" />;
-  };
-
-  const options = {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      username: username,
-      password: password,
-    }),
   };
 
   const handleSubmit = (event) => {
@@ -48,9 +41,11 @@ export default function Login() {
   };
 
   const OnLogin = () => {
-    return Request(
-      "http://localhost:3000/login",
-      options,
+    return authService.login(
+      JSON.stringify({
+        username: username,
+        password: password,
+      }),
       onError,
       onSuccess,
       <Loading />
@@ -70,7 +65,6 @@ export default function Login() {
           autoComplete="username"
           value={username}
           onChange={(event) => onFieldChange(event, setUsername)}
-          //autoFocus
         />
         <TextField
           margin="normal"
