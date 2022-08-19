@@ -9,6 +9,8 @@ module.exports = (httpRequest, airflow) => {
     this.getWorkflows = () => `${baseUri}`;
     this.getWorkflow = (name) => `${baseUri}/${name}`;
     this.postWorkflow = () => `${baseUri}/${airflow.dagRunGenerator}`;
+    this.getWorkflowSourceCode = (fileToken) =>
+      `http://${airflow.address}:${airflow.port}/api/v1/dagSources/${fileToken}`;
   }
 
   const airflowUriManager = new AirflowUriManager();
@@ -19,15 +21,45 @@ module.exports = (httpRequest, airflow) => {
 
   const authHeader = `Basic ${auth}`;
 
-  function triggerEtl(query) {
+  function getWorkflows() {
     return httpRequest
-      .post(airflowUriManager.postWorkflow(), query, authHeader)
+      .get(airflowUriManager.getWorkflows(), authHeader)
+      .then((data) => data.json())
+      .catch((err) => {
+        throw err;
+      });
+  }
+
+  function getWorkflow(workflowName) {
+    return httpRequest
+      .get(airflowUriManager.getWorkflow(workflowName), authHeader)
+      .then((data) => data.json())
+      .catch((err) => {
+        throw err;
+      });
+  }
+
+  function getWorkflowSourceCode(fileToken) {
+    return httpRequest
+      .get(airflowUriManager.getWorkflowSourceCode(fileToken), authHeader)
+      .then((data) => data.json())
+      .catch((err) => {
+        throw err;
+      });
+  }
+
+  function triggerEtl(body) {
+    return httpRequest
+      .post(airflowUriManager.postWorkflow(), body, authHeader)
       .catch((err) => {
         throw err;
       });
   }
 
   return {
+    getWorkflowSourceCode: getWorkflowSourceCode,
+    getWorkflows: getWorkflows,
+    getWorkflow: getWorkflow,
     triggerEtl: triggerEtl,
   };
 };

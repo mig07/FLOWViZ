@@ -17,7 +17,24 @@ module.exports = (WorkflowDb, Airflow) => {
    * @returns {The specified workflow}
    */
   async function getWorkflow(username, workflowName) {
-    return WorkflowDb.getDbWorkflow(username, workflowName);
+    const workflow = await WorkflowDb.getDbWorkflow(username, workflowName)
+      .then(async (dbWorkflow) => {
+        const airflowWorkflow = await Airflow.getWorkflow(workflowName);
+        const workflowSourceCode = await Airflow.getWorkflowSourceCode(
+          airflowWorkflow.file_token
+        );
+        console.log(workflowSourceCode);
+        return {
+          dbWorkflow: dbWorkflow,
+          airflow: airflowWorkflow,
+          sourceCode: workflowSourceCode,
+        };
+      })
+      .catch((err) => {
+        throw err;
+      });
+
+    return workflow;
   }
 
   /**
