@@ -1,6 +1,6 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
-import { Container, Toolbar, Typography } from "@mui/material";
+import { Container, Paper, Toolbar, Typography } from "@mui/material";
 import PageTitle from "../component/common/pageTitle";
 import WorkflowService from "../service/workflowService";
 import Loading from "../component/common/loading";
@@ -14,19 +14,32 @@ export default function Workflow({ config }) {
 
   const onError = (error) => {};
 
+  // TODO
   const onSuccess = (workflow) => {
+    const dbWorkflow = workflow.dbWorkflow;
+    const airflowWorkflow = workflow.airflowWorkflow;
     return (
       <>
         <PageTitle name={name} />
-        <PageTitle name="General data" variant="h5" sx={{ mt: 2 }} />
-        <Typography>Description: {workflow.description}</Typography>
-        <Typography>Last trigger date: </Typography>
-        <Typography>Last trigger state: </Typography>
-        <Typography>Tools involved: </Typography>
-        <Typography>Times executed: </Typography>
+        <Typography>
+          <b>Description:</b> {dbWorkflow.description || "-"}
+        </Typography>
+        <Typography>
+          <b>Last trigger date:</b> {"-"}
+        </Typography>
+        <Typography>
+          <b>Last trigger state:</b> {"-"}
+        </Typography>
+        <Typography>
+          <b>Tools involved:</b> {"-"}{" "}
+        </Typography>
+        <Typography>
+          <b>Times executed:</b> {"-"}
+        </Typography>
         <PageTitle name="DAG view" variant="h5" sx={{ mt: 2, mb: 2 }} />
         <WorkflowView />
         <PageTitle name="DAG script" variant="h5" sx={{ mt: 2 }} />
+        <pre>{workflow.sourceCode.content}</pre>
       </>
     );
   };
