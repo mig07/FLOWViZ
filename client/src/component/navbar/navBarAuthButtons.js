@@ -10,15 +10,20 @@ import {
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 import UserAvatar from "../common/userAvatar";
+import LoginIcon from "@mui/icons-material/Login";
+import HowToRegIcon from "@mui/icons-material/HowToReg";
+import AccountTreeIcon from "@mui/icons-material/AccountTree";
 
 const notAuthenticatedButtons = [
   {
     name: "Login",
     url: "/login",
+    icon: <LoginIcon />,
   },
   {
     name: "Register",
     url: "/register",
+    icon: <HowToRegIcon />,
   },
 ];
 
@@ -26,6 +31,7 @@ const authenticatedButtons = [
   {
     name: "Workflows",
     url: "/workflow",
+    icon: <AccountTreeIcon />,
   },
 ];
 
@@ -76,6 +82,7 @@ const authSection = (navigateTo, currentPage, username) => {
           key={pageButton.name}
           color="secondary"
           variant={currentPage === pageButton.url ? "outlined" : "string"}
+          startIcon={pageButton.icon}
           onClick={() => navigateTo(pageButton.url)}
         >
           {pageButton.name}
@@ -150,6 +157,7 @@ const notAuthSection = (navigateTo, currentPage) => {
         key={pageButton.name}
         color="secondary"
         variant={currentPage === pageButton.url ? "outlined" : "string"}
+        startIcon={pageButton.icon}
         onClick={() => navigateTo(pageButton.url)}
       >
         {pageButton.name}

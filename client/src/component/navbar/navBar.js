@@ -3,20 +3,8 @@ import { Typography } from "@material-ui/core";
 import MuiAppBar from "@material-ui/core/AppBar";
 import { makeStyles } from "@material-ui/core/styles";
 import Toolbar from "@material-ui/core/Toolbar";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
 import MenuIcon from "@mui/icons-material/Menu";
-import {
-  Button,
-  Divider,
-  Drawer,
-  IconButton,
-  ListItemButton,
-  Menu,
-  MenuItem,
-  useMediaQuery,
-  useTheme,
-} from "@mui/material";
+import { IconButton, MenuItem, useMediaQuery, useTheme } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
