@@ -33,6 +33,7 @@ export default function Login() {
   const onSuccess = (data) => {
     localStorage.setItem("auth", JSON.stringify(data));
     navigate("/");
+    return <InfoBar type="success" text="Successfully logged in!" />;
   };
 
   const handleSubmit = (event) => {
