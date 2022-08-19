@@ -48,7 +48,6 @@ export default function PostTool() {
 
   const [general, setGeneral] = useState({
     name: "",
-    type: "",
     description: "",
   });
 
@@ -132,8 +131,7 @@ export default function PostTool() {
         <General
           onGeneralUpdate={onGeneralUpdate}
           setCanAdvance={setCanAdvance}
-          name={general.name}
-          description={general.description}
+          general={general}
         />
       ),
     },
@@ -143,15 +141,8 @@ export default function PostTool() {
       description: "Where the tool is located and how it can be accessed.",
       fragment: (
         <Access
-          url={apiAccess.url}
-          apiKey={apiAccess.apiKey}
-          address={libraryAccess.address}
-          port={libraryAccess.port}
-          isContainer={libraryAccess.isContainer}
-          dockerDaemon={libraryAccess.dockerDaemon}
-          dockerImage={libraryAccess.dockerImage}
-          dockerContainer={libraryAccess.dockerContainer}
-          dockerVolumes={libraryAccess.dockerVolumes}
+          apiAccess={apiAccess}
+          libraryAccess={libraryAccess}
           configMethod={configMethod}
           onLibraryAccessUpdate={onLibraryAccessUpdate}
           onApiAccessUpdate={onApiAccessUpdate}

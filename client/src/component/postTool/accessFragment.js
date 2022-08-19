@@ -17,21 +17,24 @@ import Checkbox from "@mui/material/Checkbox";
 import { validateInputs } from "./util";
 
 export default function Access({
-  url,
-  apiKey,
-  address,
-  port,
-  isContainer,
-  dockerDaemon,
-  dockerImage,
-  dockerContainer,
-  dockerVolumes,
+  apiAccess,
+  libraryAccess,
   configMethod,
   onLibraryAccessUpdate = () => {},
   onApiAccessUpdate = () => {},
   setCanAdvance = () => {},
   onMethodChoice = () => {},
 }) {
+  const url = apiAccess.url;
+  const apiKey = apiAccess.apiKey;
+  const address = libraryAccess.address;
+  const port = libraryAccess.port;
+  const isContainer = libraryAccess.isContainer;
+  const dockerDaemon = libraryAccess.dockerDaemon;
+  const dockerImage = libraryAccess.dockerImage;
+  const dockerContainer = libraryAccess.dockerContainer;
+  const dockerVolumes = libraryAccess.dockerVolumes;
+
   const requiredFields = configMethod === "api" ? [url, apiKey] : [address];
 
   React.useEffect(() => {

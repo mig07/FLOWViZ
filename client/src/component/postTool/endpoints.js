@@ -6,12 +6,11 @@ import Endpoint from "./endpoint";
 import onArrayCountUpdate from "./util";
 
 export default function Endpoints({
-  data = {},
   api,
   onApiUpdate = () => {},
   generateEndpoint,
 }) {
-  const endpoints = data;
+  const endpoints = api;
 
   const [count, setCount] = useState(1);
 

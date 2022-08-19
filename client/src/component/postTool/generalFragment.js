@@ -5,9 +5,11 @@ import { validateInputs } from "./util";
 export default function General({
   onGeneralUpdate = () => {},
   setCanAdvance = () => {},
-  name,
-  description,
+  general,
 }) {
+  const name = general.name;
+  const description = general.description;
+
   const requiredFields = [name, description];
 
   React.useEffect(() => {

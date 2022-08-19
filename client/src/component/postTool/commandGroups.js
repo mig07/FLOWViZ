@@ -6,12 +6,11 @@ import CommandGroup from "./commandGroup";
 import onArrayCountUpdate from "./util";
 
 export default function CommandGroups({
-  data = {},
   library,
   onLibraryUpdate = () => {},
   generateCommandGroup,
 }) {
-  const groups = data;
+  const groups = library;
 
   const [count, setCount] = useState(1);
 
