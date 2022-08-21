@@ -13,7 +13,7 @@ export default function ChipContainer({ chips, onRemoveChip }) {
                 key={chip}
                 label={chip}
                 variant="outlined"
-                onDelete={onRemoveChip(chip)}
+                onDelete={() => onRemoveChip(chip)}
               />
             );
           })}

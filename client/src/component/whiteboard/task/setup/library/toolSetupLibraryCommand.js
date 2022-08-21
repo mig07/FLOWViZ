@@ -22,7 +22,7 @@ export default function ToolSetupLibraryCommand({
       : [];
 
   return (
-    <Grid container>
+    <Grid container direction="row" alignItems="center" justifyContent="center">
       <Grid item xs={1}>
         <IconButton onClick={(ev) => onRemove(ev, index)}>
           <CloseIcon />

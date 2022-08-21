@@ -7,13 +7,15 @@ import {
   DialogTitle,
   Typography,
 } from "@material-ui/core";
+import { Stack } from "@mui/material";
 import * as React from "react";
 import { useState } from "react";
 import ToolSetupRow from "./toolSetupRow";
 import ToolSetupStack from "./toolSetupStack";
 import ToolSetupLibraryCommand from "./library/toolSetupLibraryCommand";
-import Input from "../io/input";
-import Output from "../io/output";
+import VariableContainer from "../io/variable";
+import ChipContainer from "../../../common/chipContainer";
+import TextFieldWithTooltip from "../../../common/textFieldWithTooltip";
 
 export default function ToolSetupDialog({
   open,
@@ -28,6 +30,11 @@ export default function ToolSetupDialog({
   // For tools that provide both setup methods
   const [setupMethod, setSetupMethod] = useState("library");
 
+  const [inputKey, setInputKey] = useState("");
+  const [inputValue, setInputValue] = useState("");
+  const [outputKey, setOutputKey] = useState("");
+  const [inputs, setInputs] = useState([]);
+  const [outputs, setOutputs] = useState([]);
   const [commandGroups, cmdGroup, firstCmdName] = getLibrary(tool);
 
   const command = {
@@ -51,6 +58,17 @@ export default function ToolSetupDialog({
       value: "",
     },
   ]);
+
+  const onAddElement = (collection, value, setter, prop = "") => {
+    const hasChip = collection.find((elem) => elem === value);
+    if (!hasChip) {
+      setter((collection) => [...collection, value]);
+    }
+  };
+
+  const onRemoveElement = (value, setter) => {
+    setter((col) => col.filter((elem) => elem !== value));
+  };
 
   const onAddCommand = (event) => {
     setCommands([...commands, command]);
@@ -104,10 +122,51 @@ export default function ToolSetupDialog({
         <DialogContent dividers={scroll === "paper"}>
           <ToolSetupStack>
             <ToolSetupRow title="Input">
-              <Input />
+              <VariableContainer
+                onAddElement={(e) => onAddElement(inputs, inputKey, setInputs)}
+              >
+                <Stack>
+                  <TextFieldWithTooltip
+                    id="str-text-field-input-key"
+                    label="Input key"
+                    defaultValue={inputKey}
+                    onChange={(event) => setInputKey(event.target.value)}
+                    tooltip="The input variable key to assign a task input."
+                  />
+                  <TextFieldWithTooltip
+                    id="str-text-field-input-value"
+                    label="Input value"
+                    defaultValue={inputValue}
+                    onChange={(event) => setInputValue(event.target.value)}
+                    tooltip="The input variable value to assign a value to the key variable."
+                  />
+                </Stack>
+                <ChipContainer
+                  chips={inputs}
+                  onRemoveChip={(value) => onRemoveElement(value, setInputs)}
+                />
+              </VariableContainer>
             </ToolSetupRow>
             <ToolSetupRow title="Output">
-              <Output />
+              <VariableContainer
+                onAddElement={(e) =>
+                  onAddElement(outputs, outputKey, setOutputs)
+                }
+              >
+                <Stack>
+                  <TextFieldWithTooltip
+                    id="str-text-field-output-key"
+                    label="Output key"
+                    defaultValue={outputKey}
+                    onChange={(event) => setOutputKey(event.target.value)}
+                    tooltip="The output key variable to assign the output of this task. This key will be used by the next task to get the result of this one."
+                  />
+                </Stack>
+                <ChipContainer
+                  chips={outputs}
+                  onRemoveChip={(value) => onRemoveElement(value, setOutputs)}
+                />
+              </VariableContainer>
             </ToolSetupRow>
             <ToolSetupRow title="Setup">
               {commands.map((cmd, i) => (
