@@ -2,6 +2,12 @@ import CloseIcon from "@mui/icons-material/Close";
 import { Container, Grid, IconButton } from "@mui/material";
 import * as React from "react";
 import ToolSetupSelectField from "../toolSetupSelectField";
+import {
+  FormControl,
+  Select,
+  MenuItem,
+  ListSubheader,
+} from "@material-ui/core";
 
 export default function ToolSetupLibraryCommand({
   index,
@@ -9,6 +15,8 @@ export default function ToolSetupLibraryCommand({
   state,
   onParentUpdate,
   onRemove,
+  inputs,
+  outputs,
 }) {
   const commandGroupNames = commandGroups.map((cmdGroup) => cmdGroup.name);
 
@@ -36,7 +44,9 @@ export default function ToolSetupLibraryCommand({
             values={commandGroupNames}
             currValue={state.groupName}
             fieldWidth={12}
-            onCurrValueUpdate={(ev) => onParentUpdate(ev, index, "groupName")}
+            onCurrValueUpdate={(ev) =>
+              onParentUpdate(ev, index, "groupName", ["name", "value", "io"])
+            }
           />
           <ToolSetupSelectField
             id={`cmd-name-${index}`}
@@ -44,7 +54,9 @@ export default function ToolSetupLibraryCommand({
             values={currGroup.commands.map((cmd) => cmd.name)}
             currValue={state.name}
             fieldWidth={6}
-            onCurrValueUpdate={(ev) => onParentUpdate(ev, index, "name")}
+            onCurrValueUpdate={(ev) =>
+              onParentUpdate(ev, index, "name", ["value", "io"])
+            }
             stateDependency={state.groupName}
           />
           <ToolSetupSelectField
@@ -53,9 +65,43 @@ export default function ToolSetupLibraryCommand({
             values={cmdValues}
             currValue={state.value}
             fieldWidth={6}
-            onCurrValueUpdate={(ev) => onParentUpdate(ev, index, "value")}
+            onCurrValueUpdate={(ev) =>
+              onParentUpdate(ev, index, "value", ["io"])
+            }
             stateDependency={state.name}
           />
+          {state.value == "file" ? (
+            <Grid item xs={12}>
+              <FormControl fullWidth>
+                <Select
+                  id={`cmd-io-${index}`}
+                  label={"Command I/O"}
+                  value={state.io}
+                  onChange={(ev) => onParentUpdate(ev, index, "io")}
+                >
+                  <ListSubheader>Inputs</ListSubheader>
+                  {inputs.map((elem) => {
+                    return (
+                      <MenuItem key={elem} value={elem}>
+                        {elem}
+                      </MenuItem>
+                    );
+                  })}
+
+                  <ListSubheader>Outputs</ListSubheader>
+                  {outputs.map((elem) => {
+                    return (
+                      <MenuItem key={elem} value={elem}>
+                        {elem}
+                      </MenuItem>
+                    );
+                  })}
+                </Select>
+              </FormControl>
+            </Grid>
+          ) : (
+            <></>
+          )}
         </Grid>
       </Grid>
     </Grid>

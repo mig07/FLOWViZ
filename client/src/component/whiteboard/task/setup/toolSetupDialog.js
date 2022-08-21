@@ -16,6 +16,7 @@ import ToolSetupLibraryCommand from "./library/toolSetupLibraryCommand";
 import VariableContainer from "../io/variable";
 import ChipContainer from "../../../common/chipContainer";
 import TextFieldWithTooltip from "../../../common/textFieldWithTooltip";
+import CommandPreview from "./library/commandPreview";
 
 export default function ToolSetupDialog({
   open,
@@ -35,27 +36,24 @@ export default function ToolSetupDialog({
   const [outputKey, setOutputKey] = useState("");
   const [inputs, setInputs] = useState([]);
   const [outputs, setOutputs] = useState([]);
+
+  // Obtains the first command group name and name to fill the selectors
   const [commandGroups, cmdGroup, firstCmdName] = getLibrary(tool);
 
-  const command = {
+  const cleanCommand = {
     groupName: cmdGroup.name,
     name: "",
     value: "",
   };
 
-  const [commands, setCommands] = useState([
-    {
-      groupName: cmdGroup.name,
-      name: firstCmdName,
-      value: "",
-    },
-  ]);
+  const [inputCommands, setInputCommands] = useState([cleanCommand]);
 
   const [endpoints, setEndpoints] = useState([
     {
       groupName: cmdGroup.name,
       name: firstCmdName,
       value: "",
+      io: "",
     },
   ]);
 
@@ -71,30 +69,37 @@ export default function ToolSetupDialog({
   };
 
   const onAddCommand = (event) => {
-    setCommands([...commands, command]);
+    setInputCommands([...inputCommands, cleanCommand]);
   };
 
   const onRemoveCommand = (event, i) => {
-    if (commands.length <= 1 || i === 0) return;
-    const cmds = [...commands];
+    if (inputCommands.length <= 1 || i === 0) return;
+    const cmds = [...inputCommands];
     cmds.splice(i, 1);
-    setCommands(cmds);
+    setInputCommands(cmds);
   };
 
-  const onUpdateCommand = (event, i, prop) => {
+  const onUpdateCommand = (event, i, prop, nextProps) => {
     const value = event.target.value;
-    const cmds = [...commands];
+    const cmds = [...inputCommands];
     cmds[i][prop] = value;
-    setCommands(cmds);
+    if (nextProps || nextProps.length > 0) {
+      nextProps.forEach((nextProp) => {
+        cmds[i][nextProp] = "";
+      });
+    }
+    setInputCommands(cmds);
   };
 
   const onCancel = (event) => {
-    setCommands([command]);
+    setInputCommands([cleanCommand]);
     onSetupDialogClose();
   };
 
   const onApply = (config) => {
-    onSetupDialogApply(!config.library ? { endpoints } : { commands });
+    onSetupDialogApply(
+      !config.library ? { endpoints } : { commands: inputCommands }
+    );
     onSetupDialogClose();
   };
 
@@ -169,7 +174,12 @@ export default function ToolSetupDialog({
               </VariableContainer>
             </ToolSetupRow>
             <ToolSetupRow title="Setup">
-              {commands.map((cmd, i) => (
+              <CommandPreview
+                toolName={tool.general.name}
+                library={tool.library}
+                inputCommands={inputCommands}
+              />
+              {inputCommands.map((cmd, i) => (
                 <ToolSetupLibraryCommand
                   key={i}
                   index={i}
@@ -177,6 +187,8 @@ export default function ToolSetupDialog({
                   state={cmd}
                   onParentUpdate={onUpdateCommand}
                   onRemove={onRemoveCommand}
+                  inputs={inputs}
+                  outputs={outputs}
                 />
               ))}
               <Button onClick={onAddCommand}>Add command</Button>
@@ -187,7 +199,7 @@ export default function ToolSetupDialog({
           {children}
           <Button onClick={onCancel}>Cancel</Button>
           <Button
-            onClick={() => onApply({ library: commands, api: endpoints })}
+            onClick={() => onApply({ library: inputCommands, api: endpoints })}
           >
             Apply
           </Button>

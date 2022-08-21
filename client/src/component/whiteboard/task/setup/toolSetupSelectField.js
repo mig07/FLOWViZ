@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Grid } from "@mui/material";
-import ToolForm from "./toolForm";
+import { FormControl, Select, MenuItem } from "@material-ui/core";
 
 export default function ToolSetupSelectField(props) {
   const id = props.id;
@@ -11,15 +11,26 @@ export default function ToolSetupSelectField(props) {
   const onCurrValueUpdate = props.onCurrValueUpdate;
   const stateDependency = props.stateDependency;
 
-  return !stateDependency || (stateDependency && stateDependency !== "") ? (
+  const hasCollection = values && values.length > 0;
+
+  return (hasCollection && !stateDependency) || stateDependency !== "" ? (
     <Grid item xs={fieldWidth}>
-      <ToolForm
-        id={id}
-        label={label}
-        collection={values}
-        value={currValue}
-        onSelectValueChange={onCurrValueUpdate}
-      />
+      <FormControl fullWidth>
+        <Select
+          id={id}
+          label={label}
+          value={currValue}
+          onChange={onCurrValueUpdate}
+        >
+          {values.map((elem) => {
+            return (
+              <MenuItem key={elem} value={elem}>
+                {elem}
+              </MenuItem>
+            );
+          })}
+        </Select>
+      </FormControl>
     </Grid>
   ) : (
     <></>
