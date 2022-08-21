@@ -1,6 +1,7 @@
 const getOne = require("./serviceUtils");
 const mapTaskToDockerOperator = require("../mappers/mapTaskToDockerOperator");
 const mapTaskToSimpleHttpOperator = require("../mappers/mapTaskToSimpleHttpOperator");
+const ApiException = require("../exception/apiException");
 
 module.exports = (WorkflowDb, Airflow) => {
   /**
@@ -17,24 +18,47 @@ module.exports = (WorkflowDb, Airflow) => {
    * @returns {The specified workflow}
    */
   async function getWorkflow(username, workflowName) {
-    const workflow = await WorkflowDb.getDbWorkflow(username, workflowName)
+    return await WorkflowDb.getDbWorkflow(username, workflowName)
       .then(async (dbWorkflow) => {
         const airflowWorkflow = await Airflow.getWorkflow(workflowName);
+
+        // If does not exist in Airflow
+        if (!airflowWorkflow) {
+          throw ApiException.notFound(
+            `The workflow ${workflowName} for user ${username} no longer exists.`
+          );
+        }
+
+        const workflowRuns = await Airflow.getWorkflowDagRuns(
+          workflowName
+        ).then((data) => data.dag_runs);
         const workflowSourceCode = await Airflow.getWorkflowSourceCode(
           airflowWorkflow.file_token
         );
-        console.log(workflowSourceCode);
         return {
           dbWorkflow: dbWorkflow,
-          airflow: airflowWorkflow,
-          sourceCode: workflowSourceCode,
+          airflow: {
+            runs: workflowRuns,
+            sourceCode: workflowSourceCode,
+          },
         };
       })
       .catch((err) => {
         throw err;
       });
+  }
 
-    return workflow;
+  async function getWorkflowRun(username, workflowName, dagRunId) {
+    return await Airflow.getWorkflowDagRun(workflowName, dagRunId)
+      .then((data) => {
+        return {
+          executionDate: data.execution_date,
+          state: data.state,
+        };
+      })
+      .catch((err) => {
+        throw err;
+      });
   }
 
   /**
@@ -71,6 +95,7 @@ module.exports = (WorkflowDb, Airflow) => {
   return {
     getWorkflows: getWorkflows,
     getWorkflow: getWorkflow,
+    getWorkflowRun: getWorkflowRun,
     postWorkflow: postWorkflow,
   };
 };

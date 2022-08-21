@@ -21,6 +21,17 @@ module.exports = (workflowService) => {
       .catch((err) => next(err));
   }
 
+  function getWorkflowRun(req, res, next) {
+    const username = req.user.username;
+    const workflowName = req.params.name;
+    const dagRunId = req.params.dagRunId;
+
+    workflowService
+      .getWorkflowRun(username, workflowName, dagRunId)
+      .then((data) => onSuccess(res, data))
+      .catch((err) => next(err));
+  }
+
   function postWorkflow(req, res, next) {
     const username = req.user.username;
     const workflow = req.body;
@@ -34,6 +45,7 @@ module.exports = (workflowService) => {
   return {
     getWorkflows: getWorkflows,
     getWorkflow: getWorkflow,
+    getWorkflowRun: getWorkflowRun,
     postWorkflow: postWorkflow,
   };
 };

@@ -6,11 +6,15 @@ const airflowPassword = process.env.AIRFLOW_PASSWORD;
 module.exports = (httpRequest, airflow) => {
   function AirflowUriManager() {
     const baseUri = `http://${airflow.address}:${airflow.port}/${airflow.base}`;
-    this.getWorkflows = () => `${baseUri}`;
-    this.getWorkflow = (name) => `${baseUri}/${name}`;
-    this.postWorkflow = () => `${baseUri}/${airflow.dagRunGenerator}`;
+    const dags = `${baseUri}/${airflow.dags}`;
+    this.getWorkflows = () => `${dags}`;
+    this.getWorkflow = (name) => `${dags}/${name}`;
+    this.getWorkflowDagRuns = (name) => `${dags}/${name}/dagRuns`;
+    this.getWorkflowDagRun = (name, dagRunId) =>
+      `${dags}/${name}/dagRuns/${dagRunId}`;
+    this.postWorkflow = () => `${dags}/${airflow.dagRunGenerator}`;
     this.getWorkflowSourceCode = (fileToken) =>
-      `http://${airflow.address}:${airflow.port}/api/v1/dagSources/${fileToken}`;
+      `${baseUri}/${airflow.dagSources}/${fileToken}`;
   }
 
   const airflowUriManager = new AirflowUriManager();
@@ -39,6 +43,27 @@ module.exports = (httpRequest, airflow) => {
       });
   }
 
+  function getWorkflowDagRuns(workflowName) {
+    return httpRequest
+      .get(airflowUriManager.getWorkflowDagRuns(workflowName), authHeader)
+      .then((data) => data.json())
+      .catch((err) => {
+        throw err;
+      });
+  }
+
+  function getWorkflowDagRun(workflowName, dagRunId) {
+    return httpRequest
+      .get(
+        airflowUriManager.getWorkflowDagRun(workflowName, dagRunId),
+        authHeader
+      )
+      .then((data) => data.json())
+      .catch((err) => {
+        throw err;
+      });
+  }
+
   function getWorkflowSourceCode(fileToken) {
     return httpRequest
       .get(airflowUriManager.getWorkflowSourceCode(fileToken), authHeader)
@@ -60,6 +85,8 @@ module.exports = (httpRequest, airflow) => {
     getWorkflowSourceCode: getWorkflowSourceCode,
     getWorkflows: getWorkflows,
     getWorkflow: getWorkflow,
+    getWorkflowDagRuns: getWorkflowDagRuns,
+    getWorkflowDagRun: getWorkflowDagRun,
     triggerEtl: triggerEtl,
   };
 };

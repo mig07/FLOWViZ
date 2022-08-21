@@ -32,6 +32,12 @@ module.exports = (
     workflowController.getWorkflow
   );
 
+  app.get(
+    "/workflow/:name/:dagRunId",
+    passport.authenticate("jwt", { session: false }),
+    workflowController.getWorkflowRun
+  );
+
   // POSTs
   app.post(
     "/workflow",
