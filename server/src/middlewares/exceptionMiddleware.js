@@ -1,4 +1,4 @@
-const ApiException = require("../exception/apiException");
+const ApiException = require("../exceptions/apiException");
 
 module.exports = (dev) => {
   function interceptor(err, req, res, next) {

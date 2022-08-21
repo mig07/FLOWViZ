@@ -1,4 +1,4 @@
-const Workflow = require("../schema/mongodb/workflow/workflow");
+const Workflow = require("../models/mongodb/workflow/workflow");
 
 module.exports = () => {
   function getDbWorkflows(username) {

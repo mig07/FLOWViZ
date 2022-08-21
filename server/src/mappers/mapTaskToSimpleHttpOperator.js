@@ -1,4 +1,4 @@
-const SimpleHttpOperatorModule = require("../schema/airflow/SimpleHttpOperator");
+const SimpleHttpOperatorModule = require("../models/airflow/SimpleHttpOperator");
 // const SimpleHttpOperator = DockerOperatorModule.DockerOperator;
 // const SimpleHttpOperatorParams = DockerOperatorModule.DockerOperatorParams;
 

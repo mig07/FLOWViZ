@@ -1,5 +1,5 @@
-const ApiException = require("../exception/apiException");
-const UserModel = require("../schema/mongodb/user/user");
+const ApiException = require("../exceptions/apiException");
+const UserModel = require("../models/mongodb/user/user");
 const JwtStrategy = require("passport-jwt").Strategy;
 const ExtractJwt = require("passport-jwt").ExtractJwt;
 

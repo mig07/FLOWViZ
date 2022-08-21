@@ -1,7 +1,7 @@
 const getOne = require("./serviceUtils");
 const mapTaskToDockerOperator = require("../mappers/mapTaskToDockerOperator");
 const mapTaskToSimpleHttpOperator = require("../mappers/mapTaskToSimpleHttpOperator");
-const ApiException = require("../exception/apiException");
+const ApiException = require("../exceptions/apiException");
 
 module.exports = (WorkflowDb, Airflow) => {
   /**

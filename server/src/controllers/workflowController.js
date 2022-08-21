@@ -1,5 +1,5 @@
 const onSuccess = require("./controllerUtils");
-const ApiException = require("../exception/apiException");
+const ApiException = require("../exceptions/apiException");
 
 module.exports = (workflowService) => {
   function getWorkflows(req, res, next) {

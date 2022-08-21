@@ -7,9 +7,9 @@ module.exports = (app, passport) => {
   // Auth
   const authUtils = require("./authUtils")();
 
-  const authDs = require("../datasource/authDataSource")(passport, secret);
-  const authService = require("../service/authService")(authDs);
-  const authController = require("../controller/authController")(
+  const authDs = require("../datasources/authDataSource")(passport, secret);
+  const authService = require("../services/authService")(authDs);
+  const authController = require("../controllers/authController")(
     jwt,
     authService,
     authUtils,

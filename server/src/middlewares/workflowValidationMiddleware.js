@@ -1,5 +1,5 @@
 const { validationResult } = require("express-validator");
-const ApiException = require("../exception/apiException");
+const ApiException = require("../exceptions/apiException");
 
 module.exports = (req, res, next) => {
   const errors = [];

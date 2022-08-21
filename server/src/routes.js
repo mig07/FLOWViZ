@@ -1,5 +1,5 @@
 const { checkSchema } = require("express-validator");
-const { workflowStep } = require("./schema/airflow/workflow/workflow");
+const { workflowStep } = require("./models/airflow/workflow/workflow");
 
 module.exports = (
   app,

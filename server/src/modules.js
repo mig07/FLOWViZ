@@ -1,36 +1,41 @@
 /* Api exception custom object */
-const ApiException = require("./exception/apiException");
+const ApiException = require("./exceptions/apiException");
 
 /* HTTP requester utility class */
 const httpRequest = require("./util/httpRequest")();
 
 module.exports = (app, accessConfig, passport) => {
   // Library
-  const toolDb = require("./datasource/toolDbDataSource.js")();
-  const toolService = require("./service/toolService.js")(toolDb, ApiException);
-  const toolController = require("./controller/toolController.js")(toolService);
+  const toolDb = require("./datasources/toolDbDataSource.js")();
+  const toolService = require("./services/toolService.js")(
+    toolDb,
+    ApiException
+  );
+  const toolController = require("./controllers/toolController.js")(
+    toolService
+  );
 
   // Workflow
-  const workflowDb = require("./datasource/workflowDbDataSource.js")();
+  const workflowDb = require("./datasources/workflowDbDataSource.js")();
   const airflowDataSource =
-    require("./datasource/workflowAirflowDataSource.js")(
+    require("./datasources/workflowAirflowDataSource.js")(
       httpRequest,
       accessConfig.airflow
     );
-  const workflowService = require("./service/workflowService.js")(
+  const workflowService = require("./services/workflowService.js")(
     workflowDb,
     airflowDataSource,
     ApiException
   );
-  const workflowController = require("./controller/workflowController")(
+  const workflowController = require("./controllers/workflowController")(
     workflowService
   );
 
   /* Express middleware config */
-  const exceptionMiddleware = require("./middleware/exceptionMiddleware")(
+  const exceptionMiddleware = require("./middlewares/exceptionMiddleware")(
     accessConfig.dev
   );
-  const workflowMiddleware = require("./middleware/workflowValidationMiddleware");
+  const workflowMiddleware = require("./middlewares/workflowValidationMiddleware");
 
   // API's endpoints
   require("./routes.js")(

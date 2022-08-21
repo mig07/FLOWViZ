@@ -1,5 +1,5 @@
-const DockerOperatorModule = require("../schema/airflow/DockerOperator");
-const Mounts = require("../schema/airflow/Mounts");
+const DockerOperatorModule = require("../models/airflow/DockerOperator");
+const Mounts = require("../models/airflow/Mounts");
 const DockerOperator = DockerOperatorModule.DockerOperator;
 const DockerOperatorParams = DockerOperatorModule.DockerOperatorParams;
 
