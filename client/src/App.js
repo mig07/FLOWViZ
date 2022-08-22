@@ -27,12 +27,15 @@ export default function App() {
   // Custom hook for pages with side drawer
   const [drawerList, setDrawerList] = useNavBar();
 
-  const serverAccess = Config.server;
+  const config = Config.server;
+  const apiBaseUrl = `${config.appProtocol}://${config.address}:${config.port}/flowapi`;
+
+  console.log(apiBaseUrl);
 
   // Services
-  const authService = new AuthService(serverAccess);
-  const workflowService = new WorkflowService(serverAccess);
-  const toolService = new ToolService(serverAccess);
+  const authService = new AuthService(apiBaseUrl);
+  const workflowService = new WorkflowService(apiBaseUrl);
+  const toolService = new ToolService(apiBaseUrl);
 
   const ServiceContext = React.createContext({
     authService: authService,
@@ -42,7 +45,7 @@ export default function App() {
 
   return (
     <ThemeProvider theme={Theme}>
-      <Router>
+      <Router basename="/flowviz">
         <NavBar drawerList={drawerList}>
           <Routes>
             <Route exact path={"/"} element={<Home />} />
@@ -50,37 +53,34 @@ export default function App() {
             <Route
               exact
               path={"/documentation"}
-              element={<Documentation config={Config.server} />}
+              element={<Documentation config={apiBaseUrl} />}
             />
             <Route
               exact
               path={"/documentation/:toolName"}
-              element={<ToolPage config={Config.server} />}
+              element={<ToolPage config={apiBaseUrl} />}
             />
             <Route path={"/tool"} element={<PostTool />} />
             <Route path={"/login"} element={<Login />} />
             <Route path={"/register"} element={<Register />} />
             <Route
               path={"/profile"}
-              element={<Profile config={Config.server} />}
+              element={<Profile config={apiBaseUrl} />}
             />
             <Route
               exact
               path={"/workflow"}
-              element={<WorkflowList config={Config.server} />}
+              element={<WorkflowList config={apiBaseUrl} />}
             />
             <Route
               exact
               path={"/workflow/:name"}
-              element={<Workflow config={Config.server} />}
+              element={<Workflow config={apiBaseUrl} />}
             />
             <Route
               path={"/whiteboard"}
               element={
-                <Whiteboard
-                  config={Config.server}
-                  setDrawerList={setDrawerList}
-                />
+                <Whiteboard config={apiBaseUrl} setDrawerList={setDrawerList} />
               }
             />
             <Route path={"/test"} element={<Test />} />

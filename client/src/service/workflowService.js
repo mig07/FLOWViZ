@@ -2,8 +2,8 @@ import Request from "./request";
 import httpOptions from "./httpOptions";
 
 class WorkflowService {
-  constructor(config) {
-    this.baseUrl = `${config.appProtocol}://${config.address}:${config.port}/workflow`;
+  constructor(baseUrl) {
+    this.baseUrl = `${baseUrl}/workflow`;
   }
 
   getWorkflows(onError, onSuccess, loading) {
@@ -19,6 +19,16 @@ class WorkflowService {
   getWorkflow(workflowName, onError, onSuccess, loading) {
     return Request(
       `${this.baseUrl}/${workflowName}`,
+      httpOptions.getAuth(),
+      onError,
+      onSuccess,
+      loading
+    );
+  }
+
+  getWorkflowRun(workflowName, runId, onError, onSuccess, loading) {
+    return Request(
+      `${this.baseUrl}/${workflowName}/${runId}`,
       httpOptions.getAuth(),
       onError,
       onSuccess,

@@ -2,8 +2,8 @@ import Request from "./request";
 import httpOptions from "./httpOptions";
 
 class ToolService {
-  constructor(config) {
-    this.baseUrl = `${config.appProtocol}://${config.address}:${config.port}/tool`;
+  constructor(baseUrl) {
+    this.baseUrl = `${baseUrl}/tool`;
   }
 
   getTools(onError, onSuccess, loading) {

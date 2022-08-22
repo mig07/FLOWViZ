@@ -2,8 +2,8 @@ import Request from "./request";
 import httpOptions from "./httpOptions";
 
 class AuthService {
-  constructor(config) {
-    this.baseUrl = `${config.appProtocol}://${config.address}:${config.port}`;
+  constructor(baseUrl) {
+    this.baseUrl = baseUrl;
   }
 
   register(body, onError, onSuccess, loading) {
