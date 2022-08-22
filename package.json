@@ -2,12 +2,12 @@
   "name": "flowviz",
   "version": "1.0.0",
   "description": "A framework which provides seamless integration with other phylogenetic tools and frameworks, while allowing workflow scheduling and execution, through the Apache Airflow workflow system.",
-  "main": "app.js",
+  "main": "./server/src/flowviz.js",
   "scripts": {
     "server": "nodemon ./server/src/test.js",
     "client": "npm start --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "test": "mocha ./server/src/test"
+    "test": "mocha ./server/src/test/*"
   },
   "keywords": [
     "Bioinformatics",
