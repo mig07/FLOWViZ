@@ -7,14 +7,20 @@ module.exports = (config) => {
   require(`dotenv`).config();
   var conf = config || {};
 
-  var express = conf.express || require("express");
-  var app = conf.router || express();
-  var passport = conf.authenticator || require("passport");
+  const path = require("node:path");
+  const production = true;
+
+  const express = conf.express || require("express");
+  const app = conf.app || express();
+  const router = express.Router();
+  const passport = conf.authenticator || require("passport");
 
   /* Server config */
-  const accessConfig = require("./config/flowviz-server-dev-config.json");
+  const accessConfig = require("./config/dev-config.json");
   const dbConfig = accessConfig.dataSource;
-  const dev = accessConfig.dev;
+
+  // Defining API route prefix
+  app.use("/flowapi", router);
 
   /* Dependencies */
   const bodyParser = conf.bodyParser || require("body-parser");
@@ -35,18 +41,27 @@ module.exports = (config) => {
   /* Initializing express server */
 
   // FLOWViZ required express middlewares
-  app.use(cors());
-  app.use(express.json());
-  app.use(bodyParser.urlencoded({ extended: false }));
+  router.use(cors());
+  router.use(express.json());
+  router.use(bodyParser.urlencoded({ extended: false }));
   app.use(morgan("dev"));
+
+  // Uses client build version if in production
+  if (production) {
+    const buildDirectory = "../../client/build";
+    app.use(express.static(path.join(__dirname, buildDirectory)));
+    app.get("*", (req, res) => {
+      res.sendFile(path.join(__dirname, `${buildDirectory}/index.html`));
+    });
+  }
 
   // If no authenticator module was specified, use the one included.
   if (!conf.authenticator) {
-    require("./auth/passport")(app, passport);
+    require("./auth/passport")(router, passport);
   }
 
   /* Loading FLOWViZ modules */
-  require("./modules")(app, accessConfig, passport);
+  require("./modules")(router, accessConfig, passport);
 
   /* Server initialization */
   if (!conf.express) {

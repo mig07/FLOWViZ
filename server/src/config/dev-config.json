@@ -1,5 +1,4 @@
 {
-  "dev": true,
   "server": {
     "name": "FLOWViZ Server",
     "port": 3000
@@ -16,9 +15,5 @@
     "dags": "dags",
     "dagSources": "dagSources",
     "dagRunGenerator": "dag_generator2/dagRuns"
-  },
-  "rabbitmq": {
-    "address": "localhost",
-    "port": 5672
   }
 }
