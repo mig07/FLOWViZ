@@ -11,13 +11,11 @@ import Loading from "../component/common/loading";
 import AuthService from "../service/authService";
 import config from "../config/dev-config.json";
 
-export default function Login() {
+export default function Login({ authService }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isTrusted, setIsTrusted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-
-  const authService = new AuthService(config.server);
 
   const navigate = useNavigate();
 

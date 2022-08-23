@@ -8,13 +8,11 @@ import UserForm from "../component/common/userForm";
 import AuthService from "../service/authService";
 import config from "../config/dev-config.json";
 
-export default function Register() {
+export default function Register({ authService }) {
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [submitting, setSubmitting] = useState(false);
-
-  const authService = new AuthService(config.server);
 
   const onFieldChange = (event, setter) => {
     const value = event.target.value;

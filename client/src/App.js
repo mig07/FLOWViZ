@@ -37,12 +37,6 @@ export default function App() {
   const workflowService = new WorkflowService(apiBaseUrl);
   const toolService = new ToolService(apiBaseUrl);
 
-  const ServiceContext = React.createContext({
-    authService: authService,
-    workflowService: workflowService,
-    toolService: toolService,
-  });
-
   return (
     <ThemeProvider theme={Theme}>
       <Router basename="/flowviz">
@@ -53,34 +47,47 @@ export default function App() {
             <Route
               exact
               path={"/documentation"}
-              element={<Documentation config={apiBaseUrl} />}
+              element={<Documentation toolService={toolService} />}
             />
             <Route
               exact
               path={"/documentation/:toolName"}
-              element={<ToolPage config={apiBaseUrl} />}
+              element={<ToolPage toolService={toolService} />}
             />
-            <Route path={"/tool"} element={<PostTool />} />
-            <Route path={"/login"} element={<Login />} />
-            <Route path={"/register"} element={<Register />} />
+            <Route
+              path={"/tool"}
+              element={<PostTool toolService={toolService} />}
+            />
+            <Route
+              path={"/login"}
+              element={<Login authService={authService} />}
+            />
+            <Route
+              path={"/register"}
+              element={<Register authService={authService} />}
+            />
             <Route
               path={"/profile"}
-              element={<Profile config={apiBaseUrl} />}
+              element={<Profile authService={authService} />}
             />
             <Route
               exact
               path={"/workflow"}
-              element={<WorkflowList config={apiBaseUrl} />}
+              element={<WorkflowList workflowService={workflowService} />}
             />
             <Route
               exact
               path={"/workflow/:name"}
-              element={<Workflow config={apiBaseUrl} />}
+              element={<Workflow workflowService={workflowService} />}
             />
             <Route
               path={"/whiteboard"}
               element={
-                <Whiteboard config={apiBaseUrl} setDrawerList={setDrawerList} />
+                <Whiteboard
+                  toolService={toolService}
+                  workflowService={workflowService}
+                  setDrawerList={setDrawerList}
+                />
               }
             />
             <Route path={"/test"} element={<Test />} />

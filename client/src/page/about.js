@@ -6,7 +6,7 @@ export default function About() {
   return (
     <Container maxWidth="lg">
       <Toolbar />
-      <PageTitle name="About" />
+      <PageTitle>About</PageTitle>
       <Container sx={{ mt: 3 }}>
         <p>
           Welcome to FLOWViZ! This framework allows you to seamlessly integrate

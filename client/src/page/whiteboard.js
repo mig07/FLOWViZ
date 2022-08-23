@@ -18,8 +18,6 @@ import GenericError from "../component/common/genericError";
 import HowToRegIcon from "@mui/icons-material/HowToReg";
 import Submission from "../component/common/submission";
 import WorkflowSubmitDialog from "../component/whiteboard/workflowSubmitDialog";
-import ToolService from "../service/toolService";
-import WorkflowService from "../service/workflowService";
 
 let id = -1;
 const getId = () => `node${++id}`;
@@ -37,10 +35,11 @@ const edgeOptions = {
   },
 };
 
-export default function Whiteboard({ config, setDrawerList }) {
-  const toolService = new ToolService(config);
-  const workflowService = new WorkflowService(config);
-
+export default function Whiteboard({
+  toolService,
+  workflowService,
+  setDrawerList,
+}) {
   // Get NavBar height from theme
   const theme = useTheme();
   const appBarHeight = theme.mixins.toolbar.minHeight;
@@ -51,6 +50,8 @@ export default function Whiteboard({ config, setDrawerList }) {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
+
+  console.log(nodes);
 
   // States if the workflow can be commited
   const [canAdvance, setCanAdvance] = useState(false);
@@ -92,14 +93,35 @@ export default function Whiteboard({ config, setDrawerList }) {
     });
   });
 
+  // TODO
+  const hasLoops = () => {};
+
+  const updateNodeInputs = (sourceNodeId, targetNodeId) => {
+    const nds = [...nodes];
+
+    const sourceNode = nds.find((n) => n.id === sourceNodeId);
+
+    nds.map((n) => {
+      if (n.id === targetNodeId) {
+        n.data.setup.inputs = sourceNode.data.setup.outputs;
+      }
+    });
+
+    setNodes(nds);
+  };
+
   // Set edges
-  const onConnect = useCallback(
-    (params) => setEdges((eds) => addEdge(params, eds)),
-    []
-  );
+  const onConnect = useCallback((params) => {
+    /* if (hasLoops) return; */
+    //updateNodeInputs(params.source, params.target);
+    return setEdges((eds) => addEdge(params, eds));
+  }, []);
+
   // Update edges
-  const onEdgeUpdate = (oldEdge, newConnection) =>
-    setEdges((els) => updateEdge(oldEdge, newConnection, els));
+  const onEdgeUpdate = useCallback((oldEdge, newConnection) => {
+    /* if (hasLoops) return; */
+    return setEdges((els) => updateEdge(oldEdge, newConnection, els));
+  });
 
   const onDragOver = useCallback((event) => {
     event.preventDefault();
@@ -114,7 +136,7 @@ export default function Whiteboard({ config, setDrawerList }) {
         position: droppingToolPos,
         data: {
           tool: tool,
-          setup: { stepName: "", config: {} },
+          setup: { stepName: "", config: {}, inputs: [], outputs: [] },
           onNodeUpdate: onNodeSetupUpdate,
         },
       };
@@ -206,7 +228,7 @@ export default function Whiteboard({ config, setDrawerList }) {
           setCanAdvance={setCanAdvance}
           open={dialogOpen}
           onApply={() => {
-            requestWorkflow(nodes, edges, config, workflowName);
+            requestWorkflow(nodes, edges, workflowService, workflowName);
             setDialogOpen(false);
           }}
           onCancel={() => setDialogOpen(false)}
@@ -217,9 +239,8 @@ export default function Whiteboard({ config, setDrawerList }) {
   );
 }
 
-function requestWorkflow(nodes, edges, config, workflowName) {
+function requestWorkflow(nodes, edges, workflowService, workflowName) {
   const workflowRequest = getWorkflowRequest(workflowName, nodes, edges);
-  const workflowService = new WorkflowService(config);
 
   const onSuccess = (data) => (
     <React.Fragment>

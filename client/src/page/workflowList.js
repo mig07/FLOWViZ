@@ -22,7 +22,6 @@ import InfoBar from "../component/common/infoBar";
 import Loading from "../component/common/loading";
 import PageTitle from "../component/common/pageTitle";
 import CenteredContainer from "../component/common/centeredContainer";
-import WorkflowService from "../service/workflowService";
 
 const WorkflowStates = {
   cancelled: "cancelled",
@@ -61,10 +60,8 @@ const getState = (value) => {
   }
 };
 
-export default function WorkflowList({ config }) {
+export default function WorkflowList({ workflowService }) {
   const navigate = useNavigate();
-
-  const workflowService = new WorkflowService(config);
 
   const onError = (error) => {
     return <InfoBar type="error" text={error} />;
@@ -90,9 +87,9 @@ export default function WorkflowList({ config }) {
             </Button>
           </TableCell>
           <TableCell>{workflow.description || "-"}</TableCell>
-          <TableCell>{workflow.creationDate || "-"}</TableCell>
+          {/* <TableCell>{workflow.creationDate || "-"}</TableCell>
           <TableCell>{workflow.finishDate || "-"}</TableCell>
-          <TableCell>{getState(workflow.state) || "-"}</TableCell>
+          <TableCell>{getState(workflow.state) || "-"}</TableCell> */}
         </TableRow>
       );
     });
@@ -102,16 +99,16 @@ export default function WorkflowList({ config }) {
     <>
       <Toolbar />
       <Container maxWidth="lg">
-        <PageTitle name="Your workflows" />
+        <PageTitle>Your workflows</PageTitle>
         <TableContainer style={componentStyle} component={Paper} sx={{ mt: 5 }}>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
               <TableRow>
                 <TableCell>Name</TableCell>
                 <TableCell>Description</TableCell>
-                <TableCell>Creation date</TableCell>
+                {/* <TableCell>Creation date</TableCell>
                 <TableCell>Finish date</TableCell>
-                <TableCell>State</TableCell>
+                <TableCell>State</TableCell> */}
               </TableRow>
             </TableHead>
             <TableBody>

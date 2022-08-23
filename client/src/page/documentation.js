@@ -1,4 +1,5 @@
 import React from "react";
+import { useContext } from "react";
 import { Toolbar } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import Loading from "../component/common/loading";
@@ -7,9 +8,7 @@ import ToolCardGrid from "../component/documentation/toolCardGrid";
 import ToolService from "../service/toolService";
 import PageTitle from "../component/common/pageTitle";
 
-export default function Documentation({ config }) {
-  const toolService = new ToolService(config);
-
+export default function Documentation({ toolService }) {
   return (
     <>
       <Toolbar />

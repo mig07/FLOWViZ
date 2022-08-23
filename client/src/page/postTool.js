@@ -26,7 +26,7 @@ import Loading from "../component/common/loading";
 import InfoBar from "../component/common/infoBar";
 import Submission from "../component/common/submission";
 
-export default function PostTool() {
+export default function PostTool({ toolService }) {
   const [activeStep, setActiveStep] = useState(0);
   const [canAdvance, setCanAdvance] = useState(false);
   const [configMethod, setConfigMethod] = useState("api");
@@ -183,26 +183,6 @@ export default function PostTool() {
     </Grid>
   );
 
-  const options = {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(
-      configMethod === "api"
-        ? {
-            name: general.name,
-            description: general.description,
-            type: configMethod,
-            api: api,
-          }
-        : {
-            name: general.name,
-            description: general.description,
-            type: configMethod,
-            library: library,
-          }
-    ),
-  };
-
   const onError = (error) => (
     <Container component="main" maxWidth="lg">
       <Toolbar />
@@ -244,9 +224,22 @@ export default function PostTool() {
   );
 
   const OnSubmit = () =>
-    Request(
-      "http://localhost:3000/tool",
-      options,
+    toolService.postTool(
+      JSON.stringify(
+        configMethod === "api"
+          ? {
+              name: general.name,
+              description: general.description,
+              type: configMethod,
+              api: api,
+            }
+          : {
+              name: general.name,
+              description: general.description,
+              type: configMethod,
+              library: library,
+            }
+      ),
       onError,
       onSuccess,
       <Loading />

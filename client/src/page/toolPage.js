@@ -9,9 +9,8 @@ import ToolService from "../service/toolService";
 import InfoBar from "../component/common/infoBar";
 import Loading from "../component/common/loading";
 
-export default function ToolPage(props) {
+export default function ToolPage({ toolService }) {
   let { toolName } = useParams();
-  const toolService = new ToolService(props.config);
 
   const onSuccess = (tool) => {
     const general = tool.general;

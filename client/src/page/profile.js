@@ -1,6 +1,5 @@
 import React from "react";
 import {
-  Avatar,
   Button,
   Container,
   Grid,
@@ -8,7 +7,6 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
-import Request from "../service/request";
 import PageTitle from "../component/common/pageTitle";
 import PersonRemoveIcon from "@mui/icons-material/PersonRemove";
 import SyncLockIcon from "@mui/icons-material/SyncLock";
@@ -17,15 +15,12 @@ import InfoBar from "../component/common/infoBar";
 import Loading from "../component/common/loading";
 import AuthService from "../service/authService";
 
-export default function Profile({ config }) {
-  const authService = new AuthService(config);
-
+export default function Profile({ authService }) {
   const onError = (error) => {
     <InfoBar type="error" text={error} />;
   };
 
   const onSuccess = (user) => {
-    console.log(user);
     return (
       <Grid container maxWidth="lg" spacing={5} sx={{ mt: 2 }}>
         <Grid item>
@@ -65,8 +60,7 @@ export default function Profile({ config }) {
   return (
     <Container maxWidth="lg">
       <Toolbar />
-      <PageTitle name="Profile" />
-
+      <PageTitle>Profile</PageTitle>
       {authService.profile(onError, onSuccess, <Loading />)}
     </Container>
   );
