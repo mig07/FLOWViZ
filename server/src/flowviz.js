@@ -14,6 +14,7 @@ module.exports = (config) => {
   const app = conf.app || express();
   const router = express.Router();
   const passport = conf.authenticator || require("passport");
+  const compression = require("compression");
 
   /* Server config */
   const accessConfig = require("./config/dev-config.json");
@@ -45,6 +46,7 @@ module.exports = (config) => {
   router.use(express.json());
   router.use(bodyParser.urlencoded({ extended: false }));
   app.use(morgan("dev"));
+  app.use(compression());
 
   // Uses client build version if in production
   if (production) {
