@@ -48,8 +48,6 @@ function ToolNode({ id, data }) {
     data.onNodeUpdate(id, nodeSetup);
   };
 
-  const ToolSetupDialog2 = ({ children }) => {};
-
   return (
     <div className="tool-node" style={{ "border-color": nodeColor }}>
       <ToolSetupDialog
@@ -62,12 +60,12 @@ function ToolNode({ id, data }) {
       <Handle
         type="target"
         position={Position.Top}
-        style={{ background: inputColor }}
+        style={{ background: inputColor, width: 15, height: 15 }}
       />
       <Handle
         type="source"
         position={Position.Bottom}
-        style={{ background: outputColor }}
+        style={{ background: outputColor, width: 15, height: 15 }}
       />
       <div>{tool.general.name} Node</div>
       <div>

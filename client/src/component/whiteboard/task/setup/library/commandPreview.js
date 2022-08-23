@@ -2,12 +2,12 @@ import React from "react";
 import { Paper, Typography } from "@mui/material";
 
 export default function CommandPreview({ toolName, library, inputCommands }) {
-  console.log(inputCommands);
-  let args = inputCommands.map((cmd) => {
-    console.log(cmd);
-    return `${getInvocationFromCmd(library, cmd.groupName, cmd.name)} ${
-      cmd.value
-    }`;
+  let args = inputCommands.map((cmd, index) => {
+    return `${index > 0 ? " " : ""}${getInvocationFromCmd(
+      library,
+      cmd.groupName,
+      cmd.name
+    )} ${cmd.value}`;
   });
 
   // TODO

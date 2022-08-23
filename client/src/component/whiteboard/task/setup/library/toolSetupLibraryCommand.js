@@ -81,18 +81,20 @@ export default function ToolSetupLibraryCommand({
                 >
                   <ListSubheader>Inputs</ListSubheader>
                   {inputs.map((elem) => {
+                    const elemKey = elem.key;
                     return (
-                      <MenuItem key={elem} value={elem}>
-                        {elem}
+                      <MenuItem key={elemKey} value={elemKey}>
+                        {elemKey}
                       </MenuItem>
                     );
                   })}
 
                   <ListSubheader>Outputs</ListSubheader>
                   {outputs.map((elem) => {
+                    const elemKey = elem.key;
                     return (
-                      <MenuItem key={elem} value={elem}>
-                        {elem}
+                      <MenuItem key={elemKey} value={elemKey}>
+                        {elemKey}
                       </MenuItem>
                     );
                   })}

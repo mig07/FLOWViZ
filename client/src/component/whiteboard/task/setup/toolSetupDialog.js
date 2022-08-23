@@ -1,22 +1,19 @@
 import {
   Button,
-  Container,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
-  Typography,
 } from "@material-ui/core";
-import { Stack } from "@mui/material";
+import { Grid } from "@mui/material";
 import * as React from "react";
 import { useState } from "react";
+import ChipContainer from "../../../common/chipContainer";
+import VariableContainer from "../io/variable";
+import CommandPreview from "./library/commandPreview";
+import ToolSetupLibraryCommand from "./library/toolSetupLibraryCommand";
 import ToolSetupRow from "./toolSetupRow";
 import ToolSetupStack from "./toolSetupStack";
-import ToolSetupLibraryCommand from "./library/toolSetupLibraryCommand";
-import VariableContainer from "../io/variable";
-import ChipContainer from "../../../common/chipContainer";
-import TextFieldWithTooltip from "../../../common/textFieldWithTooltip";
-import CommandPreview from "./library/commandPreview";
 
 export default function ToolSetupDialog({
   open,
@@ -31,9 +28,6 @@ export default function ToolSetupDialog({
   // For tools that provide both setup methods
   const [setupMethod, setSetupMethod] = useState("library");
 
-  const [inputKey, setInputKey] = useState("");
-  const [inputValue, setInputValue] = useState("");
-  const [outputKey, setOutputKey] = useState("");
   const [inputs, setInputs] = useState([]);
   const [outputs, setOutputs] = useState([]);
 
@@ -57,15 +51,19 @@ export default function ToolSetupDialog({
     },
   ]);
 
-  const onAddElement = (collection, value, setter, prop = "") => {
-    const hasChip = collection.find((elem) => elem === value);
+  const onAddElement = (collection, keyValuePair, setter) => {
+    const key = keyValuePair.key;
+    const hasChip = collection.find((elem) => elem === key);
     if (!hasChip) {
-      setter((collection) => [...collection, value]);
+      setter((collection) => [
+        ...collection,
+        { key: key, value: keyValuePair.value },
+      ]);
     }
   };
 
-  const onRemoveElement = (value, setter) => {
-    setter((col) => col.filter((elem) => elem !== value));
+  const onRemoveElement = (key, setter) => {
+    setter((col) => col.filter((elem) => elem.key !== key));
   };
 
   const onAddCommand = (event) => {
@@ -83,7 +81,8 @@ export default function ToolSetupDialog({
     const value = event.target.value;
     const cmds = [...inputCommands];
     cmds[i][prop] = value;
-    if (nextProps || nextProps.length > 0) {
+    // Clean next dependent properties if they exist
+    if (nextProps && nextProps.length > 0) {
       nextProps.forEach((nextProp) => {
         cmds[i][nextProp] = "";
       });
@@ -116,7 +115,7 @@ export default function ToolSetupDialog({
     <>
       <Dialog
         fullWidth
-        maxWidth="sm"
+        maxWidth="md"
         open={open}
         onClose={onSetupDialogClose}
         scroll={scroll}
@@ -126,52 +125,38 @@ export default function ToolSetupDialog({
         <DialogTitle id="scroll-dialog-title">Task Setup</DialogTitle>
         <DialogContent dividers={scroll === "paper"}>
           <ToolSetupStack>
-            <ToolSetupRow title="Input">
-              <VariableContainer
-                onAddElement={(e) => onAddElement(inputs, inputKey, setInputs)}
-              >
-                <Stack>
-                  <TextFieldWithTooltip
-                    id="str-text-field-input-key"
-                    label="Input key"
-                    defaultValue={inputKey}
-                    onChange={(event) => setInputKey(event.target.value)}
-                    tooltip="The input variable key to assign a task input."
-                  />
-                  <TextFieldWithTooltip
-                    id="str-text-field-input-value"
-                    label="Input value"
-                    defaultValue={inputValue}
-                    onChange={(event) => setInputValue(event.target.value)}
-                    tooltip="The input variable value to assign a value to the key variable."
-                  />
-                </Stack>
-                <ChipContainer
-                  chips={inputs}
-                  onRemoveChip={(value) => onRemoveElement(value, setInputs)}
-                />
-              </VariableContainer>
+            <ToolSetupRow title="Relayed data">
+              <ChipContainer chips={[]} />
             </ToolSetupRow>
-            <ToolSetupRow title="Output">
-              <VariableContainer
-                onAddElement={(e) =>
-                  onAddElement(outputs, outputKey, setOutputs)
-                }
-              >
-                <Stack>
-                  <TextFieldWithTooltip
-                    id="str-text-field-output-key"
-                    label="Output key"
-                    defaultValue={outputKey}
-                    onChange={(event) => setOutputKey(event.target.value)}
-                    tooltip="The output key variable to assign the output of this task. This key will be used by the next task to get the result of this one."
-                  />
-                </Stack>
-                <ChipContainer
-                  chips={outputs}
-                  onRemoveChip={(value) => onRemoveElement(value, setOutputs)}
-                />
-              </VariableContainer>
+            <ToolSetupRow title="I/O variables">
+              <Grid fullWidth container>
+                <Grid container item xs={6}>
+                  <ToolSetupRow title="Input">
+                    <VariableContainer
+                      id="Input"
+                      keyTooltip="The input variable key to assign a task input."
+                      valueTooltip="The input variable value to assign a value to the key variable."
+                      collection={inputs}
+                      collectionSetter={setInputs}
+                      onAddElement={onAddElement}
+                      onRemove={onRemoveElement}
+                    />
+                  </ToolSetupRow>
+                </Grid>
+                <Grid container item xs={6}>
+                  <ToolSetupRow title="Output">
+                    <VariableContainer
+                      id="Output"
+                      keyTooltip="The output key variable to assign the output of this task. This key will be used by the next task to get the result of this one."
+                      valueTooltip="The output variable value to assign a value to the key variable."
+                      collection={outputs}
+                      collectionSetter={setOutputs}
+                      onAddElement={onAddElement}
+                      onRemove={onRemoveElement}
+                    />
+                  </ToolSetupRow>
+                </Grid>
+              </Grid>
             </ToolSetupRow>
             <ToolSetupRow title="Setup">
               <CommandPreview
@@ -199,7 +184,13 @@ export default function ToolSetupDialog({
           {children}
           <Button onClick={onCancel}>Cancel</Button>
           <Button
-            onClick={() => onApply({ library: inputCommands, api: endpoints })}
+            onClick={() =>
+              onApply({
+                io: { input: inputs, outputs: outputs },
+                library: inputCommands,
+                api: endpoints,
+              })
+            }
           >
             Apply
           </Button>
