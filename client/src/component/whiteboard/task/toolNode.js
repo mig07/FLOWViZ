@@ -8,7 +8,6 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import ToolSetupDialog from "./setup/toolSetupDialog";
 
 function ToolNode({ id, data }) {
-  console.log(data);
   const tool = data.tool;
 
   const inputColor = "#ff0000";

@@ -64,13 +64,20 @@ export default function Whiteboard({
   const [dialogOpen, setDialogOpen] = useState(false);
   const [workflowSubmission, setWorkflowSubmission] = useState({
     workflowName: "",
+    workflowDescription: "",
     startDateTime: new Date(),
     endDateTime: new Date(),
   });
 
-  const onWorkflowSubmission = (workflowName, startDateTime, endDateTime) => {
+  const onWorkflowSubmission = (
+    workflowName,
+    workflowDescription,
+    startDateTime,
+    endDateTime
+  ) => {
     setWorkflowSubmission({
       workflowName: workflowName,
+      workflowDescription: workflowDescription,
       startDateTime: startDateTime,
       endDateTime: endDateTime,
     });
@@ -294,6 +301,7 @@ function getWorkflowRequest(workflowSubmission, nodes, edges) {
   const workflow = [];
 
   const name = workflowSubmission.workflowName;
+  const description = workflowSubmission.workflowDescription;
   const startDateTime = workflowSubmission.startDateTime;
   const endDateTime = workflowSubmission.endDateTime;
 
@@ -322,6 +330,7 @@ function getWorkflowRequest(workflowSubmission, nodes, edges) {
   });
   return {
     name: name,
+    description: description,
     startDateTime: startDateTime,
     endDateTime: endDateTime,
     tasks: workflow,
