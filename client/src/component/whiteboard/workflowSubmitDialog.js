@@ -7,61 +7,58 @@ import {
   DialogTitle,
   TextField,
 } from "@material-ui/core";
-// import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-// import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-// import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { validateInputs } from "../postTool/util";
+import WorkflowDateTimePicker from "./workflowDateTimePicker";
+import { Stack } from "@mui/system";
 
-export default function WorkflowSubmitDialog({
-  workflowName,
-  onWorkflowNameUpdate,
-  workflowStartDateTime,
-  setWorkflowStartDateTime,
-  workflowEndDateTime,
-  setWorkflowEndDateTime,
-  setCanAdvance,
-  open,
-  onApply,
-  onCancel,
-}) {
+export default function WorkflowSubmitDialog({ open, onApply, onCancel }) {
+  const [name, setName] = useState("");
+  const [startDateTime, setStartDateTime] = useState(new Date());
+  const [endDateTime, setEndDateTime] = useState(new Date());
+  const [canAdvance, setCanAdvance] = useState(false);
+
+  const onDateTimeUpdate = (newValue, setter) => {
+    setter(newValue);
+  };
+
+  const requiredFields = [name, startDateTime, endDateTime];
+
   useEffect(() => {
-    validateInputs([workflowName], setCanAdvance);
-  }, [workflowName]);
+    validateInputs(requiredFields, setCanAdvance);
+  }, requiredFields);
 
   return (
     <Dialog onClose={onCancel} open={open}>
       <DialogTitle>Set workflow name</DialogTitle>
-      <Container sx={{ p: 2 }}>
-        <TextField
-          id="workflow-name"
-          label="Workflow Name"
-          onChange={onWorkflowNameUpdate}
-        />
-      </Container>
-      {/* <LocalizationProvider dateAdapter={AdapterDateFns}>
-        <DateTimePicker
-          renderInput={(props) => <TextField {...props} />}
+      <Stack spacing={3} padding={2}>
+        <Container>
+          <TextField
+            id="workflow-name"
+            label="Workflow Name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+        </Container>
+        <WorkflowDateTimePicker
           label="Start date and time"
-          value={workflowStartDateTime}
-          onChange={(newValue) => {
-            setWorkflowStartDateTime(newValue);
-          }}
+          value={startDateTime}
+          onDateTimeUpdate={(val) => onDateTimeUpdate(val, setStartDateTime)}
         />
-      </LocalizationProvider>
-      <LocalizationProvider dateAdapter={AdapterDateFns}>
-        <DateTimePicker
-          renderInput={(props) => <TextField {...props} />}
+        <WorkflowDateTimePicker
           label="End date and time"
-          value={workflowEndDateTime}
-          onChange={(newValue) => {
-            setWorkflowEndDateTime(newValue);
-          }}
+          value={endDateTime}
+          onDateTimeUpdate={(val) => onDateTimeUpdate(val, setEndDateTime)}
         />
-      </LocalizationProvider> */}
+      </Stack>
       <DialogActions>
         <Button onClick={onCancel}>Cancel</Button>
-        <Button onClick={onApply}>Submit</Button>
+        <Button
+          disabled={!canAdvance}
+          onClick={() => onApply(name, startDateTime, endDateTime)}
+        >
+          Submit
+        </Button>
       </DialogActions>
     </Dialog>
   );

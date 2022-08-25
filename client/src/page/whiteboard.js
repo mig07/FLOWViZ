@@ -14,11 +14,10 @@ import ReactFlow, {
 } from "react-flow-renderer";
 import Loading from "../component/common/loading";
 import ToolNode from "../component/whiteboard/task/toolNode";
-import GenericError from "../component/common/genericError";
 import HowToRegIcon from "@mui/icons-material/HowToReg";
 import Submission from "../component/common/submission";
 import WorkflowSubmitDialog from "../component/whiteboard/workflowSubmitDialog";
-import InfoBar from "../component/common/infoBar";
+import GenericErrorBar from "../component/common/genericErrorBar";
 
 let id = -1;
 const getId = () => `node${++id}`;
@@ -63,13 +62,18 @@ export default function Whiteboard({
 
   // Workflow name and datetimes for workflow submission
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [workflowName, setWorkflowName] = useState("");
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
+  const [workflowSubmission, setWorkflowSubmission] = useState({
+    workflowName: "",
+    startDateTime: new Date(),
+    endDateTime: new Date(),
+  });
 
-  const onWorkflowNameUpdate = (event) => {
-    const value = event.target.value;
-    setWorkflowName(value);
+  const onWorkflowSubmission = (workflowName, startDateTime, endDateTime) => {
+    setWorkflowSubmission({
+      workflowName: workflowName,
+      startDateTime: startDateTime,
+      endDateTime: endDateTime,
+    });
   };
 
   useEffect(() => {
@@ -80,7 +84,7 @@ export default function Whiteboard({
     setCanAdvance(true);
   });
 
-  toolService.getTools(GenericError, setDrawerList, <Loading />);
+  toolService.getTools(GenericErrorBar, setDrawerList, <Loading />);
 
   const onNodeSetupUpdate = useCallback((nodeId, data) => {
     setNodes((nds) => {
@@ -168,7 +172,12 @@ export default function Whiteboard({
       setIsToolDrop(false);
     };
 
-    toolService.getTool(droppingToolName, GenericError, onSuccess, <Loading />);
+    toolService.getTool(
+      droppingToolName,
+      GenericErrorBar,
+      onSuccess,
+      <Loading />
+    );
     return <></>;
   };
 
@@ -192,15 +201,17 @@ export default function Whiteboard({
   );
 
   function WorkflowRequest() {
-    const workflowRequest = getWorkflowRequest(workflowName, nodes, edges);
-
-    console.log(workflowRequest);
+    const workflowRequest = getWorkflowRequest(
+      workflowSubmission,
+      nodes,
+      edges
+    );
 
     const OnSuccess = () => {
       return (
         <React.Fragment>
           <Submission
-            text={`Successfully added ${workflowName}`}
+            text={`Successfully added ${workflowSubmission.workflowName}`}
             Icon={HowToRegIcon}
           />
         </React.Fragment>
@@ -209,7 +220,7 @@ export default function Whiteboard({
 
     return workflowService.postWorkflow(
       JSON.stringify(workflowRequest),
-      GenericError,
+      GenericErrorBar,
       OnSuccess,
       <Loading />
     );
@@ -264,16 +275,10 @@ export default function Whiteboard({
           </Button>
         </Box>
         <WorkflowSubmitDialog
-          workflowName={workflowName}
-          onWorkflowNameUpdate={onWorkflowNameUpdate}
-          workflowStartDateTime={startDate}
-          setWorkflowStartDateTime={setStartDate}
-          workflowEndDateTime={endDate}
-          setWorkflowEndDateTime={setEndDate}
-          setCanAdvance={setCanAdvance}
           open={dialogOpen}
-          onApply={() => {
+          onApply={(workflowName, startDateTime, endDateTime) => {
             setIsSubmitting(true);
+            onWorkflowSubmission(workflowName, startDateTime, endDateTime);
             setDialogOpen(false);
           }}
           onCancel={() => setDialogOpen(false)}
@@ -285,8 +290,12 @@ export default function Whiteboard({
   );
 }
 
-function getWorkflowRequest(name, nodes, edges) {
+function getWorkflowRequest(workflowSubmission, nodes, edges) {
   const workflow = [];
+
+  const name = workflowSubmission.workflowName;
+  const startDateTime = workflowSubmission.startDateTime;
+  const endDateTime = workflowSubmission.endDateTime;
 
   nodes.forEach((node) => {
     const nodeId = node.id;
@@ -313,6 +322,8 @@ function getWorkflowRequest(name, nodes, edges) {
   });
   return {
     name: name,
+    startDateTime: startDateTime,
+    endDateTime: endDateTime,
     tasks: workflow,
   };
 }
