@@ -8,6 +8,7 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import ToolSetupDialog from "./setup/toolSetupDialog";
 
 function ToolNode({ id, data }) {
+  console.log(data);
   const tool = data.tool;
 
   const inputColor = "#ff0000";
@@ -36,23 +37,26 @@ function ToolNode({ id, data }) {
   };
 
   const onSetupDialogApply = (config) => {
-    const nodeSetup = data.setup;
-    nodeSetup.config = config;
-    data.onNodeUpdate(id, nodeSetup);
+    const d = { ...data };
+    d.config = config;
+    data.onNodeUpdate(id, d);
   };
 
-  const onStepNameUpdate = (event) => {
+  const onTaskNameUpdate = (event) => {
     const value = event.target.value;
-    const nodeSetup = data.setup;
-    nodeSetup.stepName = value;
-    data.onNodeUpdate(id, nodeSetup);
+    const d = { ...data };
+    d.name = value;
+    data.onNodeUpdate(id, d);
   };
 
   return (
     <div className="tool-node" style={{ "border-color": nodeColor }}>
       <ToolSetupDialog
+        nodeId={id}
         open={openToolSetup}
+        data={data}
         tool={tool}
+        relayedOuts={data.config.inputs}
         scroll={toolSetupScroll}
         onSetupDialogApply={onSetupDialogApply}
         onSetupDialogClose={onSetupDialogClose}
@@ -69,7 +73,7 @@ function ToolNode({ id, data }) {
       />
       <div>{tool.general.name} Node</div>
       <div>
-        <input placeholder="Step name" onChange={onStepNameUpdate} />
+        <input placeholder="Task name" onChange={onTaskNameUpdate} />
         <IconButton onClick={onSetupDialogOpen("paper")}>
           <SettingsIcon />
         </IconButton>

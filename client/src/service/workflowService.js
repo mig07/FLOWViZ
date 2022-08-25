@@ -39,7 +39,7 @@ class WorkflowService {
   postWorkflow(body, onError, onSuccess, loading) {
     return Request(
       this.baseUrl,
-      httpOptions.post(body),
+      httpOptions.postAuth(body),
       onError,
       onSuccess,
       loading

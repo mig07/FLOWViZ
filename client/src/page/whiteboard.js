@@ -18,6 +18,7 @@ import GenericError from "../component/common/genericError";
 import HowToRegIcon from "@mui/icons-material/HowToReg";
 import Submission from "../component/common/submission";
 import WorkflowSubmitDialog from "../component/whiteboard/workflowSubmitDialog";
+import InfoBar from "../component/common/infoBar";
 
 let id = -1;
 const getId = () => `node${++id}`;
@@ -51,10 +52,9 @@ export default function Whiteboard({
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
 
-  console.log(nodes);
-
   // States if the workflow can be commited
   const [canAdvance, setCanAdvance] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Is the user dropping a tool into the whiteboard
   const [isToolDrop, setIsToolDrop] = useState(false);
@@ -82,45 +82,61 @@ export default function Whiteboard({
 
   toolService.getTools(GenericError, setDrawerList, <Loading />);
 
-  const onNodeSetupUpdate = useCallback((nodeId, setup) => {
+  const onNodeSetupUpdate = useCallback((nodeId, data) => {
     setNodes((nds) => {
       return nds.map((node) => {
         if (node.id === nodeId) {
-          node.data.setup = setup;
+          node.data = data;
         }
         return node;
       });
     });
   });
 
-  // TODO
-  const hasLoops = () => {};
+  const hasLoop = useCallback((currEdges, currTarget) => {
+    if (currEdges.length <= 0) return false;
 
-  const updateNodeInputs = (sourceNodeId, targetNodeId) => {
-    const nds = [...nodes];
+    const targetEdgeNode = currEdges.find((e) => e.source === currTarget);
+    if (!targetEdgeNode) return false;
 
-    const sourceNode = nds.find((n) => n.id === sourceNodeId);
+    return targetEdgeNode.target !== null;
+  });
 
-    nds.map((n) => {
-      if (n.id === targetNodeId) {
-        n.data.setup.inputs = sourceNode.data.setup.outputs;
-      }
+  const updateNodeInputs = useCallback((sourceNodeId, targetNodeId) => {
+    setNodes((nds) => {
+      const sourceNode = nds.find((n) => n.id === sourceNodeId);
+
+      return nds.map((n) => {
+        if (n.id === targetNodeId) {
+          n.data.config.inputs.push(sourceNode.data.config.outputs);
+        }
+        return n;
+      });
     });
-
-    setNodes(nds);
-  };
+  });
 
   // Set edges
   const onConnect = useCallback((params) => {
-    /* if (hasLoops) return; */
-    //updateNodeInputs(params.source, params.target);
-    return setEdges((eds) => addEdge(params, eds));
+    const source = params.source;
+    const target = params.target;
+
+    setEdges((eds) => {
+      if (hasLoop(eds, target)) return eds;
+      return addEdge(params, eds);
+    });
+    updateNodeInputs(source, target);
   }, []);
 
   // Update edges
   const onEdgeUpdate = useCallback((oldEdge, newConnection) => {
-    /* if (hasLoops) return; */
-    return setEdges((els) => updateEdge(oldEdge, newConnection, els));
+    const source = oldEdge.source;
+    const target = newConnection.target;
+
+    setEdges((els) => {
+      if (hasLoop(els, target)) return els;
+      return updateEdge(oldEdge, newConnection, els);
+    });
+    updateNodeInputs(source, target);
   });
 
   const onDragOver = useCallback((event) => {
@@ -136,7 +152,12 @@ export default function Whiteboard({
         position: droppingToolPos,
         data: {
           tool: tool,
-          setup: { stepName: "", config: {}, inputs: [], outputs: [] },
+          name: "",
+          config: {
+            inputs: [],
+            outputs: [],
+            setup: {},
+          },
           onNodeUpdate: onNodeSetupUpdate,
         },
       };
@@ -169,6 +190,30 @@ export default function Whiteboard({
     },
     [reactFlowInstance]
   );
+
+  function WorkflowRequest() {
+    const workflowRequest = getWorkflowRequest(workflowName, nodes, edges);
+
+    console.log(workflowRequest);
+
+    const OnSuccess = () => {
+      return (
+        <React.Fragment>
+          <Submission
+            text={`Successfully added ${workflowName}`}
+            Icon={HowToRegIcon}
+          />
+        </React.Fragment>
+      );
+    };
+
+    return workflowService.postWorkflow(
+      JSON.stringify(workflowRequest),
+      GenericError,
+      OnSuccess,
+      <Loading />
+    );
+  }
 
   return (
     <Grid container>
@@ -228,34 +273,15 @@ export default function Whiteboard({
           setCanAdvance={setCanAdvance}
           open={dialogOpen}
           onApply={() => {
-            requestWorkflow(nodes, edges, workflowService, workflowName);
+            setIsSubmitting(true);
             setDialogOpen(false);
           }}
           onCancel={() => setDialogOpen(false)}
         />
         {isToolDrop ? <OnToolDrop /> : <></>}
+        {isSubmitting ? <WorkflowRequest /> : <></>}
       </Grid>
     </Grid>
-  );
-}
-
-function requestWorkflow(nodes, edges, workflowService, workflowName) {
-  const workflowRequest = getWorkflowRequest(workflowName, nodes, edges);
-
-  const onSuccess = (data) => (
-    <React.Fragment>
-      <Submission
-        text={`Successfully added ${workflowName}`}
-        Icon={HowToRegIcon}
-      />
-    </React.Fragment>
-  );
-
-  workflowService.postWorkflow(
-    JSON.stringify(workflowRequest),
-    GenericError,
-    onSuccess,
-    <Loading />
   );
 }
 
@@ -267,24 +293,19 @@ function getWorkflowRequest(name, nodes, edges) {
 
     const children = edges.map((edge) => {
       if (edge.source.includes(nodeId)) {
-        const name = nodes.find((node) => node.id === edge.target).data.setup
-          .stepName;
-        return name;
+        return nodes.find((node) => node.id === edge.target).data.name;
       }
     });
 
     const parents = edges.map((edge) => {
       if (edge.target.includes(nodeId)) {
-        const name = nodes.find((node) => node.id === edge.source).data.setup
-          .stepName;
-
-        return name;
+        return nodes.find((node) => node.id === edge.source).data.name;
       }
     });
 
     const step = {
-      id: node.data.setup.stepName,
-      action: node.data.setup.config,
+      id: node.data.name,
+      action: node.data.config,
       children: children,
       parents: parents,
     };
@@ -301,7 +322,7 @@ function isWorkflowValid(nodes, edges) {
 
   // Checking if all nodes have assigned names
   const areStepNamesValid = nodes.every(
-    (step) => step.data.setup.stepName && step.data.setup.stepName !== ""
+    (step) => step.data.stepName && step.data.stepName !== ""
   );
 
   // Checking if there are no isolated nodes

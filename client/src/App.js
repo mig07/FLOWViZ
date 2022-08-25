@@ -30,8 +30,6 @@ export default function App() {
   const config = Config.server;
   const apiBaseUrl = `${config.appProtocol}://${config.address}:${config.port}/flowapi`;
 
-  console.log(apiBaseUrl);
-
   // Services
   const authService = new AuthService(apiBaseUrl);
   const workflowService = new WorkflowService(apiBaseUrl);

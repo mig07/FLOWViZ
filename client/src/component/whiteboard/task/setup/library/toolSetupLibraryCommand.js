@@ -15,6 +15,7 @@ export default function ToolSetupLibraryCommand({
   state,
   onParentUpdate,
   onRemove,
+  relayedOutputs,
   inputs,
   outputs,
 }) {
@@ -81,6 +82,14 @@ export default function ToolSetupLibraryCommand({
                 >
                   <ListSubheader>Inputs</ListSubheader>
                   {inputs.map((elem) => {
+                    const elemKey = elem.key;
+                    return (
+                      <MenuItem key={elemKey} value={elemKey}>
+                        {elemKey}
+                      </MenuItem>
+                    );
+                  })}
+                  {relayedOutputs.map((elem) => {
                     const elemKey = elem.key;
                     return (
                       <MenuItem key={elemKey} value={elemKey}>

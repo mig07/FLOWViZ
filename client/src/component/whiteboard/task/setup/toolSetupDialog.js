@@ -12,12 +12,15 @@ import ChipContainer from "../../../common/chipContainer";
 import VariableContainer from "../io/variable";
 import CommandPreview from "./library/commandPreview";
 import ToolSetupLibraryCommand from "./library/toolSetupLibraryCommand";
+import RelayedData from "./relayedData";
 import ToolSetupRow from "./toolSetupRow";
 import ToolSetupStack from "./toolSetupStack";
 
 export default function ToolSetupDialog({
+  nodeId,
   open,
   tool,
+  relayedOuts,
   scroll,
   onSetupDialogApply,
   onSetupDialogClose,
@@ -28,7 +31,9 @@ export default function ToolSetupDialog({
   // For tools that provide both setup methods
   const [setupMethod, setSetupMethod] = useState("library");
 
-  const [inputs, setInputs] = useState([]);
+  const relayedOutputs = relayedOuts.flatMap((elem) => elem);
+
+  const [inputs, setInputs] = useState(relayedOutputs);
   const [outputs, setOutputs] = useState([]);
 
   // Obtains the first command group name and name to fill the selectors
@@ -57,7 +62,7 @@ export default function ToolSetupDialog({
     if (!hasChip) {
       setter((collection) => [
         ...collection,
-        { key: key, value: keyValuePair.value },
+        { name: nodeId, key: key, value: keyValuePair.value },
       ]);
     }
   };
@@ -96,9 +101,7 @@ export default function ToolSetupDialog({
   };
 
   const onApply = (config) => {
-    onSetupDialogApply(
-      !config.library ? { endpoints } : { commands: inputCommands }
-    );
+    onSetupDialogApply(config);
     onSetupDialogClose();
   };
 
@@ -125,9 +128,14 @@ export default function ToolSetupDialog({
         <DialogTitle id="scroll-dialog-title">Task Setup</DialogTitle>
         <DialogContent dividers={scroll === "paper"}>
           <ToolSetupStack>
-            <ToolSetupRow title="Relayed data">
-              <ChipContainer chips={[]} />
-            </ToolSetupRow>
+            {relayedOuts && relayedOuts.length > 0 ? (
+              <ToolSetupRow title={`Relayed data`}>
+                <RelayedData relayedOutputs={relayedOutputs} />
+              </ToolSetupRow>
+            ) : (
+              <></>
+            )}
+
             <ToolSetupRow title="I/O variables">
               <Grid fullWidth container>
                 <Grid container item xs={6}>
@@ -172,6 +180,7 @@ export default function ToolSetupDialog({
                   state={cmd}
                   onParentUpdate={onUpdateCommand}
                   onRemove={onRemoveCommand}
+                  relayedOutputs={relayedOutputs}
                   inputs={inputs}
                   outputs={outputs}
                 />
@@ -186,9 +195,9 @@ export default function ToolSetupDialog({
           <Button
             onClick={() =>
               onApply({
-                io: { input: inputs, outputs: outputs },
-                library: inputCommands,
-                api: endpoints,
+                inputs: inputs,
+                outputs: outputs,
+                setup: inputCommands,
               })
             }
           >
