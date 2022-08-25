@@ -4,7 +4,7 @@ const ApiException = require("./exceptions/apiException");
 /* HTTP requester utility class */
 const httpRequest = require("./util/httpRequest")();
 
-module.exports = (app, accessConfig, passport) => {
+module.exports = (app, accessConfig, passport, production) => {
   // Library
   const toolDb = require("./datasources/toolDbDataSource.js")();
   const toolService = require("./services/toolService.js")(
@@ -33,7 +33,7 @@ module.exports = (app, accessConfig, passport) => {
 
   /* Express middleware config */
   const exceptionMiddleware = require("./middlewares/exceptionMiddleware")(
-    accessConfig.dev
+    production
   );
   const workflowMiddleware = require("./middlewares/workflowValidationMiddleware");
 

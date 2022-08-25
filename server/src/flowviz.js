@@ -8,7 +8,7 @@ module.exports = (config) => {
   var conf = config || {};
 
   const path = require("node:path");
-  const production = true;
+  const production = false;
 
   const express = conf.express || require("express");
   const app = conf.app || express();
@@ -45,7 +45,7 @@ module.exports = (config) => {
   router.use(cors());
   router.use(express.json());
   router.use(bodyParser.urlencoded({ extended: false }));
-  app.use(morgan("dev"));
+  router.use(morgan("dev"));
   app.use(compression());
 
   // Uses client build version if in production
@@ -63,7 +63,7 @@ module.exports = (config) => {
   }
 
   /* Loading FLOWViZ modules */
-  require("./modules")(router, accessConfig, passport);
+  require("./modules")(router, accessConfig, passport, production);
 
   /* Server initialization */
   if (!conf.express) {

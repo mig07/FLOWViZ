@@ -1,8 +1,8 @@
 const ApiException = require("../exceptions/apiException");
 
-module.exports = (dev) => {
+module.exports = (production) => {
   function interceptor(err, req, res, next) {
-    if (dev) {
+    if (!production) {
       console.log(err);
     }
 
