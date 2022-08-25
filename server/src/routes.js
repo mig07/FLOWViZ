@@ -7,6 +7,7 @@ module.exports = (
   workflowController,
   exceptionMiddleware,
   workflowMiddleware,
+  mongooseErrorMiddleware,
   passport
 ) => {
   /* Library Endpoints */
@@ -47,6 +48,9 @@ module.exports = (
     workflowController.postWorkflow
   );
 
-  /* Express middleware error handler */
+  /* Mongoose specific error handler */
+  app.use(mongooseErrorMiddleware);
+
+  /* Main error handler */
   app.use(exceptionMiddleware.interceptor);
 };

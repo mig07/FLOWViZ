@@ -6,9 +6,10 @@ module.exports = () => {
   }
 
   function getDbWorkflow(username, workflowName) {
-    return Workflow.findOne({ username: username, name: workflowName }).select(
-      "-_id -__v"
-    );
+    return Workflow.findOne({
+      username: username,
+      dag_id: workflowName,
+    }).select("-_id -__v");
   }
 
   function postDbWorkflow(workflow) {

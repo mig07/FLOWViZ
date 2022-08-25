@@ -35,6 +35,11 @@ module.exports = (app, accessConfig, passport, production) => {
   const exceptionMiddleware = require("./middlewares/exceptionMiddleware")(
     production
   );
+
+  /* Mongoose error middleware config */
+  const mongooseErrorMiddleware = require("./middlewares/mongooseErrorMiddleware");
+
+  /* Workflow validation middleware config */
   const workflowMiddleware = require("./middlewares/workflowValidationMiddleware");
 
   // API's endpoints
@@ -44,6 +49,7 @@ module.exports = (app, accessConfig, passport, production) => {
     workflowController,
     exceptionMiddleware,
     workflowMiddleware,
+    mongooseErrorMiddleware,
     passport
   );
 };

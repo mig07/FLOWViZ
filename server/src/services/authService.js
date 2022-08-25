@@ -7,7 +7,12 @@ module.exports = (authDataSource) => {
     return await authDataSource.getUserByName(username);
   }
 
+  async function deleteUser(username) {
+    return await authDateSource.deleteUser(username);
+  }
+
   return {
+    deleteUser: deleteUser,
     register: register,
     getUserByName: getUserByName,
   };

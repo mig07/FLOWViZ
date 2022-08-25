@@ -14,25 +14,16 @@ module.exports = (WorkflowDb, Airflow) => {
 
   /**
    * Returns a specified workflow from the data source
-   * @param {The workflow name} name
+   * @param {username}
+   * @param {The workflow name} workflowName
    * @returns {The specified workflow}
    */
   async function getWorkflow(username, workflowName) {
-    return await WorkflowDb.getDbWorkflow(username, workflowName)
+    return getDbWorkflow(username, workflowName)
       .then(async (dbWorkflow) => {
-        const airflowWorkflow = await Airflow.getWorkflow(workflowName);
-
-        // If does not exist in Airflow
-        if (!airflowWorkflow) {
-          throw ApiException.notFound(
-            `The workflow ${workflowName} for user ${username} no longer exists.`
-          );
-        }
-
-        const workflowRuns = await Airflow.getWorkflowDagRuns(
-          workflowName
-        ).then((data) => data.dag_runs);
-        const workflowSourceCode = await Airflow.getWorkflowSourceCode(
+        const airflowWorkflow = await getAirflowWorkflow(workflowName);
+        const workflowRuns = await getWorkflowDagRuns(workflowName);
+        const workflowSourceCode = await getWorkflowSourceCode(
           airflowWorkflow.file_token
         );
         return {
@@ -48,7 +39,38 @@ module.exports = (WorkflowDb, Airflow) => {
       });
   }
 
-  async function getWorkflowRun(username, workflowName, dagRunId) {
+  async function getDbWorkflow(username, workflowName) {
+    return await WorkflowDb.getDbWorkflow(username, workflowName).catch(
+      (err) => {
+        throw err;
+      }
+    );
+  }
+
+  async function getAirflowWorkflow(workflowName) {
+    return await Airflow.getWorkflow(workflowName)
+      .then((workflow) => {
+        if (!workflow) {
+          throw ApiException.notFound(
+            `The workflow ${workflowName} does not exist.`
+          );
+        }
+        return workflow;
+      })
+      .catch((err) => {
+        throw err;
+      });
+  }
+
+  async function getWorkflowDagRuns(workflowName) {
+    return await Airflow.getWorkflowDagRuns(workflowName)
+      .then((data) => data.dag_runs)
+      .catch((err) => {
+        throw err;
+      });
+  }
+
+  async function getWorkflowRun(workflowName, dagRunId) {
     return await Airflow.getWorkflowDagRun(workflowName, dagRunId)
       .then((data) => {
         return {
@@ -61,18 +83,24 @@ module.exports = (WorkflowDb, Airflow) => {
       });
   }
 
+  async function getWorkflowSourceCode(fileToken) {
+    return await Airflow.getWorkflowSourceCode(fileToken).catch((err) => {
+      throw err;
+    });
+  }
+
   /**
    * Sends a workflow to Apache Airflow, while formatting parameters for a correct
    * workflow system execution
    */
   async function postWorkflow(username, workflow) {
-    const id = workflow.id;
+    const name = workflow.name;
     const description = workflow.description;
     const executionOrder = getExecutionOrder(workflow);
     const airflowRequest = convertToAirflowWorkflow(workflow, executionOrder);
 
     const dbWorkflow = {
-      dag_id: id,
+      name: name,
       description: description,
       username: username,
       dag: airflowRequest,

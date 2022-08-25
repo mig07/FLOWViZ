@@ -26,18 +26,9 @@ module.exports = (passport, secret) => {
 
   function register(user) {
     const u = new UserModel(user);
-    return u
-      .save()
-      .then((data) => console.log(data))
-      .catch((err) => {
-        // MongoDb correspondent error for duplicate file.
-        if (err.code === 11000) {
-          throw ApiException.conflict(
-            `The user with username '${user.username}' already exists.`
-          );
-        }
-        throw err;
-      });
+    return u.save().catch((err) => {
+      throw err;
+    });
   }
 
   function getUserByName(username) {
@@ -55,8 +46,24 @@ module.exports = (passport, secret) => {
       });
   }
 
+  function deleteUser(username) {
+    return UserModel.deleteOne({ username: username })
+      .then((dbUser) => {
+        if (!dbUser) {
+          throw ApiException.notFound(
+            `The user with name '${username}' does not exist.`
+          );
+        }
+        return dbUser;
+      })
+      .catch((err) => {
+        throw err;
+      });
+  }
+
   return {
     register: register,
     getUserByName: getUserByName,
+    deleteUser: deleteUser,
   };
 };

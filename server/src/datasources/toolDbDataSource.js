@@ -1,3 +1,4 @@
+const ApiException = require("../exceptions/apiException");
 const ToolContract = require("../models/mongodb/tool/ToolContract");
 
 module.exports = () => {
@@ -6,7 +7,9 @@ module.exports = () => {
   }
 
   function getTool(toolName) {
-    return ToolContract.findOne({ name: toolName }).select("-_id -__v");
+    return ToolContract.findOne({ "general.name": toolName }).select(
+      "-_id -__v"
+    );
   }
 
   function addTool(tool) {
@@ -14,7 +17,10 @@ module.exports = () => {
   }
 
   function updateTool(toolName, updatedTool) {
-    return new ToolContract.replaceOne({ name: toolName }, updatedTool);
+    return new ToolContract.replaceOne(
+      { "general.name": toolName },
+      updatedTool
+    );
   }
 
   return {
