@@ -130,7 +130,7 @@ const authSection = (navigateTo, currentPage, username) => {
                   <MenuItem
                     onClick={(event) => {
                       //TODO
-                      localStorage.setItem("auth", "{}");
+                      localStorage.removeItem("auth");
                       if (currentPage !== "/") {
                         navigateAndClose(event, "/");
                       } else {
