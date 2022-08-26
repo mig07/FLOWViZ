@@ -22,6 +22,7 @@ import Test from "./test/test";
 import AuthService from "./service/authService";
 import WorkflowService from "./service/workflowService";
 import ToolService from "./service/toolService";
+import PrivateRoute from "./util/privateRoute";
 
 export default function App() {
   // Custom hook for pages with side drawer
@@ -64,20 +65,20 @@ export default function App() {
               path={"/register"}
               element={<Register authService={authService} />}
             />
-            <Route
-              path={"/profile"}
-              element={<Profile authService={authService} />}
-            />
-            <Route
-              exact
-              path={"/workflow"}
-              element={<WorkflowList workflowService={workflowService} />}
-            />
-            <Route
-              exact
-              path={"/workflow/:name"}
-              element={<Workflow workflowService={workflowService} />}
-            />
+            <Route element={<PrivateRoute />}>
+              <Route
+                path="/profile"
+                element={<Profile authService={authService} />}
+              />
+              <Route
+                path="/workflow"
+                element={<WorkflowList workflowService={workflowService} />}
+              />
+              <Route
+                path="/workflow/:name"
+                element={<Workflow workflowService={workflowService} />}
+              />
+            </Route>
             <Route
               path={"/whiteboard"}
               element={
