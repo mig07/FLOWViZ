@@ -70,17 +70,57 @@ module.exports = (WorkflowDb, Airflow) => {
       });
   }
 
-  async function getWorkflowRun(workflowName, dagRunId) {
+  async function getWorkflowRun(username, workflowName, dagRunId) {
     return await Airflow.getWorkflowDagRun(workflowName, dagRunId)
-      .then((data) => {
+      .then(async (data) => {
+        const taskInstances = await Airflow.getWorkflowDagRunTaskInstances(
+          workflowName,
+          dagRunId
+        )
+          .then((taskInstances) =>
+            taskInstances.task_instances.map((tInstance) => tInstance.task_id)
+          )
+          .catch((err) => {
+            throw err;
+          });
+
         return {
           executionDate: data.execution_date,
           state: data.state,
+          taskInstances: taskInstances,
         };
       })
       .catch((err) => {
         throw err;
       });
+  }
+
+  async function getWorkflowRunTaskInstance(
+    username,
+    workflowName,
+    dagRunId,
+    taskInstanceId
+  ) {
+    return await Airflow.getWorkflowDagRunTaskInstance(
+      workflowName,
+      dagRunId,
+      taskInstanceId
+    );
+  }
+
+  async function getWorkflowRunTaskInstanceLog(
+    username,
+    workflowName,
+    dagRunId,
+    logNumber,
+    taskInstanceId
+  ) {
+    return await Airflow.getWorkflowDagRunTaskInstanceLog(
+      workflowName,
+      dagRunId,
+      taskInstanceId,
+      logNumber
+    );
   }
 
   async function getWorkflowSourceCode(fileToken) {
@@ -124,6 +164,8 @@ module.exports = (WorkflowDb, Airflow) => {
     getWorkflows: getWorkflows,
     getWorkflow: getWorkflow,
     getWorkflowRun: getWorkflowRun,
+    getWorkflowRunTaskInstance: getWorkflowRunTaskInstance,
+    getWorkflowRunTaskInstanceLog: getWorkflowRunTaskInstanceLog,
     postWorkflow: postWorkflow,
   };
 };

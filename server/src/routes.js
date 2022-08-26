@@ -39,6 +39,18 @@ module.exports = (
     workflowController.getWorkflowRun
   );
 
+  app.get(
+    "/workflow/:name/:dagRunId/tasks/:taskInstanceId",
+    passport.authenticate("jwt", { session: false }),
+    workflowController.getWorkflowRunTaskInstance
+  );
+
+  app.get(
+    "/workflow/:name/:dagRunId/tasks/:taskInstanceId/logs/:logNumber",
+    passport.authenticate("jwt", { session: false }),
+    workflowController.getWorkflowRunTaskInstanceLog
+  );
+
   // POSTs
   app.post(
     "/workflow",

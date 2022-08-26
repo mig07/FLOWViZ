@@ -12,6 +12,17 @@ module.exports = (httpRequest, airflow) => {
     this.getWorkflowDagRuns = (name) => `${dags}/${name}/dagRuns`;
     this.getWorkflowDagRun = (name, dagRunId) =>
       `${dags}/${name}/dagRuns/${dagRunId}`;
+    this.getWorkflowDagRunTaskInstances = (name, dagRunId) =>
+      `${dags}/${name}/dagRuns/${dagRunId}/taskInstances`;
+    this.getWorkflowDagRunTaskInstance = (name, dagRunId, taskInstanceId) =>
+      `${dags}/${name}/dagRuns/${dagRunId}/taskInstances/${taskInstanceId}`;
+    this.getWorkflowDagRunTaskInstanceLog = (
+      name,
+      dagRunId,
+      taskInstanceId,
+      logNumber
+    ) =>
+      `${dags}/${name}/dagRuns/${dagRunId}/taskInstances/${taskInstanceId}/logs/${logNumber}`;
     this.postWorkflow = () => `${dags}/${airflow.dagRunGenerator}`;
     this.getWorkflowSourceCode = (fileToken) =>
       `${baseUri}/${airflow.dagSources}/${fileToken}`;
@@ -64,6 +75,63 @@ module.exports = (httpRequest, airflow) => {
       });
   }
 
+  function getWorkflowDagRunTaskInstances(workflowName, dagRunId) {
+    return httpRequest
+      .get(
+        airflowUriManager.getWorkflowDagRunTaskInstances(
+          workflowName,
+          dagRunId
+        ),
+        authHeader
+      )
+      .then((data) => data.json())
+      .catch((err) => {
+        throw err;
+      });
+  }
+
+  function getWorkflowDagRunTaskInstance(
+    workflowName,
+    dagRunId,
+    taskInstanceId
+  ) {
+    return httpRequest
+      .get(
+        airflowUriManager.getWorkflowDagRunTaskInstance(
+          workflowName,
+          dagRunId,
+          taskInstanceId
+        ),
+        authHeader
+      )
+      .then((data) => data.json())
+      .catch((err) => {
+        throw err;
+      });
+  }
+
+  function getWorkflowDagRunTaskInstanceLog(
+    workflowName,
+    dagRunId,
+    taskInstanceId,
+    logNumber
+  ) {
+    return httpRequest
+      .get(
+        airflowUriManager.getWorkflowDagRunTaskInstanceLog(
+          workflowName,
+          dagRunId,
+          taskInstanceId,
+          logNumber
+        ),
+        authHeader
+      )
+      .then((data) => data.json())
+      .catch((err) => {
+        throw err;
+      });
+  }
+
   function getWorkflowSourceCode(fileToken) {
     return httpRequest
       .get(airflowUriManager.getWorkflowSourceCode(fileToken), authHeader)
@@ -87,6 +155,9 @@ module.exports = (httpRequest, airflow) => {
     getWorkflow: getWorkflow,
     getWorkflowDagRuns: getWorkflowDagRuns,
     getWorkflowDagRun: getWorkflowDagRun,
+    getWorkflowDagRunTaskInstances: getWorkflowDagRunTaskInstances,
+    getWorkflowDagRunTaskInstance: getWorkflowDagRunTaskInstance,
+    getWorkflowDagRunTaskInstanceLog: getWorkflowDagRunTaskInstanceLog,
     triggerEtl: triggerEtl,
   };
 };

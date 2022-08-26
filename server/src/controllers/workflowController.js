@@ -32,6 +32,42 @@ module.exports = (workflowService) => {
       .catch((err) => next(err));
   }
 
+  function getWorkflowRunTaskInstance(req, res, next) {
+    const username = req.user.username;
+    const workflowName = req.params.name;
+    const dagRunId = req.params.dagRunId;
+    const taskInstanceId = req.params.taskInstanceId;
+
+    workflowService
+      .getWorkflowRunTaskInstance(
+        username,
+        workflowName,
+        dagRunId,
+        taskInstanceId
+      )
+      .then((data) => onSuccess(res, data))
+      .catch((err) => next(err));
+  }
+
+  function getWorkflowRunTaskInstanceLog(req, res, next) {
+    const username = req.user.username;
+    const workflowName = req.params.name;
+    const dagRunId = req.params.dagRunId;
+    const taskInstanceId = req.params.taskInstanceId;
+    const logNumber = req.params.logNumber;
+
+    workflowService
+      .getWorkflowRunTaskInstanceLog(
+        username,
+        workflowName,
+        dagRunId,
+        taskInstanceId,
+        logNumber
+      )
+      .then((data) => onSuccess(res, data))
+      .catch((err) => next(err));
+  }
+
   function postWorkflow(req, res, next) {
     const username = req.user.username;
     const workflow = req.body;
@@ -46,6 +82,8 @@ module.exports = (workflowService) => {
     getWorkflows: getWorkflows,
     getWorkflow: getWorkflow,
     getWorkflowRun: getWorkflowRun,
+    getWorkflowRunTaskInstance: getWorkflowRunTaskInstance,
+    getWorkflowRunTaskInstanceLog: getWorkflowRunTaskInstanceLog,
     postWorkflow: postWorkflow,
   };
 };
