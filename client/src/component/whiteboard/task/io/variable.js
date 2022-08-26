@@ -59,7 +59,7 @@ export default function VariableContainer({
         </Grid>
       </Grid>
       <ChipContainer
-        chips={collection.map((input) => input.key)}
+        chips={collection.map((elem) => elem.key)}
         onRemoveChip={(key) => onRemoveElement(key, collectionSetter)}
       />
     </>

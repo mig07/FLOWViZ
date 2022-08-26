@@ -147,7 +147,7 @@ export default function ToolSetupDialog({
                       collection={inputs}
                       collectionSetter={setInputs}
                       onAddElement={onAddElement}
-                      onRemove={onRemoveElement}
+                      onRemoveElement={onRemoveElement}
                     />
                   </ToolSetupRow>
                 </Grid>
@@ -160,7 +160,7 @@ export default function ToolSetupDialog({
                       collection={outputs}
                       collectionSetter={setOutputs}
                       onAddElement={onAddElement}
-                      onRemove={onRemoveElement}
+                      onRemoveElement={onRemoveElement}
                     />
                   </ToolSetupRow>
                 </Grid>
