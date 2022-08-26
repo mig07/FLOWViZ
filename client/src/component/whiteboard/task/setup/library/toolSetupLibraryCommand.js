@@ -9,6 +9,8 @@ import {
   ListSubheader,
 } from "@material-ui/core";
 
+const reservedValues = ["file", "str"];
+
 export default function ToolSetupLibraryCommand({
   index,
   commandGroups,
@@ -71,7 +73,7 @@ export default function ToolSetupLibraryCommand({
             }
             stateDependency={state.name}
           />
-          {state.value == "file" ? (
+          {reservedValues.includes(state.value) ? (
             <Grid item xs={12}>
               <FormControl fullWidth>
                 <Select
