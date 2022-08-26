@@ -36,6 +36,41 @@ class WorkflowService {
     );
   }
 
+  getWorkflowDagRunTaskInstance(
+    workflowName,
+    runId,
+    taskId,
+    onError,
+    onSuccess,
+    loading
+  ) {
+    return Request(
+      `${this.baseUrl}/${workflowName}/${runId}/tasks/${taskId}`,
+      httpOptions.getAuth(),
+      onError,
+      onSuccess,
+      loading
+    );
+  }
+
+  getWorkflowDagRunTaskInstanceLog(
+    workflowName,
+    runId,
+    taskId,
+    logNumber,
+    onError,
+    onSuccess,
+    loading
+  ) {
+    return Request(
+      `${this.baseUrl}/${workflowName}/${runId}/tasks/${taskId}/logs/${logNumber}`,
+      httpOptions.getAuth(),
+      onError,
+      onSuccess,
+      loading
+    );
+  }
+
   postWorkflow(body, onError, onSuccess, loading) {
     return Request(
       this.baseUrl,

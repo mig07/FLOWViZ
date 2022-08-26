@@ -28,11 +28,21 @@ export default function Selector({
           value={value}
           onChange={onChange}
         >
-          {collection.map((elem, index) => (
-            <MenuItem key={`${id}-${index}`} value={elem[prop]}>
-              {elem[prop]}
-            </MenuItem>
-          ))}
+          {collection && collection.length > 0 ? (
+            collection.map((elem, index) =>
+              prop ? (
+                <MenuItem key={`${id}-${index}`} value={elem[prop]}>
+                  {elem[prop]}
+                </MenuItem>
+              ) : (
+                <MenuItem key={`${id}-${index}`} value={elem}>
+                  {elem}
+                </MenuItem>
+              )
+            )
+          ) : (
+            <MenuItem></MenuItem>
+          )}
         </Select>
       </FormControl>
     </Box>

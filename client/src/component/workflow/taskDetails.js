@@ -1,44 +1,41 @@
 import { Grid, Stack, Typography } from "@mui/material";
 import React from "react";
 import { useState } from "react";
-import Loading from "../common/loading";
 import PageTitle from "../common/pageTitle";
-import TaskDetails from "./taskDetails";
 import Selector from "../workflow/selector";
+import TaskLog from "./taskLog";
 
-export default function DagRunDetails({
-  selectedDagRun,
+export default function TaskDetails({
   workflowService,
   workflowName,
-  onError = () => {},
+  selectedDagRun,
+  selectedTaskId,
+  onError,
 }) {
-  const [selectedTaskId, setSelectedTaskId] = useState("");
+  const [selectedLogNumber, setSelectedLogNumber] = useState("");
 
-  const DagRunDetailsView = ({ dagRun, children }) => {
-    const executionDate = dagRun.executionDate;
-    const state = dagRun.state;
-    const taskInstances = dagRun.taskInstances;
-
+  const TaskDetailsView = ({ taskInstance, children }) => {
     return (
       <>
         <Grid container sx={{ mt: 2 }}>
           <Grid item xs={6}>
-            <Stack spacing={1}>
+            <Stack>
               <Typography>
-                <b>Run date:</b> {executionDate}
+                <b>Run date:</b> {taskInstance.executionDate}
               </Typography>
               <Typography>
-                <b>Run state:</b> {state}
+                <b>Run state:</b> {taskInstance.state}
               </Typography>
             </Stack>
           </Grid>
           <Grid item xs={6} container direction="column" alignItems="flex-end">
             <Selector
-              id="dag-task-instance"
-              label="Task"
-              collection={taskInstances}
-              value={selectedTaskId}
-              onChange={(e) => setSelectedTaskId(e.target.value)}
+              id="dag-run-task-instance"
+              label="Log"
+              collection={Array(taskInstance.try_number).fill()}
+              prop={"log"}
+              value={selectedLogNumber}
+              onChange={(e) => setSelectedLogNumber(e.target.value)}
               isFirst={true}
             />
           </Grid>
@@ -48,29 +45,31 @@ export default function DagRunDetails({
     );
   };
 
-  return selectedDagRun ? (
+  return selectedTaskId ? (
     <>
       <PageTitle variant="h5" sx={{ mt: 2, mb: 2 }}>
-        Run details: {selectedDagRun}
+        Task ID: {selectedTaskId}
       </PageTitle>
-      {workflowService.getWorkflowRun(
+      {workflowService.getWorkflowDagRunTaskInstance(
         workflowName,
         selectedDagRun,
+        selectedTaskId,
         onError,
-        (dagRun) => {
+        (taskInstance) => {
           return (
-            <DagRunDetailsView dagRun={dagRun}>
-              <TaskDetails
+            <TaskDetailsView taskInstance={taskInstance}>
+              <TaskLog
                 workflowService={workflowService}
                 workflowName={workflowName}
                 selectedDagRun={selectedDagRun}
                 selectedTaskId={selectedTaskId}
+                selectedLogNumber={selectedLogNumber}
                 onError={onError}
               />
-            </DagRunDetailsView>
+            </TaskDetailsView>
           );
         },
-        <Loading />
+        <></>
       )}
     </>
   ) : (

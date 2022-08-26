@@ -1,23 +1,11 @@
-import React from "react";
-import { useState, useEffect } from "react";
+import { Container, Grid, Stack, Toolbar, Typography } from "@mui/material";
+import React, { useState } from "react";
 import { useLocation } from "react-router-dom";
-import {
-  Box,
-  FormControl,
-  MenuItem,
-  Container,
-  Select,
-  InputLabel,
-  Toolbar,
-  Typography,
-  Stack,
-  Grid,
-} from "@mui/material";
-import PageTitle from "../component/common/pageTitle";
-import WorkflowService from "../service/workflowService";
-import Loading from "../component/common/loading";
-import WorkflowView from "../component/common/workflowView";
 import InfoBar from "../component/common/infoBar";
+import Loading from "../component/common/loading";
+import PageTitle from "../component/common/pageTitle";
+import WorkflowView from "../component/common/workflowView";
+import DagRunDetails from "../component/workflow/dagRunDetails";
 import Selector from "../component/workflow/selector";
 
 export default function Workflow({ workflowService }) {
@@ -25,8 +13,6 @@ export default function Workflow({ workflowService }) {
   const name = location.pathname.split("/")[2]; //TODO
 
   const [selectedDagRun, setSelectedDagRun] = useState("");
-  const [selectedTaskId, setSelectedTaskId] = useState("");
-  const [logNumber, setLogNumber] = useState("");
 
   const onStateUpdate = (event, setter) => {
     setter(event.target.value);
@@ -36,7 +22,7 @@ export default function Workflow({ workflowService }) {
     return <InfoBar type="error" text={error} />;
   };
 
-  const onSuccess = (workflow) => {
+  const WorkflowGeneralInformation = ({ workflow, children }) => {
     const dbWorkflow = workflow.dbWorkflow;
     const airflow = workflow.airflow;
     const runs = airflow.runs;
@@ -68,7 +54,7 @@ export default function Workflow({ workflowService }) {
             />
           </Grid>
         </Grid>
-
+        {children}
         <PageTitle variant="h5" sx={{ mt: 2, mb: 2 }}>
           DAG view
         </PageTitle>
@@ -85,7 +71,21 @@ export default function Workflow({ workflowService }) {
     <>
       <Toolbar />
       <Container maxWidth="lg">
-        {workflowService.getWorkflow(name, onError, onSuccess, <Loading />)}
+        {workflowService.getWorkflow(
+          name,
+          onError,
+          (workflow) => (
+            <WorkflowGeneralInformation workflow={workflow}>
+              <DagRunDetails
+                selectedDagRun={selectedDagRun}
+                workflowService={workflowService}
+                workflowName={name}
+                onError={onError}
+              />
+            </WorkflowGeneralInformation>
+          ),
+          <Loading />
+        )}
       </Container>
     </>
   );
