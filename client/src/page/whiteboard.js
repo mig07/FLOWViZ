@@ -52,7 +52,6 @@ export default function Whiteboard({
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
 
   // States if the workflow can be commited
-  const [canAdvance, setCanAdvance] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Is the user dropping a tool into the whiteboard
@@ -81,15 +80,8 @@ export default function Whiteboard({
       startDateTime: startDateTime,
       endDateTime: endDateTime,
     });
+    setIsSubmitting(true);
   };
-
-  useEffect(() => {
-    if (!isWorkflowValid(nodes, edges)) {
-      setCanAdvance(false);
-      return;
-    }
-    setCanAdvance(true);
-  });
 
   toolService.getTools(GenericErrorBar, setDrawerList, <Loading />);
 
@@ -214,7 +206,10 @@ export default function Whiteboard({
       edges
     );
 
+    console.log(workflowRequest);
+
     const OnSuccess = () => {
+      setIsSubmitting(false);
       return (
         <React.Fragment>
           <Submission
@@ -283,9 +278,13 @@ export default function Whiteboard({
         </Box>
         <WorkflowSubmitDialog
           open={dialogOpen}
-          onApply={(workflowName, startDateTime, endDateTime) => {
-            setIsSubmitting(true);
-            onWorkflowSubmission(workflowName, startDateTime, endDateTime);
+          onApply={(workflowName, description, startDateTime, endDateTime) => {
+            onWorkflowSubmission(
+              workflowName,
+              description,
+              startDateTime,
+              endDateTime
+            );
             setDialogOpen(false);
           }}
           onCancel={() => setDialogOpen(false)}
@@ -322,6 +321,7 @@ function getWorkflowRequest(workflowSubmission, nodes, edges) {
 
     const step = {
       id: node.data.name,
+      type: node.data.tool.access._type,
       action: node.data.config,
       children: children,
       parents: parents,
