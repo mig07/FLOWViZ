@@ -15,6 +15,11 @@ export default function TaskDetails({
   const [selectedLogNumber, setSelectedLogNumber] = useState("");
 
   const TaskDetailsView = ({ taskInstance, children }) => {
+    const logNumbers = Array.from(
+      Array(taskInstance.try_number),
+      (_, index) => index + 1
+    );
+
     return (
       <>
         <Grid container sx={{ mt: 2 }}>
@@ -32,8 +37,7 @@ export default function TaskDetails({
             <Selector
               id="dag-run-task-instance"
               label="Log"
-              collection={Array(taskInstance.try_number).fill()}
-              prop={"log"}
+              collection={logNumbers}
               value={selectedLogNumber}
               onChange={(e) => setSelectedLogNumber(e.target.value)}
               isFirst={true}
