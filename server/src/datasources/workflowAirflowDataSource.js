@@ -39,7 +39,6 @@ module.exports = (httpRequest, airflow) => {
   function getWorkflows() {
     return httpRequest
       .get(airflowUriManager.getWorkflows(), authHeader)
-      .then((data) => data.json())
       .catch((err) => {
         throw err;
       });
@@ -48,7 +47,6 @@ module.exports = (httpRequest, airflow) => {
   function getWorkflow(workflowName) {
     return httpRequest
       .get(airflowUriManager.getWorkflow(workflowName), authHeader)
-      .then((data) => data.json())
       .catch((err) => {
         throw err;
       });
@@ -57,7 +55,6 @@ module.exports = (httpRequest, airflow) => {
   function getWorkflowDagRuns(workflowName) {
     return httpRequest
       .get(airflowUriManager.getWorkflowDagRuns(workflowName), authHeader)
-      .then((data) => data.json())
       .catch((err) => {
         throw err;
       });
@@ -69,7 +66,6 @@ module.exports = (httpRequest, airflow) => {
         airflowUriManager.getWorkflowDagRun(workflowName, dagRunId),
         authHeader
       )
-      .then((data) => data.json())
       .catch((err) => {
         throw err;
       });
@@ -84,7 +80,6 @@ module.exports = (httpRequest, airflow) => {
         ),
         authHeader
       )
-      .then((data) => data.json())
       .catch((err) => {
         throw err;
       });
@@ -104,7 +99,6 @@ module.exports = (httpRequest, airflow) => {
         ),
         authHeader
       )
-      .then((data) => data.json())
       .catch((err) => {
         throw err;
       });
@@ -126,7 +120,6 @@ module.exports = (httpRequest, airflow) => {
         ),
         authHeader
       )
-      .then((data) => data.json())
       .catch((err) => {
         throw err;
       });
@@ -135,7 +128,6 @@ module.exports = (httpRequest, airflow) => {
   function getWorkflowSourceCode(fileToken) {
     return httpRequest
       .get(airflowUriManager.getWorkflowSourceCode(fileToken), authHeader)
-      .then((data) => data.json())
       .catch((err) => {
         throw err;
       });

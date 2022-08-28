@@ -1,4 +1,4 @@
-const fetch = require("node-fetch");
+const nodeFetch = require("node-fetch");
 
 module.exports = () => {
   function get(url, auth) {
@@ -25,6 +25,21 @@ module.exports = () => {
     };
 
     return fetch(url, options);
+  }
+
+  function fetch(url, options) {
+    return nodeFetch(url, options)
+      .then((response) => {
+        if (!response.ok) {
+          return Promise.reject(response);
+        }
+        return response.json().catch((err) => {
+          throw err;
+        });
+      })
+      .catch((err) => {
+        throw err;
+      });
   }
 
   return {
