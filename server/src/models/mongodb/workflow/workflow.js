@@ -19,7 +19,7 @@ const AirflowDagSchema = new Schema({
 });
 
 const WorkflowSchema = new Schema({
-  name: {
+  dag_id: {
     type: String,
     minlength: 3,
     maxlength: 30,

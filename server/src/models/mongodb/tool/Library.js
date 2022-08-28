@@ -9,11 +9,11 @@ const CommandSchema = new Schema(
       maxlength: 30,
       required: true,
     },
-    /* description: {
-    type: String,
-    minlength: 10,
-    maxlength: 100,
-  }, */
+    description: {
+      type: String,
+      minlength: 10,
+      maxlength: 100,
+    },
     invocation: [String],
     allowedValues: [String],
     allowedCommands: [String],
@@ -30,7 +30,7 @@ const CommandGroupSchema = new Schema(
       maxlength: 30,
       unique: true,
     },
-    /* description: { type: String, minlength: 10, maxlength: 100 }, */
+    description: { type: String, minlength: 10, maxlength: 100 },
     invocation: [String],
     order: { type: Number, min: 0, max: 10, required: true },
     allowCommandRep: { type: Boolean, required: true },
