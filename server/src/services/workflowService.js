@@ -1,4 +1,3 @@
-const getOne = require("./serviceUtils");
 const mapTaskToDockerOperator = require("../mappers/mapTaskToDockerOperator");
 const mapTaskToSimpleHttpOperator = require("../mappers/mapTaskToSimpleHttpOperator");
 const ApiException = require("../exceptions/apiException");
@@ -22,6 +21,11 @@ module.exports = (WorkflowDb, Airflow) => {
     return getDbWorkflow(username, workflowName)
       .then(async (dbWorkflow) => {
         const airflowWorkflow = await getAirflowWorkflow(workflowName);
+
+        if (!dbWorkflow || !airflowWorkflow) {
+          throw ApiException.notFound(`Workflow ${workflowName} not found.`);
+        }
+
         const workflowRuns = await getWorkflowDagRuns(workflowName);
         const workflowSourceCode = await getWorkflowSourceCode(
           airflowWorkflow.file_token
@@ -112,15 +116,17 @@ module.exports = (WorkflowDb, Airflow) => {
     username,
     workflowName,
     dagRunId,
-    logNumber,
-    taskInstanceId
+    taskInstanceId,
+    logNumber
   ) {
     return await Airflow.getWorkflowDagRunTaskInstanceLog(
       workflowName,
       dagRunId,
       taskInstanceId,
       logNumber
-    );
+    ).catch((err) => {
+      throw err;
+    });
   }
 
   async function getWorkflowSourceCode(fileToken) {
@@ -130,8 +136,8 @@ module.exports = (WorkflowDb, Airflow) => {
   }
 
   /**
-   * Sends a workflow to Apache Airflow, while formatting parameters for a correct
-   * workflow system execution
+   * Sends a workflow to Apache Airflow, while formatting parameters for a
+   * correct workflow system execution
    */
   async function postWorkflow(username, workflow) {
     const name = workflow.name;
@@ -140,7 +146,7 @@ module.exports = (WorkflowDb, Airflow) => {
     const airflowRequest = convertToAirflowWorkflow(workflow, executionOrder);
 
     const dbWorkflow = {
-      name: name,
+      dag_id: name,
       description: description,
       username: username,
       dag: airflowRequest,
@@ -152,7 +158,7 @@ module.exports = (WorkflowDb, Airflow) => {
       // was created into the database
       .then(() =>
         Airflow.triggerEtl({
-          conf: { dag_id: workflow.id, username: username },
+          conf: { dag_id: name, username: username },
         })
       )
       .catch((err) => {
@@ -190,13 +196,13 @@ function convertToAirflowWorkflow(workflow, executionOrder) {
   return {
     start_date: workflow.start_date,
     end_date: workflow.end_date,
-    airflow_imports: getImportsFromTasks(tasks),
+    airflow_imports: supplyNonRedundantImportsFromTasks(tasks),
     tasks: tasks,
     execution_order: executionOrder,
   };
 }
 
-function getImportsFromTasks(tasks) {
+function supplyNonRedundantImportsFromTasks(tasks) {
   const importsMap = new Map();
 
   tasks.forEach((task) => {
@@ -226,43 +232,24 @@ function getImportsFromTasks(tasks) {
  * @returns {Workflow's execution order string, formatted to request Airflow}
  */
 function getExecutionOrder(workflow) {
-  let res = [];
-  workflow.tasks.forEach((step) => {
-    const children = step.children;
-    const parents = step.parents;
-    const startNode = !parents || parents.length === 0;
-    const endNode = !children || children.length === 0;
+  const taskMap = new Map();
+  let res = "";
+  workflow.tasks.forEach((task) => {
+    const children = task.children;
+    if (children.length > 0)
+      taskMap.set(task.id, children.length === 1 ? children[0] : children);
+  });
 
-    if (endNode) {
-      return;
-    } else if (startNode) {
-      res.push(step.id);
-    }
-
-    if (!res.includes(children)) {
-      res.push(children.length === 1 ? children[0] : children);
+  let taskMapValues = [taskMap.keys().next().value];
+  taskMap.forEach((value, key) => {
+    if (!taskMapValues.includes(value)) {
+      taskMapValues.push(value);
     }
   });
 
-  return stringifyExecutionOrder(res);
-}
-
-/**
- * Gets a stringified version of the passed array, already formatted with
- * the Airflow syntax
- * @param {The ordered array representing the workflow's execution order} execOrder
- * @returns {A stringified version of the passed array, already formatted with
- * the Airflow syntax}
- */
-function stringifyExecutionOrder(execOrder) {
-  let res = "";
-  const lastElemIdx = execOrder.length - 1;
-  execOrder.forEach((step, index, execOrder) => {
-    if (index === lastElemIdx) return;
-    res += Array.isArray(step) ? `[${step}]` : step;
-    if (index < lastElemIdx - 1) {
-      res += " >> ";
-    }
+  taskMapValues.forEach((val, index) => {
+    res += Array.isArray(val) ? `[${val}]` : val;
+    if (index < taskMapValues.length - 1) res += " >> ";
   });
 
   return res;
