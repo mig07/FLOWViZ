@@ -70,7 +70,9 @@ function ToolNode({ id, data }) {
         position={Position.Bottom}
         style={{ background: outputColor, width: 15, height: 15 }}
       />
-      <div>{tool.general.name} Node</div>
+      <div>
+        {id}: {tool.general.name}
+      </div>
       <div>
         <input placeholder="Task name" onChange={onTaskNameUpdate} />
         <IconButton onClick={onSetupDialogOpen("paper")}>

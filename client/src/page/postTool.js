@@ -1,3 +1,9 @@
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import BadgeOutlinedIcon from "@mui/icons-material/BadgeOutlined";
+import CellTowerIcon from "@mui/icons-material/CellTower";
+import FactCheckOutlinedIcon from "@mui/icons-material/FactCheckOutlined";
+import SendIcon from "@mui/icons-material/Send";
 import {
   Button,
   Container,
@@ -11,22 +17,16 @@ import {
 } from "@mui/material";
 import * as React from "react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import InfoBar from "../component/common/infoBar";
+import Loading from "../component/common/loading";
 import Access from "../component/postTool/accessFragment";
 import General from "../component/postTool/generalFragment";
 import Rules from "../component/postTool/rulesFragment";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import BadgeOutlinedIcon from "@mui/icons-material/BadgeOutlined";
-import CellTowerIcon from "@mui/icons-material/CellTower";
-import FactCheckOutlinedIcon from "@mui/icons-material/FactCheckOutlined";
-import HowToRegIcon from "@mui/icons-material/HowToReg";
-import SendIcon from "@mui/icons-material/Send";
-import Request from "../service/request";
-import Loading from "../component/common/loading";
-import InfoBar from "../component/common/infoBar";
-import Submission from "../component/common/submission";
 
 export default function PostTool({ toolService }) {
+  const navigate = useNavigate();
+
   const [activeStep, setActiveStep] = useState(0);
   const [canAdvance, setCanAdvance] = useState(false);
   const [configMethod, setConfigMethod] = useState("api");
@@ -213,15 +213,15 @@ export default function PostTool({ toolService }) {
     </Container>
   );
 
-  const onSuccess = (data) => (
-    <React.Fragment>
-      <Toolbar />
-      <Submission
-        text={`Successfully added ${general.name}`}
-        Icon={HowToRegIcon}
-      />
-    </React.Fragment>
-  );
+  const onSuccess = (data) => {
+    navigate("/submission", {
+      state: {
+        text: `Successfully added ${general.name}!`,
+        resourcePageLabel: general.name,
+        resourcePageUrl: `/documentation/${general.name}`,
+      },
+    });
+  };
 
   const OnSubmit = () =>
     toolService.postTool(
@@ -241,7 +241,7 @@ export default function PostTool({ toolService }) {
             }
       ),
       onError,
-      onSuccess,
+      onSuccess(),
       <Loading />
     );
 

@@ -1,7 +1,6 @@
 import { ThemeProvider } from "@mui/material/styles";
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Copyright from "./component/common/copyright";
 import NavBar from "./component/navbar/navBar";
 import Config from "./config/dev-config.json";
 import { Theme } from "./config/theme";
@@ -23,6 +22,7 @@ import AuthService from "./service/authService";
 import WorkflowService from "./service/workflowService";
 import ToolService from "./service/toolService";
 import PrivateRoute from "./util/privateRoute";
+import Submission from "./page/submission";
 
 export default function App() {
   // Custom hook for pages with side drawer
@@ -89,7 +89,7 @@ export default function App() {
                 />
               }
             />
-            <Route path={"/test"} element={<Test />} />
+            <Route path="/submission" element={<Submission />} />
             <Route
               path="*"
               element={

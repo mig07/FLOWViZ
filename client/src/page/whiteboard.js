@@ -1,5 +1,5 @@
 import SendIcon from "@mui/icons-material/Send";
-import { Box, Button, Grid } from "@mui/material";
+import { Box, Button, Grid, Stack, Typography } from "@mui/material";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { styled, useTheme } from "@mui/material/styles";
 import ReactFlow, {
@@ -18,6 +18,9 @@ import HowToRegIcon from "@mui/icons-material/HowToReg";
 import Submission from "../component/common/submission";
 import WorkflowSubmitDialog from "../component/whiteboard/workflowSubmitDialog";
 import GenericErrorBar from "../component/common/genericErrorBar";
+import CenteredContainer from "../component/common/centeredContainer";
+import WorkflowSubmission from "./submission";
+import { useNavigate } from "react-router-dom";
 
 let id = -1;
 const getId = () => `node${++id}`;
@@ -42,6 +45,7 @@ export default function Whiteboard({
 }) {
   // Get NavBar height from theme
   const theme = useTheme();
+  const navigate = useNavigate();
   const appBarHeight = theme.mixins.toolbar.minHeight;
 
   const reactFlowWrapper = useRef(null);
@@ -206,24 +210,20 @@ export default function Whiteboard({
       edges
     );
 
-    console.log(workflowRequest);
-
     const OnSuccess = () => {
-      setIsSubmitting(false);
-      return (
-        <React.Fragment>
-          <Submission
-            text={`Successfully added ${workflowSubmission.workflowName}`}
-            Icon={HowToRegIcon}
-          />
-        </React.Fragment>
-      );
+      navigate("/submission", {
+        state: {
+          text: `Workflow ${workflowSubmission.workflowName} was successfully submitted!`,
+          resourcePageLabel: workflowSubmission.workflowName,
+          resourcePageUrl: `/workflow/${workflowSubmission.workflowName}`,
+        },
+      });
     };
 
     return workflowService.postWorkflow(
       JSON.stringify(workflowRequest),
-      GenericErrorBar,
-      OnSuccess,
+      (error) => <GenericErrorBar error={error} />,
+      OnSuccess(),
       <Loading />
     );
   }
@@ -313,18 +313,11 @@ function getWorkflowRequest(workflowSubmission, nodes, edges) {
       }
     });
 
-    const parents = edges.map((edge) => {
-      if (edge.target.includes(nodeId)) {
-        return nodes.find((node) => node.id === edge.source).data.name;
-      }
-    });
-
     const step = {
       id: node.data.name,
       type: node.data.tool.access._type,
       action: node.data.config,
       children: children,
-      parents: parents,
     };
     workflow.push(step);
   });
@@ -337,7 +330,7 @@ function getWorkflowRequest(workflowSubmission, nodes, edges) {
   };
 }
 
-function isWorkflowValid(nodes, edges) {
+/* function isWorkflowValid(nodes, edges) {
   if (nodes.length === 0 || edges.length === 0) return false;
 
   // Checking if all nodes have assigned names
@@ -363,4 +356,4 @@ function arrayEquals(a, b) {
     a.length === b.length &&
     a.every((val, index) => val === b[index])
   );
-}
+} */
