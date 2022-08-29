@@ -10,7 +10,6 @@ const Task = new Schema(
       required: true,
     },
     action: Object,
-    parents: [String],
     children: [String],
   },
   { _id: false }

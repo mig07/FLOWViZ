@@ -8,13 +8,13 @@ function mapToTaskToDockerOperator(task) {
   return new DockerOperator(
     (task_id = task.id),
     (operator_params = new DockerOperatorParams(
-      (image = action.image),
-      (api_version = action.api_version),
-      (mounts = action.mounts),
+      (image = action.dockerImage),
+      (api_version = action.dockerApiVersion),
+      (mounts = action.dockerVolumes),
       (command = action.command),
-      (auto_remove = action.auto_remove),
-      (docker_url = action.docker_url),
-      (network_mode = action.network_mode)
+      (auto_remove = action.dockerAutoRemove),
+      (docker_url = action.dockerUrl),
+      (network_mode = action.dockerNetworkMode)
     ).toJson())
   ).toJson();
 }
