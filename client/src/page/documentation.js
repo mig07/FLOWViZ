@@ -17,20 +17,20 @@ export default function Documentation({ toolService }) {
   return (
     <>
       <Toolbar />
-      <Stack>
-        <Typography variant="h3" align="center">
-          Available tools
-        </Typography>
-        {toolService.getTools(GenericError, ToolCardGrid, <Loading />)}
-        <Container sx={{ mt: 6 }}>
+      <CenteredContainer sx={{ mt: 6 }}>
+        <Stack>
+          <Typography variant="h3" align="center">
+            Available tools
+          </Typography>
+          {toolService.getTools(GenericError, ToolCardGrid, <Loading />)}
           <CenteredContainer>
             <Fab variant="extended" onClick={() => navigate("/tool")}>
               <AddIcon sx={{ mr: 1 }} />
               Add tool
             </Fab>
           </CenteredContainer>
-        </Container>
-      </Stack>
+        </Stack>
+      </CenteredContainer>
     </>
   );
 }
