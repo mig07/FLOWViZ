@@ -37,7 +37,7 @@ const Access = new Schema(
   {
     _type: {
       type: String,
-      enum: ["local", "container", "api"],
+      enum: ["library", "api"],
       required: true,
     },
     api: ApiAccess,
