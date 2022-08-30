@@ -220,6 +220,7 @@ export default function PostTool({ toolService }) {
         resourcePageUrl: `/documentation/${general.name}`,
       },
     });
+    return <></>;
   };
 
   const OnSubmit = () => {
@@ -236,7 +237,7 @@ export default function PostTool({ toolService }) {
             library: library,
           }
     );
-    return toolService.postTool(body, onError, onSuccess(), <Loading />);
+    return toolService.postTool(body, onError, onSuccess, <Loading />);
   };
 
   const NextButton = () => (
