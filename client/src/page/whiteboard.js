@@ -69,7 +69,6 @@ export default function Whiteboard({
     workflowName: "",
     workflowDescription: "",
     startDateTime: new Date(),
-    endDateTime: new Date(),
   });
 
   const onWorkflowSubmission = (
@@ -278,13 +277,8 @@ export default function Whiteboard({
         </Box>
         <WorkflowSubmitDialog
           open={dialogOpen}
-          onApply={(workflowName, description, startDateTime, endDateTime) => {
-            onWorkflowSubmission(
-              workflowName,
-              description,
-              startDateTime,
-              endDateTime
-            );
+          onApply={(workflowName, description, startDateTime) => {
+            onWorkflowSubmission(workflowName, description, startDateTime);
             setDialogOpen(false);
           }}
           onCancel={() => setDialogOpen(false)}

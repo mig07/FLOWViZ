@@ -16,14 +16,13 @@ export default function WorkflowSubmitDialog({ open, onApply, onCancel }) {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [startDateTime, setStartDateTime] = useState(new Date());
-  const [endDateTime, setEndDateTime] = useState(new Date());
   const [canAdvance, setCanAdvance] = useState(false);
 
   const onDateTimeUpdate = (newValue, setter) => {
     setter(newValue);
   };
 
-  const requiredFields = [name, startDateTime, endDateTime];
+  const requiredFields = [name, startDateTime];
 
   useEffect(() => {
     validateInputs(requiredFields, setCanAdvance);
@@ -50,17 +49,12 @@ export default function WorkflowSubmitDialog({ open, onApply, onCancel }) {
           value={startDateTime}
           onDateTimeUpdate={(val) => onDateTimeUpdate(val, setStartDateTime)}
         />
-        <WorkflowDateTimePicker
-          label="End date and time"
-          value={endDateTime}
-          onDateTimeUpdate={(val) => onDateTimeUpdate(val, setEndDateTime)}
-        />
       </Stack>
       <DialogActions>
         <Button onClick={onCancel}>Cancel</Button>
         <Button
           disabled={!canAdvance}
-          onClick={() => onApply(name, description, startDateTime, endDateTime)}
+          onClick={() => onApply(name, description, startDateTime)}
         >
           Submit
         </Button>
