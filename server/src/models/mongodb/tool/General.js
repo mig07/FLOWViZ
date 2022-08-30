@@ -10,7 +10,7 @@ const General = new Schema(
       required: true,
       unique: true,
     },
-    description: { type: String, minlength: 0, maxlength: 100 },
+    description: { type: String, maxlength: 100 },
   },
   { _id: false }
 );

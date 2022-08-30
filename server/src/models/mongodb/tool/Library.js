@@ -5,14 +5,12 @@ const CommandSchema = new Schema(
   {
     name: {
       type: String,
-      minlength: 2,
       maxlength: 30,
       required: true,
     },
     description: {
       type: String,
-      minlength: 10,
-      maxlength: 100,
+      maxlength: 300,
     },
     invocation: [String],
     allowedValues: [String],
@@ -26,13 +24,11 @@ const CommandGroupSchema = new Schema(
   {
     name: {
       type: String,
-      minlength: 3,
       maxlength: 30,
-      unique: true,
     },
-    description: { type: String, minlength: 10, maxlength: 100 },
+    description: { type: String, maxlength: 100 },
     invocation: [String],
-    order: { type: Number, min: 0, max: 10, required: true },
+    order: { type: Number, max: 10, required: true },
     allowCommandRep: { type: Boolean, required: true },
     commands: [CommandSchema],
   },
