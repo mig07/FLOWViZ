@@ -17,8 +17,8 @@ export default function Documentation({ toolService }) {
   return (
     <>
       <Toolbar />
-      <CenteredContainer sx={{ mt: 6 }}>
-        <Stack>
+      <Container>
+        <Stack alignItems="center">
           <Typography variant="h3" align="center">
             Available tools
           </Typography>
@@ -30,7 +30,7 @@ export default function Documentation({ toolService }) {
             </Fab>
           </CenteredContainer>
         </Stack>
-      </CenteredContainer>
+      </Container>
     </>
   );
 }
