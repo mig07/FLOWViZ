@@ -150,12 +150,17 @@ export default function Access({
           autoComplete="port"
           defaultValue={port}
           value={port}
-          onChange={(event) =>
-            onLibraryAccessUpdate((prevState) => ({
-              ...prevState,
-              port: event.target.value,
-            }))
-          }
+          inputProps={{ maxLength: 5, inputmode: "numeric", pattern: "[0-9]*" }}
+          onChange={(event) => {
+            const p = event.target.value;
+            if (typeof p != "string") return;
+            if (!isNaN(p) && !isNaN(parseFloat(p))) {
+              return onLibraryAccessUpdate((prevState) => ({
+                ...prevState,
+                port: event.target.value,
+              }));
+            }
+          }}
         />
         <FormGroup>
           <FormControlLabel

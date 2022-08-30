@@ -18,7 +18,7 @@ export default function Documentation({ toolService }) {
     <>
       <Toolbar />
       <Container>
-        <Stack alignItems="center">
+        <Stack alignItems="center" spacing={3}>
           <Typography variant="h3" align="center">
             Available tools
           </Typography>

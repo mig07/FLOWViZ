@@ -90,7 +90,6 @@ export default function PostTool({ toolService }) {
   };
 
   const [api, setApi] = useState([generateEndpoint(0)]);
-  console.log(api);
 
   const generateCommandGroup = (index) => {
     return {
@@ -223,27 +222,22 @@ export default function PostTool({ toolService }) {
     });
   };
 
-  const OnSubmit = () =>
-    toolService.postTool(
-      JSON.stringify(
-        configMethod === "api"
-          ? {
-              name: general.name,
-              description: general.description,
-              type: configMethod,
-              api: api,
-            }
-          : {
-              name: general.name,
-              description: general.description,
-              type: configMethod,
-              library: library,
-            }
-      ),
-      onError,
-      onSuccess(),
-      <Loading />
+  const OnSubmit = () => {
+    const body = JSON.stringify(
+      configMethod === "api"
+        ? {
+            general: general,
+            access: { _type: configMethod, api: libraryAccess },
+            api: api,
+          }
+        : {
+            general: general,
+            access: { _type: configMethod, library: libraryAccess },
+            library: library,
+          }
     );
+    return toolService.postTool(body, onError, onSuccess(), <Loading />);
+  };
 
   const NextButton = () => (
     <Grid
