@@ -9,6 +9,7 @@ import { Grid } from "@mui/material";
 import * as React from "react";
 import { useState } from "react";
 import ChipContainer from "../../../common/chipContainer";
+import ToolInfo from "../info/toolInfo";
 import VariableContainer from "../io/variable";
 import CommandPreview from "./library/commandPreview";
 import ToolSetupLibraryCommand from "./library/toolSetupLibraryCommand";
@@ -118,7 +119,7 @@ export default function ToolSetupDialog({
     <>
       <Dialog
         fullWidth
-        maxWidth="md"
+        maxWidth="lg"
         open={open}
         onClose={onSetupDialogClose}
         scroll={scroll}
@@ -135,7 +136,9 @@ export default function ToolSetupDialog({
             ) : (
               <></>
             )}
-
+            <ToolSetupRow title="Tool information">
+              <ToolInfo tool={tool} />
+            </ToolSetupRow>
             <ToolSetupRow title="I/O variables">
               <Grid fullWidth container>
                 <Grid container item xs={6}>

@@ -217,12 +217,13 @@ export default function Whiteboard({
           resourcePageUrl: `/workflow/${workflowSubmission.workflowName}`,
         },
       });
+      return <></>;
     };
 
     return workflowService.postWorkflow(
       JSON.stringify(workflowRequest),
       (error) => <GenericErrorBar error={error} />,
-      OnSuccess(),
+      OnSuccess,
       <Loading />
     );
   }
@@ -296,10 +297,11 @@ function getWorkflowRequest(workflowSubmission, nodes, edges) {
   const name = workflowSubmission.workflowName;
   const description = workflowSubmission.workflowDescription;
   const startDateTime = workflowSubmission.startDateTime;
-  const endDateTime = workflowSubmission.endDateTime;
 
   nodes.forEach((node) => {
     const nodeId = node.id;
+    const toolName = node.data.tool.general.name;
+    const type = node.data.tool.access._type;
 
     const children = edges.map((edge) => {
       if (edge.source.includes(nodeId)) {
@@ -309,7 +311,7 @@ function getWorkflowRequest(workflowSubmission, nodes, edges) {
 
     const step = {
       id: node.data.name,
-      type: node.data.tool.access._type,
+      tool: toolName,
       action: node.data.config,
       children: children,
     };
@@ -319,7 +321,6 @@ function getWorkflowRequest(workflowSubmission, nodes, edges) {
     name: name,
     description: description,
     startDateTime: startDateTime,
-    endDateTime: endDateTime,
     tasks: workflow,
   };
 }

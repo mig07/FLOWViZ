@@ -10,6 +10,8 @@ import ToolSetupDialog from "./setup/toolSetupDialog";
 function ToolNode({ id, data }) {
   const tool = data.tool;
 
+  console.log(data);
+
   const inputColor = "#ff0000";
   const outputColor = "#00ff22";
 
