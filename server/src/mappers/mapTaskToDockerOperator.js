@@ -3,18 +3,19 @@ const Mounts = require("../models/airflow/Mounts");
 const DockerOperator = DockerOperatorModule.DockerOperator;
 const DockerOperatorParams = DockerOperatorModule.DockerOperatorParams;
 
-function mapToTaskToDockerOperator(task) {
+function mapToTaskToDockerOperator(task, tool) {
   const action = task.action;
+  const access = tool.access.library;
   return new DockerOperator(
     (task_id = task.id),
     (operator_params = new DockerOperatorParams(
-      (image = action.dockerImage),
-      (api_version = action.dockerApiVersion),
-      (mounts = action.dockerVolumes),
+      (image = access.dockerImage),
+      (api_version = access.dockerApiVersion),
+      (mounts = access.dockerVolumes),
       (command = action.command),
-      (auto_remove = action.dockerAutoRemove),
-      (docker_url = action.dockerUrl),
-      (network_mode = action.dockerNetworkMode)
+      (auto_remove = access.dockerAutoRemove),
+      (docker_url = access.dockerUrl),
+      (network_mode = access.dockerNetworkMode)
     ).toJson())
   ).toJson();
 }

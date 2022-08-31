@@ -1,8 +1,9 @@
 const mapTaskToDockerOperator = require("../mappers/mapTaskToDockerOperator");
 const mapTaskToSimpleHttpOperator = require("../mappers/mapTaskToSimpleHttpOperator");
 const ApiException = require("../exceptions/apiException");
+const getOne = require("./serviceUtils");
 
-module.exports = (WorkflowDb, Airflow) => {
+module.exports = (WorkflowDb, Airflow, ToolDb) => {
   /**
    * Returns a list of workflows from the data source
    * @returns {A list of workflows from the data source}
@@ -174,7 +175,10 @@ module.exports = (WorkflowDb, Airflow) => {
     const name = workflow.name;
     const description = workflow.description;
     const executionOrder = getExecutionOrder(workflow);
-    const airflowRequest = convertToAirflowWorkflow(workflow, executionOrder);
+    const airflowRequest = await convertToAirflowWorkflow(
+      workflow,
+      executionOrder
+    );
 
     const dbWorkflow = {
       dag_id: name,
@@ -197,6 +201,45 @@ module.exports = (WorkflowDb, Airflow) => {
       });
   }
 
+  async function convertToAirflowWorkflow(workflow, executionOrder) {
+    const tasks = [];
+    const fetchedTools = new Map();
+
+    for (const task of workflow.tasks) {
+      const toolName = task.tool;
+      if (!fetchedTools.get(toolName)) {
+        const tool = await getOne(ToolDb.getTool, toolName, "tool");
+        fetchedTools.set(toolName, tool);
+      }
+    }
+
+    workflow.tasks.forEach((task) => {
+      const tool = fetchedTools.get(task.tool);
+      const type = tool.access._type;
+      switch (type) {
+        case "library":
+          tasks.push(mapTaskToDockerOperator(task, tool));
+          break;
+        case "api":
+          tasks.push(mapTaskToSimpleHttpOperator(task, tool));
+          break;
+      }
+    });
+
+    return {
+      start_date: workflow.start_date,
+      end_date: workflow.end_date,
+      airflow_imports: supplyNonRedundantImportsFromTasks(tasks),
+      tasks: tasks,
+      execution_order: executionOrder,
+    };
+  }
+
+  async function getToolForWorkflow(toolName) {
+    const tool = await ToolDb.getTool(toolName);
+    return tool;
+  }
+
   return {
     getWorkflows: getWorkflows,
     getWorkflow: getWorkflow,
@@ -206,32 +249,6 @@ module.exports = (WorkflowDb, Airflow) => {
     postWorkflow: postWorkflow,
   };
 };
-
-function convertToAirflowWorkflow(workflow, executionOrder) {
-  const tasks = [];
-
-  workflow.tasks.forEach((task) => {
-    switch (task.type) {
-      case "container":
-        tasks.push(mapTaskToDockerOperator(task));
-        break;
-      case "local":
-        tasks.push(mapTaskToBashOperator(task));
-        break;
-      case "api":
-        tasks.push(mapTaskToSimpleHttpOperator(task));
-        break;
-    }
-  });
-
-  return {
-    start_date: workflow.start_date,
-    end_date: workflow.end_date,
-    airflow_imports: supplyNonRedundantImportsFromTasks(tasks),
-    tasks: tasks,
-    execution_order: executionOrder,
-  };
-}
 
 function supplyNonRedundantImportsFromTasks(tasks) {
   const importsMap = new Map();
