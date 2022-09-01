@@ -78,17 +78,17 @@ export default function App() {
                 path="/workflow/:name"
                 element={<Workflow workflowService={workflowService} />}
               />
+              <Route
+                path={"/whiteboard"}
+                element={
+                  <Whiteboard
+                    toolService={toolService}
+                    workflowService={workflowService}
+                    setDrawerList={setDrawerList}
+                  />
+                }
+              />
             </Route>
-            <Route
-              path={"/whiteboard"}
-              element={
-                <Whiteboard
-                  toolService={toolService}
-                  workflowService={workflowService}
-                  setDrawerList={setDrawerList}
-                />
-              }
-            />
             <Route path="/submission" element={<Submission />} />
             <Route
               path="*"
