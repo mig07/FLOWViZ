@@ -217,7 +217,6 @@ export default function Whiteboard({
           resourcePageUrl: `/workflow/${workflowSubmission.workflowName}`,
         },
       });
-      return <></>;
     };
 
     return workflowService.postWorkflow(

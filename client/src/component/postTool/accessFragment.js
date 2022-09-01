@@ -1,11 +1,14 @@
 import {
   Container,
+  Grid,
+  IconButton,
   Stack,
   TextField,
   Toolbar,
   Typography,
 } from "@mui/material";
 import * as React from "react";
+import { useState } from "react";
 import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
@@ -13,6 +16,8 @@ import RadioGroup from "@mui/material/RadioGroup";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
 import Checkbox from "@mui/material/Checkbox";
+import ChipContainer from "../common/chipContainer";
+import AddIcon from "@mui/icons-material/Add";
 
 import { validateInputs } from "./util";
 
@@ -36,6 +41,9 @@ export default function Access({
   const dockerVolumes = libraryAccess.dockerVolumes;
 
   const requiredFields = configMethod === "api" ? [url, apiKey] : [address];
+
+  const [volumeSource, setVolumeSource] = useState("");
+  const [volumeTarget, setVolumeTarget] = useState("");
 
   React.useEffect(() => {
     validateInputs(requiredFields, setCanAdvance);
@@ -93,6 +101,21 @@ export default function Access({
           }
         />
         <TextField
+          required
+          margin="normal"
+          id="dockerUrl"
+          label="Docker URL"
+          name="docker url"
+          autoComplete="docker url"
+          value={dockerDaemon}
+          onChange={(event) =>
+            onLibraryAccessUpdate((prevState) => ({
+              ...prevState,
+              dockerDaemon: event.target.value,
+            }))
+          }
+        />
+        <TextField
           margin="normal"
           id="container"
           label="Docker container"
@@ -106,17 +129,69 @@ export default function Access({
             }))
           }
         />
-        <TextField
-          margin="normal"
-          id="volumes"
-          label="Volumes"
-          name="volumes"
-          autoComplete="volumes"
-          value={dockerContainer}
-          onChange={(event) =>
+        <Grid
+          container
+          spacing={1}
+          direction="row"
+          alignItems="center"
+          justifyContent="center"
+        >
+          <Grid item xs={10}>
+            <TextField
+              margin="normal"
+              id="volume source"
+              label="Volume source"
+              name="volume source"
+              autoComplete="volume source"
+              value={volumeSource}
+              onChange={(e) => setVolumeSource(e.target.value)}
+            />
+            <TextField
+              margin="normal"
+              id="volume target"
+              label="Volume target"
+              name="volume target"
+              autoComplete="volume target"
+              value={volumeTarget}
+              onChange={(e) => setVolumeTarget(e.target.value)}
+            />
+          </Grid>
+          <Grid item xs={2}>
+            <IconButton>
+              <AddIcon
+                onClick={() =>
+                  onLibraryAccessUpdate((prevState) => {
+                    const prevDockerVolumes = [...prevState.dockerVolumes];
+
+                    const hasChip = prevDockerVolumes.find(
+                      (elem) => elem.source === volumeSource
+                    );
+
+                    if (!hasChip) {
+                      prevDockerVolumes.push({
+                        source: volumeSource,
+                        target: volumeTarget,
+                      });
+                    }
+
+                    return {
+                      ...prevState,
+                      dockerVolumes: prevDockerVolumes,
+                    };
+                  })
+                }
+              />
+            </IconButton>
+          </Grid>
+        </Grid>
+        <ChipContainer
+          chips={dockerVolumes.map((elem) => elem.source)}
+          onRemoveChip={(source) =>
             onLibraryAccessUpdate((prevState) => ({
               ...prevState,
-              dockerContainer: event.target.value,
+              dockerVolumes: prevState.dockerVolumes.filter(
+                (elem) => elem.source !== source
+              ),
             }))
           }
         />
@@ -150,7 +225,7 @@ export default function Access({
           autoComplete="port"
           defaultValue={port}
           value={port}
-          inputProps={{ maxLength: 5, inputmode: "numeric", pattern: "[0-9]*" }}
+          inputProps={{ maxLength: 5 }}
           onChange={(event) => {
             const p = event.target.value;
             if (typeof p != "string") return;

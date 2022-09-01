@@ -1,14 +1,18 @@
 import React from "react";
 import { Paper, Typography } from "@mui/material";
 
+const reservedValues = ["file", "str"];
+
 export default function CommandPreview({ toolName, library, inputCommands }) {
   let args = inputCommands.map((cmd, index) => {
     return `${index > 0 ? " " : ""}${getInvocationFromCmd(
       library,
       cmd.groupName,
       cmd.name
-    )} ${cmd.value}`;
+    )} ${reservedValues.includes(cmd.value) ? "" : cmd.value} ${cmd.io}`;
   });
+
+  console.log(inputCommands);
 
   // TODO
   const tName = toolName.toLowerCase();
