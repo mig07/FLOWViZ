@@ -8,7 +8,7 @@ module.exports = (config) => {
   var conf = config || {};
 
   const path = require("node:path");
-  const production = false;
+  const production = config.production | false;
 
   const express = conf.express || require("express");
   const app = conf.app || express();
