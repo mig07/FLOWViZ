@@ -18,6 +18,7 @@ import FormLabel from "@mui/material/FormLabel";
 import Checkbox from "@mui/material/Checkbox";
 import ChipContainer from "../common/chipContainer";
 import AddIcon from "@mui/icons-material/Add";
+import CenteredContainer from "../common/centeredContainer";
 
 import { validateInputs } from "./util";
 
@@ -51,7 +52,7 @@ export default function Access({
 
   const MethodChoice = () => {
     return (
-      <>
+      <CenteredContainer>
         <FormControl>
           <FormLabel id="config-method-label">
             Choose your configuration method
@@ -78,7 +79,7 @@ export default function Access({
           </RadioGroup>
         </FormControl>
         <Toolbar />
-      </>
+      </CenteredContainer>
     );
   };
 
@@ -129,72 +130,64 @@ export default function Access({
             }))
           }
         />
-        <Grid
-          container
-          spacing={1}
-          direction="row"
-          alignItems="center"
-          justifyContent="center"
-        >
-          <Grid item xs={10}>
-            <TextField
-              margin="normal"
-              id="volume source"
-              label="Volume source"
-              name="volume source"
-              autoComplete="volume source"
-              value={volumeSource}
-              onChange={(e) => setVolumeSource(e.target.value)}
+        <CenteredContainer>
+          <TextField
+            margin="normal"
+            id="volume source"
+            label="Volume source"
+            name="volume source"
+            autoComplete="volume source"
+            value={volumeSource}
+            onChange={(e) => setVolumeSource(e.target.value)}
+          />
+          <TextField
+            margin="normal"
+            id="volume target"
+            label="Volume target"
+            name="volume target"
+            autoComplete="volume target"
+            value={volumeTarget}
+            onChange={(e) => setVolumeTarget(e.target.value)}
+          />
+          <IconButton>
+            <AddIcon
+              onClick={() =>
+                onLibraryAccessUpdate((prevState) => {
+                  const prevDockerVolumes = [...prevState.dockerVolumes];
+
+                  const hasChip = prevDockerVolumes.find(
+                    (elem) => elem.source === volumeSource
+                  );
+
+                  if (!hasChip) {
+                    prevDockerVolumes.push({
+                      source: volumeSource,
+                      target: volumeTarget,
+                    });
+                  }
+
+                  return {
+                    ...prevState,
+                    dockerVolumes: prevDockerVolumes,
+                  };
+                })
+              }
             />
-            <TextField
-              margin="normal"
-              id="volume target"
-              label="Volume target"
-              name="volume target"
-              autoComplete="volume target"
-              value={volumeTarget}
-              onChange={(e) => setVolumeTarget(e.target.value)}
-            />
-          </Grid>
-          <Grid item xs={2}>
-            <IconButton>
-              <AddIcon
-                onClick={() =>
-                  onLibraryAccessUpdate((prevState) => {
-                    const prevDockerVolumes = [...prevState.dockerVolumes];
-
-                    const hasChip = prevDockerVolumes.find(
-                      (elem) => elem.source === volumeSource
-                    );
-
-                    if (!hasChip) {
-                      prevDockerVolumes.push({
-                        source: volumeSource,
-                        target: volumeTarget,
-                      });
-                    }
-
-                    return {
-                      ...prevState,
-                      dockerVolumes: prevDockerVolumes,
-                    };
-                  })
-                }
-              />
-            </IconButton>
-          </Grid>
-        </Grid>
-        <ChipContainer
-          chips={dockerVolumes.map((elem) => elem.source)}
-          onRemoveChip={(source) =>
-            onLibraryAccessUpdate((prevState) => ({
-              ...prevState,
-              dockerVolumes: prevState.dockerVolumes.filter(
-                (elem) => elem.source !== source
-              ),
-            }))
-          }
-        />
+          </IconButton>
+        </CenteredContainer>
+        <CenteredContainer>
+          <ChipContainer
+            chips={dockerVolumes.map((elem) => elem.source)}
+            onRemoveChip={(source) =>
+              onLibraryAccessUpdate((prevState) => ({
+                ...prevState,
+                dockerVolumes: prevState.dockerVolumes.filter(
+                  (elem) => elem.source !== source
+                ),
+              }))
+            }
+          />
+        </CenteredContainer>
       </>
     );
   };
