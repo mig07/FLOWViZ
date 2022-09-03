@@ -78,7 +78,7 @@ def load_log_entry(ti=None, **kwargs):
     mongo_hook.insert_one(mongo_collection="workflowlogs", doc=log, mongo_db=MONGO_DB)
     
 
-dag_id = 'dag_generator2'
+dag_id = 'dag_generator'
 schedule = '@once'
 with DAG(dag_id, schedule_interval=None, default_args=default_args) as dag:
 
