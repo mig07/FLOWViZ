@@ -1,7 +1,7 @@
 import SendIcon from "@mui/icons-material/Send";
-import { Box, Button, Grid, Stack, Typography } from "@mui/material";
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import { styled, useTheme } from "@mui/material/styles";
+import { Box, Button, Grid } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
+import React, { useCallback, useRef, useState, useEffect } from "react";
 import ReactFlow, {
   addEdge,
   Background,
@@ -12,15 +12,11 @@ import ReactFlow, {
   useEdgesState,
   useNodesState,
 } from "react-flow-renderer";
+import { useNavigate } from "react-router-dom";
+import GenericErrorBar from "../component/common/genericErrorBar";
 import Loading from "../component/common/loading";
 import ToolNode from "../component/whiteboard/task/toolNode";
-import HowToRegIcon from "@mui/icons-material/HowToReg";
-import Submission from "../component/common/submission";
 import WorkflowSubmitDialog from "../component/whiteboard/workflowSubmitDialog";
-import GenericErrorBar from "../component/common/genericErrorBar";
-import CenteredContainer from "../component/common/centeredContainer";
-import WorkflowSubmission from "./submission";
-import { useNavigate } from "react-router-dom";
 
 let id = -1;
 const getId = () => `node${++id}`;
@@ -55,6 +51,8 @@ export default function Whiteboard({
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
 
+  const [nodeChanged, setNodeChanged] = useState(null);
+
   // States if the workflow can be commited
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -63,6 +61,9 @@ export default function Whiteboard({
   const [droppingToolName, setDroppingToolName] = useState("");
   const [droppingToolPos, setDroppingToolPos] = useState(null);
 
+  // State for fetched tools to avoid unnecessarry HTTP requests
+  const [fetchedTools, setFetchedTools] = useState(new Map());
+
   // Workflow name and datetimes for workflow submission
   const [dialogOpen, setDialogOpen] = useState(false);
   const [workflowSubmission, setWorkflowSubmission] = useState({
@@ -70,6 +71,20 @@ export default function Whiteboard({
     workflowDescription: "",
     startDateTime: new Date(),
   });
+
+  // Updates relayed data if a node changed
+  useEffect(() => {
+    const eds = [...edges];
+    const targets = [];
+
+    eds.forEach((e) => {
+      if (e.source === nodeChanged) {
+        targets.push(e.target);
+      }
+    });
+
+    targets.forEach((t) => updateNodeInputs(nodeChanged, t));
+  }, [nodeChanged]);
 
   const onWorkflowSubmission = (
     workflowName,
@@ -93,12 +108,14 @@ export default function Whiteboard({
       return nds.map((node) => {
         if (node.id === nodeId) {
           node.data = data;
+          setNodeChanged(node.id);
         }
         return node;
       });
     });
   });
 
+  // Detects and avoids loops inside the drawn workflow
   const hasLoop = useCallback((currEdges, currTarget) => {
     if (currEdges.length <= 0) return false;
 
@@ -152,6 +169,10 @@ export default function Whiteboard({
 
   const OnToolDrop = () => {
     const onSuccess = (tool) => {
+      setFetchedTools((fetchedToolsMap) =>
+        fetchedToolsMap.set(droppingToolName, tool)
+      );
+
       const node = {
         id: getId(),
         type: "tool",
@@ -174,12 +195,22 @@ export default function Whiteboard({
       setIsToolDrop(false);
     };
 
-    toolService.getTool(
-      droppingToolName,
-      GenericErrorBar,
-      onSuccess,
-      <Loading />
-    );
+    // Checks if tool was already fetched
+    const tool = fetchedTools.get(droppingToolName);
+
+    if (!tool) {
+      // Fetches tool if not found inside state
+      toolService.getTool(
+        droppingToolName,
+        GenericErrorBar,
+        onSuccess,
+        <Loading />
+      );
+    } else {
+      // Creates node if tool was found inside state
+      onSuccess(tool);
+    }
+
     return <></>;
   };
 

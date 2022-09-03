@@ -129,7 +129,7 @@ export default function ToolSetupDialog({
         <DialogTitle id="scroll-dialog-title">Task Setup</DialogTitle>
         <DialogContent dividers={scroll === "paper"}>
           <ToolSetupStack>
-            {relayedOuts && relayedOuts.length > 0 ? (
+            {relayedOutputs && relayedOutputs.length > 0 ? (
               <ToolSetupRow title={`Relayed data`}>
                 <RelayedData relayedOutputs={relayedOutputs} />
               </ToolSetupRow>
