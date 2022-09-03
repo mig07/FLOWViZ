@@ -45,6 +45,7 @@ export default function Library({ name, library }) {
                     {isEmpty(cmd.allowedCommandSets)
                       ? " "
                       : ` [${cmd.allowedCommandSets.map((cmdSet) => cmdSet)}] `}
+                    {cmd.description ? `-> ${cmd.description}` : ""}
                   </Typography>
                 );
               })}
