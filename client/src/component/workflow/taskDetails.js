@@ -26,7 +26,7 @@ export default function TaskDetails({
           <Grid item xs={6}>
             <Stack>
               <Typography>
-                <b>Run date:</b> {taskInstance.executionDate}
+                <b>Run date:</b> {taskInstance.execution_date}
               </Typography>
               <Typography>
                 <b>Run state:</b> {taskInstance.state}
