@@ -18,7 +18,7 @@ export default function Workflow({ workflowService }) {
     setter(event.target.value);
   };
 
-  const onError = (error) => {
+  const onError = ({ error }) => {
     return <InfoBar type="error" text={error} />;
   };
 
