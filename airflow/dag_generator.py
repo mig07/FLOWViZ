@@ -142,7 +142,6 @@ def generate_dag(dag_id, description, dagraph, filename):
         line = line.replace("dagIdToReplace", "'"+dag_id+"'")
         line = line.replace("descriptionToReplace", "'"+description+"'")
         line = line.replace("startDateToReplace", dagraph['start_date'])
-        line = line.replace("endDateToReplace", dagraph['end_date'])
         line = line.replace("importsToReplace", generate_imports(dagraph['airflow_imports']))
         line = line.replace("operatorsToReplace", generate_tasks(tasks))
         line = line.replace("executionOrderToReplace", execution_order)
