@@ -1,5 +1,7 @@
 # FLOWViZ
 
+![flowviz-whiteboard](/docs/pictures/whiteboard.png)
+
 FLOWViZ is a framework that allows you to seamlessly
 integrate other phylogenetic tools and frameworks,
 while providing workflow scheduling and execution,
