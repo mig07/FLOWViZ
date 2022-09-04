@@ -1,6 +1,6 @@
 # FLOWViZ
 
-![flowviz-whiteboard](/docs/pictures/whiteboard.png)
+![flowviz-whiteboard](/docs/pictures/flowviz-whiteboard.png)
 
 FLOWViZ is a framework that allows you to seamlessly
 integrate other phylogenetic tools and frameworks,
