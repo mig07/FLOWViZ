@@ -1,19 +1,27 @@
 # FLOWViZ
 
-![flowviz-whiteboard](/docs/pictures/flowviz-whiteboard.png)
-
-FLOWViZ is a framework that allows you to seamlessly
+FLOWViZ is an integration framework that allows you to seamlessly
 integrate other phylogenetic tools and frameworks,
 while providing workflow scheduling and execution,
 through the Apache Airflow workflow system.
 
-It is composed by two components: an express server
-and a react client,
+It is composed by two components: an **HTTP Express server**
+and a **React client**,
 both written in JavaScript.
 
-**It is still a work under development**: expect incomplete or faulty features!
-If you find a bug,
-please report [here](https://github.com/mig07/FLOWViZ/issues)
+**It is still a work under development!**
+If you find a bug, please report [here](https://github.com/mig07/FLOWViZ/issues)
+
+With this framework, you can integrate your own phylogenetic tools, by filling a
+contract where you specify the tool's access, rules and guidelines.
+
+The integrated tools can then be used to build your own customized workflows.
+
+![flowviz-whiteboard](/docs/pictures/flowviz-whiteboard.png)
+
+You can also customize each task inside the workflow.
+
+![flowviz-task-setup](/docs/pictures/individualTaskSetup.png)
 
 # Setup
 
