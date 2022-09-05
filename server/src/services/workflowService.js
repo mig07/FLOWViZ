@@ -18,32 +18,36 @@ module.exports = (WorkflowDb, Airflow, ToolDb) => {
    * @param {The workflow name} workflowName
    * @returns {The specified workflow}
    */
-  async function getWorkflow(username, workflowName) {
+  function getWorkflow(username, workflowName) {
     return getDbWorkflow(username, workflowName)
-      .then(async (dbWorkflow) => {
-        const airflowWorkflow = await getAirflowWorkflow(workflowName);
-
+      .then((dbWorkflow) => {
         if (!dbWorkflow) {
           throw ApiException.notFound(`Workflow ${workflowName} not found.`);
         }
+        return getAirflowWorkflow(workflowName)
+          .then(async (airflowWorkflow) => {
+            if (!airflowWorkflow) {
+              throw ApiException.notFound(
+                `Airflow does not have workflow ${airflowWorkflow}. If you created the workflow recently, please reload this page in a minute.`
+              );
+            }
 
-        if (!airflowWorkflow) {
-          throw ApiException.notFound(
-            `Airflow does not have workflow ${workflow}. If you create the workflow recently, please reload this page in a minute.`
-          );
-        }
+            const workflowRuns = await getWorkflowDagRuns(workflowName);
+            const workflowSourceCode = await getWorkflowSourceCode(
+              airflowWorkflow.file_token
+            );
 
-        const workflowRuns = await getWorkflowDagRuns(workflowName);
-        const workflowSourceCode = await getWorkflowSourceCode(
-          airflowWorkflow.file_token
-        );
-        return {
-          dbWorkflow: dbWorkflow,
-          airflow: {
-            runs: workflowRuns,
-            sourceCode: workflowSourceCode,
-          },
-        };
+            return {
+              dbWorkflow: dbWorkflow,
+              airflow: {
+                runs: workflowRuns,
+                sourceCode: workflowSourceCode,
+              },
+            };
+          })
+          .catch((err) => {
+            throw err;
+          });
       })
       .catch((err) => {
         throw err;
@@ -228,16 +232,10 @@ module.exports = (WorkflowDb, Airflow, ToolDb) => {
 
     return {
       start_date: workflow.start_date,
-      end_date: workflow.end_date,
       airflow_imports: supplyNonRedundantImportsFromTasks(tasks),
       tasks: tasks,
       execution_order: executionOrder,
     };
-  }
-
-  async function getToolForWorkflow(toolName) {
-    const tool = await ToolDb.getTool(toolName);
-    return tool;
   }
 
   return {

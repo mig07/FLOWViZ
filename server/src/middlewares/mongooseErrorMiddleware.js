@@ -7,8 +7,6 @@ module.exports = (err, req, res, next) => {
     return;
   }
 
-  console.log(err);
-
   /*
   Mongoose does not provide other ways to handle errors.
   Even the type mongoose error is not exported to be used for reflection.
