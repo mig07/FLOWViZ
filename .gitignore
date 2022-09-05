@@ -17,4 +17,4 @@ ehthumbs.db
 Thumbs.db
 
 # Remove when deploying
-build/
+#build/
