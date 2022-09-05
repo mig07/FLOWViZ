@@ -241,7 +241,7 @@ export default function Whiteboard({
     );
 
     const OnSuccess = () => {
-      navigate("/submission", {
+      return navigate("/submission", {
         state: {
           text: `Workflow ${workflowSubmission.workflowName} was successfully submitted!`,
           resourcePageLabel: workflowSubmission.workflowName,
@@ -330,8 +330,10 @@ function getWorkflowRequest(workflowSubmission, nodes, edges) {
 
   nodes.forEach((node) => {
     const nodeId = node.id;
-    const toolName = node.data.tool.general.name;
-    const type = node.data.tool.access._type;
+    const data = node.data;
+    const toolName = data.tool.general.name;
+    const type = data.tool.access._type;
+    const action = data.config.action;
 
     const children = edges.map((edge) => {
       if (edge.source.includes(nodeId)) {
@@ -340,9 +342,9 @@ function getWorkflowRequest(workflowSubmission, nodes, edges) {
     });
 
     const step = {
-      id: node.data.name,
+      id: data.name,
       tool: toolName,
-      action: node.data.config,
+      action: type === "library" ? { command: action } : {},
       children: children,
     };
     workflow.push(step);

@@ -32,6 +32,18 @@ export default function ToolSetupLibraryCommand({
       ? currGroup.commands.find((cmd) => cmd.name === state.name).allowedValues
       : [];
 
+  const MenuListItem = (collection) => {
+    return collection.map((elem) => {
+      const key = elem.key;
+      const value = elem.value;
+      return (
+        <MenuItem key={key} value={value}>
+          {key}
+        </MenuItem>
+      );
+    });
+  };
+
   return (
     <Grid container direction="row" alignItems="center" justifyContent="center">
       <Grid item xs={1}>
@@ -83,32 +95,10 @@ export default function ToolSetupLibraryCommand({
                   onChange={(ev) => onParentUpdate(ev, index, "io")}
                 >
                   <ListSubheader>Inputs</ListSubheader>
-                  {inputs.map((elem) => {
-                    const elemKey = elem.key;
-                    return (
-                      <MenuItem key={elemKey} value={elemKey}>
-                        {elemKey}
-                      </MenuItem>
-                    );
-                  })}
-                  {relayedOutputs.map((elem) => {
-                    const elemKey = elem.key;
-                    return (
-                      <MenuItem key={elemKey} value={elemKey}>
-                        {elemKey}
-                      </MenuItem>
-                    );
-                  })}
-
+                  {MenuListItem(inputs)}
+                  {MenuListItem(relayedOutputs)}
                   <ListSubheader>Outputs</ListSubheader>
-                  {outputs.map((elem) => {
-                    const elemKey = elem.key;
-                    return (
-                      <MenuItem key={elemKey} value={elemKey}>
-                        {elemKey}
-                      </MenuItem>
-                    );
-                  })}
+                  {MenuListItem(outputs)}
                 </Select>
               </FormControl>
             </Grid>

@@ -17,6 +17,8 @@ import RelayedData from "./relayedData";
 import ToolSetupRow from "./toolSetupRow";
 import ToolSetupStack from "./toolSetupStack";
 
+const reservedValues = ["file", "str"];
+
 export default function ToolSetupDialog({
   nodeId,
   open,
@@ -40,12 +42,15 @@ export default function ToolSetupDialog({
   // Obtains the first command group name and name to fill the selectors
   const [commandGroups, cmdGroup, firstCmdName] = getLibrary(tool);
 
+  // A clean command when adding new commands inside the task
   const cleanCommand = {
     groupName: cmdGroup.name,
     name: "",
     value: "",
+    io: "",
   };
 
+  // The library configuration state
   const [inputCommands, setInputCommands] = useState([cleanCommand]);
 
   const [endpoints, setEndpoints] = useState([
@@ -95,6 +100,17 @@ export default function ToolSetupDialog({
     }
     setInputCommands(cmds);
   };
+
+  //TODO
+  const cmdPreview = inputCommands
+    .map((cmd) => {
+      return `${getInvocationFromCmd(tool.library, cmd.groupName, cmd.name)} ${
+        reservedValues.includes(cmd.value) ? "" : cmd.value
+      } ${!cmd.io ? "" : cmd.io}`;
+    })
+    .toString()
+    .replace(",", "")
+    .replace(",", " ");
 
   const onCancel = (event) => {
     setInputCommands([cleanCommand]);
@@ -170,11 +186,7 @@ export default function ToolSetupDialog({
               </Grid>
             </ToolSetupRow>
             <ToolSetupRow title="Setup">
-              <CommandPreview
-                toolName={tool.general.name}
-                library={tool.library}
-                inputCommands={inputCommands}
-              />
+              <CommandPreview cmdPreview={cmdPreview} />
               {inputCommands.map((cmd, i) => (
                 <ToolSetupLibraryCommand
                   key={i}
@@ -201,6 +213,7 @@ export default function ToolSetupDialog({
                 inputs: inputs,
                 outputs: outputs,
                 setup: inputCommands,
+                action: cmdPreview,
               })
             }
           >
@@ -211,6 +224,19 @@ export default function ToolSetupDialog({
     </>
   );
 }
+
+const getInvocationFromCmd = (library, cmdGroup, cmdName) => {
+  const cmdGroupCommands = library.find(
+    (commandGroup) => commandGroup.name === cmdGroup
+  ).commands;
+
+  const cmd =
+    cmdName !== ""
+      ? cmdGroupCommands.find((cmd) => cmd.name === cmdName)
+      : cmdGroupCommands[0];
+
+  return cmd.invocation[0];
+};
 
 function getLibrary(tool) {
   const library = tool.library;
