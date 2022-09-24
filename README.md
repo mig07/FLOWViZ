@@ -23,7 +23,7 @@ You can also customize each task inside the workflow.
 
 ![flowviz-task-setup](/docs/pictures/individualTaskSetup.png)
 
-The system architecture was also detailed into an [article](https://inforum.org.pt/sites/default/files/2022-09/Actas_INForum.pdf)(page 206), which was submitted and accepted for presentation in Inforum 2022 conference.
+The system architecture was also detailed into an [article](https://inforum.org.pt/sites/default/files/2022-09/Actas_INForum.pdf) (page 206), which was submitted and accepted for presentation at the [Inforum 2022's conference](https://inforum.org.pt/).
 
 # Setup
 
