@@ -23,6 +23,8 @@ You can also customize each task inside the workflow.
 
 ![flowviz-task-setup](/docs/pictures/individualTaskSetup.png)
 
+The system architecture was also detailed into an [article](https://inforum.org.pt/sites/default/files/2022-09/Actas_INForum.pdf)(page 206), which was submitted and accepted for presentation in Inforum 2022 conference.
+
 # Setup
 
 ## Configuring database
@@ -48,6 +50,14 @@ docker run --name mongodb -d -p 27017:27017 mongo
 2. Fill it with the variables below (remove the curly brackets and change what is in between them):
 
 ```sh
+PRODUCTION={true|false}
+SERVER_NAME={server_name}
+SERVER_PORT={server_port_number}
+DATABASE_ADDRESS={database_address}
+DATABASE_PORT={database_port}
+AIRFLOW_ADDRESS={airflow_address}
+AIRFLOW_PORT={airflow_port}
+AIRFLOW_DAG_GENERATOR={airflow_dag_generator_name}
 JWT_SECRET={jwt_secret}
 AIRFLOW_USERNAME={airflow_username}
 AIRFLOW_PASSWORD={airflow_password}
