@@ -4,7 +4,7 @@ const ApiException = require("./exceptions/apiException");
 /* HTTP requester utility class */
 const httpRequest = require("./util/httpRequest")();
 
-module.exports = (app, accessConfig, passport, production) => {
+module.exports = (app, airflow, passport, production) => {
   // Library
   const toolDb = require("./datasources/toolDbDataSource.js")();
   const toolService = require("./services/toolService.js")(
@@ -18,10 +18,7 @@ module.exports = (app, accessConfig, passport, production) => {
   // Workflow
   const workflowDb = require("./datasources/workflowDbDataSource.js")();
   const airflowDataSource =
-    require("./datasources/workflowAirflowDataSource.js")(
-      httpRequest,
-      accessConfig.airflow
-    );
+    require("./datasources/workflowAirflowDataSource.js")(httpRequest, airflow);
   const workflowService = require("./services/workflowService.js")(
     workflowDb,
     airflowDataSource,

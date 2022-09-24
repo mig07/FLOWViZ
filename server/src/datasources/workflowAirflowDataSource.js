@@ -1,12 +1,11 @@
-require(`dotenv`).config();
-
-const airflowUsername = process.env.AIRFLOW_USERNAME;
-const airflowPassword = process.env.AIRFLOW_PASSWORD;
-
 module.exports = (httpRequest, airflow) => {
+  const airflowBase = "api/v1";
+  const airflowDags = "dags";
+  const airflowDagSources = "dagSources";
+
   function AirflowUriManager() {
-    const baseUri = `http://${airflow.address}:${airflow.port}/${airflow.base}`;
-    const dags = `${baseUri}/${airflow.dags}`;
+    const baseUri = `http://${airflow.address}:${airflow.port}/${airflowBase}`;
+    const dags = `${baseUri}/${airflowDags}`;
     this.getWorkflows = () => `${dags}`;
     this.getWorkflow = (name) => `${dags}/${name}`;
     this.getWorkflowDagRuns = (name) => `${dags}/${name}/dagRuns`;
@@ -23,14 +22,14 @@ module.exports = (httpRequest, airflow) => {
       logNumber
     ) =>
       `${dags}/${name}/dagRuns/${dagRunId}/taskInstances/${taskInstanceId}/logs/${logNumber}`;
-    this.postWorkflow = () => `${dags}/${airflow.dagRunGenerator}`;
+    this.postWorkflow = () => `${dags}/${airflow.dagGenerator}/dagRuns`;
     this.getWorkflowSourceCode = (fileToken) =>
-      `${baseUri}/${airflow.dagSources}/${fileToken}`;
+      `${baseUri}/${airflowDagSources}/${fileToken}`;
   }
 
   const airflowUriManager = new AirflowUriManager();
 
-  const auth = Buffer.from(`${airflowUsername}:${airflowPassword}`).toString(
+  const auth = Buffer.from(`${airflow.username}:${airflow.password}`).toString(
     "base64"
   );
 

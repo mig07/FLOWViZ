@@ -1,38 +1,44 @@
 /**
  * A configurator module to expose the framework, when using it as a npm package.
  * @param {JSON object to insert previously created objects required for the
- * phylogenetic tool and FLOWViZ (e.g. dependencies, middlewares, ...)} config
+ * phylogenetic tool and FLOWViZ integration.} config
  */
 module.exports = (config) => {
   require(`dotenv`).config();
-  var conf = config || {};
 
-  const path = require("node:path");
-  const production = config.production | false;
+  const conf = config || {};
 
+  const airflow = {
+    address: process.env.AIRFLOW_ADDRESS,
+    port: process.env.AIRFLOW_PORT,
+    username: process.env.AIRFLOW_USERNAME,
+    password: process.env.AIRFLOW_PASSWORD,
+    dagGenerator: process.env.AIRFLOW_DAG_GENERATOR,
+  };
+
+  const production = process.env.PRODUCTION || false;
+
+  /* Dependencies */
   const express = conf.express || require("express");
   const app = conf.app || express();
-  const router = express.Router();
+  const router = express.Router(); // New Router for FLOWViZ
+  const bodyParser = conf.bodyParser || require("body-parser");
+  const cors = conf.cors || require("cors");
+  const mongoose = conf.mongoose || require("mongoose");
   const passport = conf.authenticator || require("passport");
-  const compression = require("compression");
+  const compression = conf.compression || require("compression");
+  const morgan = conf.morgan || require("morgan");
+  const path = conf.path || require("node:path");
 
-  /* Server config */
-  const accessConfig = require("./config/dev-config.json");
-  const dbConfig = accessConfig.dataSource;
+  /* Database config */
+  const databaseAddr = process.env.DATABASE_ADDRESS;
+  const databasePort = process.env.DATABASE_PORT;
 
   // Defining API route prefix
   app.use("/flowapi", router);
 
-  /* Dependencies */
-  const bodyParser = conf.bodyParser || require("body-parser");
-  const morgan = conf.morgan || require("morgan");
-  const cors = conf.cors || require("cors");
-  const mongoose = conf.mongoose || require("mongoose");
-
-  /* Utilities */
-
   /* Creating connection with MongoDB */
-  mongoose.connect(`mongodb://${dbConfig.address}:${dbConfig.port}`, {
+  mongoose.connect(`mongodb://${databaseAddr}:${databasePort}`, {
     useNewUrlParser: true,
   });
   const db = mongoose.connection;
@@ -57,20 +63,19 @@ module.exports = (config) => {
     });
   }
 
-  // If no authenticator module was specified, use the one included.
+  // If no authenticator module was specified, use the included one.
   if (!conf.authenticator) {
     require("./auth/passport")(router, passport);
   }
 
   /* Loading FLOWViZ modules */
-  require("./modules")(router, accessConfig, passport, production);
+  require("./modules")(router, airflow, passport, production);
 
   /* Server initialization */
   if (!conf.express) {
-    const serverConfig = accessConfig.server;
-    const port = serverConfig.port;
+    const port = process.env.SERVER_PORT;
     app.listen(port, (err) => {
-      console.log(`Booting ${serverConfig.name}...`);
+      console.log(`Booting ${process.env.SERVER_NAME}...`);
       if (err) {
         console.log("Error!", err);
       }
