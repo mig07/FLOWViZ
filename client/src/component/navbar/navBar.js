@@ -1,73 +1,21 @@
 import styled from "@emotion/styled";
-import { Typography } from "@material-ui/core";
 import MuiAppBar from "@material-ui/core/AppBar";
 import { makeStyles } from "@material-ui/core/styles";
 import Toolbar from "@material-ui/core/Toolbar";
 import MenuIcon from "@mui/icons-material/Menu";
-import { IconButton, MenuItem, useMediaQuery, useTheme } from "@mui/material";
+import { IconButton, useMediaQuery, useTheme } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemText from "@mui/material/ListItemText";
 import * as React from "react";
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import NavBarAuthButtons from "./navBarAuthButtons";
 import NavBarButtons from "./navBarButtons";
-import NavBarTitle from "./navBarTitle";
 import NavBarDrawer from "./navBarDrawer";
+import NavBarTitle from "./navBarTitle";
 import NavMenuButtons from "./navMenuButtons";
 
 const drawerWidth = 250;
 const drawerPages = ["/whiteboard"];
-
-const DrawerHeader = styled("div")(({ theme }) => ({
-  display: "flex",
-  alignItems: "center",
-  textAlign: "left",
-  padding: theme.spacing(0, 1),
-  // necessary for content to be below app bar
-  ...theme.mixins.toolbar,
-  justifyContent: "flex",
-}));
-
-const pageButtonsGroups = [
-  {
-    position: "center",
-    pageButtons: [
-      {
-        name: "Home",
-        url: "/",
-      },
-      {
-        name: "Documentation",
-        url: "/documentation",
-      },
-      {
-        name: "About",
-        url: "/about",
-      },
-    ],
-  },
-];
-
-const notAuthenticatedButtons = [
-  {
-    name: "Login",
-    url: "/login",
-  },
-  {
-    name: "Register",
-    url: "/register",
-  },
-];
-
-const authenticatedButtons = [
-  {
-    name: "Workflows",
-    url: "/workflow",
-  },
-];
 
 export default function NavBar({ drawerList, auth, children }) {
   const navigate = useNavigate();

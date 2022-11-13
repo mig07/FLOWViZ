@@ -13,6 +13,8 @@ import UserAvatar from "../common/userAvatar";
 import LoginIcon from "@mui/icons-material/Login";
 import HowToRegIcon from "@mui/icons-material/HowToReg";
 import AccountTreeIcon from "@mui/icons-material/AccountTree";
+import ModeIcon from "@mui/icons-material/Mode";
+import { redirect } from "react-router-dom";
 
 const notAuthenticatedButtons = [
   {
@@ -28,6 +30,11 @@ const notAuthenticatedButtons = [
 ];
 
 const authenticatedButtons = [
+  {
+    name: "Whiteboard",
+    url: "/whiteboard",
+    icon: <ModeIcon />,
+  },
   {
     name: "Workflows",
     url: "/workflow",
