@@ -87,9 +87,6 @@ export default function WorkflowList({ workflowService }) {
             </Button>
           </TableCell>
           <TableCell>{workflow.description || "-"}</TableCell>
-          {/* <TableCell>{workflow.creationDate || "-"}</TableCell>
-          <TableCell>{workflow.finishDate || "-"}</TableCell>
-          <TableCell>{getState(workflow.state) || "-"}</TableCell> */}
         </TableRow>
       );
     });
@@ -106,9 +103,6 @@ export default function WorkflowList({ workflowService }) {
               <TableRow>
                 <TableCell>Name</TableCell>
                 <TableCell>Description</TableCell>
-                {/* <TableCell>Creation date</TableCell>
-                <TableCell>Finish date</TableCell>
-                <TableCell>State</TableCell> */}
               </TableRow>
             </TableHead>
             <TableBody>

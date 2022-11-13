@@ -7,22 +7,21 @@ import { Theme } from "./config/theme";
 import useNavBar from "./hooks/useNavBar";
 import About from "./page/about";
 import Documentation from "./page/documentation";
+import ErrorPage from "./page/errorPage";
 import Home from "./page/home";
 import Login from "./page/login";
-import ErrorPage from "./page/errorPage";
 import PostTool from "./page/postTool";
 import Profile from "./page/profile";
 import Register from "./page/register";
+import Submission from "./page/submission";
 import ToolPage from "./page/toolPage";
 import Whiteboard from "./page/whiteboard";
-import WorkflowList from "./page/workflowList";
 import Workflow from "./page/workflow";
-import Test from "./test/test";
+import WorkflowList from "./page/workflowList";
 import AuthService from "./service/authService";
-import WorkflowService from "./service/workflowService";
 import ToolService from "./service/toolService";
+import WorkflowService from "./service/workflowService";
 import PrivateRoute from "./util/privateRoute";
-import Submission from "./page/submission";
 
 export default function App() {
   // Custom hook for pages with side drawer

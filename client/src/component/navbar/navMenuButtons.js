@@ -1,11 +1,8 @@
-import Box from "@material-ui/core/Box";
-import Button from "@material-ui/core/Button";
-import MenuItem from "@mui/material/MenuItem";
-import Menu from "@mui/material/Menu";
-import { Typography } from "@mui/material";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
-import * as React from "react";
 import { IconButton } from "@material-ui/core";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import * as React from "react";
 
 export default function NavMenuButtons({ navigateTo }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
