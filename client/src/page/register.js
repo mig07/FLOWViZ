@@ -51,7 +51,7 @@ export default function Register({ authService }) {
       icon={<HowToRegIcon />}
       handleSubmit={handleSubmit}
     >
-      <TextField
+      {/* <TextField
         margin="normal"
         required
         fullWidth
@@ -61,7 +61,7 @@ export default function Register({ authService }) {
         autoComplete="email"
         value={email}
         onChange={(event) => onFieldChange(event, setEmail)}
-      />
+      /> */}
       <TextField
         margin="normal"
         required
