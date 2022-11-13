@@ -1,12 +1,12 @@
-const auth = JSON.parse(localStorage.getItem("auth"));
-
-const authorization = auth ? `Bearer ${auth.jwt}` : "";
+const auth = () => JSON.parse(localStorage.getItem("auth"));
 
 const normalHeader = { "Content-type": "application/json" };
 
-const authHeader = {
-  "Content-type": "application/json",
-  Authorization: authorization,
+const authHeader = () => {
+  return {
+    "Content-type": "application/json",
+    Authorization: auth() ? `Bearer ${auth().jwt}` : "",
+  };
 };
 
 const options = (method, headers, body) => {
@@ -21,9 +21,9 @@ const get = (headers) => options("GET", headers || normalHeader);
 
 const post = (body, headers) => options("POST", headers || normalHeader, body);
 
-const getAuth = () => get(authHeader);
+const getAuth = () => get(authHeader());
 
-const postAuth = (body) => post(body, authHeader);
+const postAuth = (body) => post(body, authHeader());
 
 export default {
   get,
