@@ -89,14 +89,12 @@ export default function Whiteboard({
   const onWorkflowSubmission = (
     workflowName,
     workflowDescription,
-    startDateTime,
-    endDateTime
+    startDateTime
   ) => {
     setWorkflowSubmission({
       workflowName: workflowName,
       workflowDescription: workflowDescription,
       startDateTime: startDateTime,
-      endDateTime: endDateTime,
     });
     setIsSubmitting(true);
   };
@@ -241,13 +239,14 @@ export default function Whiteboard({
     );
 
     const OnSuccess = () => {
-      return navigate("/submission", {
+      navigate("/submission", {
         state: {
           text: `Workflow ${workflowSubmission.workflowName} was successfully submitted!`,
           resourcePageLabel: workflowSubmission.workflowName,
           resourcePageUrl: `/workflow/${workflowSubmission.workflowName}`,
         },
       });
+      return <></>;
     };
 
     return workflowService.postWorkflow(
@@ -356,31 +355,3 @@ function getWorkflowRequest(workflowSubmission, nodes, edges) {
     tasks: workflow,
   };
 }
-
-/* function isWorkflowValid(nodes, edges) {
-  if (nodes.length === 0 || edges.length === 0) return false;
-
-  // Checking if all nodes have assigned names
-  const areStepNamesValid = nodes.every(
-    (step) => step.data.stepName && step.data.stepName !== ""
-  );
-
-  // Checking if there are no isolated nodes
-  const nodeIds = nodes.map((node) => node.id);
-  const edgeSources = edges.map((edge) => edge.source);
-  const edgeTargets = edges.map((edge) => edge.target);
-  const eds = [...new Set([...edgeSources, ...edgeTargets])];
-
-  const areAllStepsConnected = arrayEquals(nodeIds, eds);
-
-  return areStepNamesValid && areAllStepsConnected;
-}
-
-function arrayEquals(a, b) {
-  return (
-    Array.isArray(a) &&
-    Array.isArray(b) &&
-    a.length === b.length &&
-    a.every((val, index) => val === b[index])
-  );
-} */
