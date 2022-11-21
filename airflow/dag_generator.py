@@ -49,7 +49,7 @@ def extract_dag_from_mongo(ti=None, **kwargs):
     ti.xcom_push(key='workflow', value=wflow)
 
 # Transform the stored DAG into an Airflow DAG
-def transform_data_into_airflow_dag(ti=None, **kwargs):
+def transform_and_load_data_into_airflow_dag(ti=None, **kwargs):
     workflow = ti.xcom_pull(task_ids="extract_dag_from_mongo", key="workflow")
     dag_id = workflow['dag_id']
     description = workflow['description']
@@ -57,26 +57,8 @@ def transform_data_into_airflow_dag(ti=None, **kwargs):
 
     # Create file from template in include/ directory
     new_filename = str(DAG_PATH + dag_id + PYTHON_EXT)
-    # with open(new_filename, 'w') as new_dag:
-    #    new_dag.write(json.dumps(dag))
     shutil.copyfile(DAG_TEMPLATE_FILENAME, new_filename)
     generate_dag(dag_id, description, dag, new_filename)
-
-    ti.xcom_push(key='workflow', value=workflow)
-
-# Create and load the correspondent log for the DAG and user
-def load_log_entry(ti=None, **kwargs):
-    workflow = ti.xcom_pull(task_ids="transform_data_into_airflow_dag", key="workflow")
-    dag_id = workflow['dag_id']
-    username = workflow['username']
-
-    log = {
-        "dag_id" : dag_id,
-        "username" : username,
-        "log": "" 
-    }
-    mongo_hook.insert_one(mongo_collection="workflowlogs", doc=log, mongo_db=MONGO_DB)
-    
 
 dag_id = 'dag_generator'
 schedule = '@once'
@@ -87,17 +69,12 @@ with DAG(dag_id, schedule_interval=None, default_args=default_args) as dag:
         python_callable=extract_dag_from_mongo,
         provide_context=True)
 
-    transform_data_into_airflow_dag = PythonOperator(
-        task_id='transform_data_into_airflow_dag',
-        python_callable=transform_data_into_airflow_dag,
+    transform_and_load_data_into_airflow_dag = PythonOperator(
+        task_id='transform_and_load_data_into_airflow_dag',
+        python_callable=transform_and_load_data_into_airflow_dag,
         provide_context=True)
 
-    load_log_entry = PythonOperator(
-        task_id='load_log_entry',
-        python_callable=load_log_entry,
-        provide_context=True)
-
-    extract_dag_from_mongo >> transform_data_into_airflow_dag >> load_log_entry
+    extract_dag_from_mongo >> transform_and_load_data_into_airflow_dag
 
 # Generate the imports for the involved operators
 def generate_imports(imports):
@@ -141,7 +118,7 @@ def generate_dag(dag_id, description, dagraph, filename):
     for line in fileinput.input(filename, inplace=True):
         line = line.replace("dagIdToReplace", "'"+dag_id+"'")
         line = line.replace("descriptionToReplace", "'"+description+"'")
-        line = line.replace("startDateToReplace", dagraph['start_date'])
+        line = line.replace("startDateToReplace", "'"+dagraph['start_date']+"'")
         line = line.replace("importsToReplace", generate_imports(dagraph['airflow_imports']))
         line = line.replace("operatorsToReplace", generate_tasks(tasks))
         line = line.replace("executionOrderToReplace", execution_order)
