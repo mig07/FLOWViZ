@@ -11,8 +11,6 @@ function TextFieldMultiInput({
   tooltip,
   onParentUpdate = () => {},
 }) {
-  const collection = data;
-
   const [input, setInput] = React.useState("");
   const [chips, setChips] = React.useState([]);
 
@@ -21,21 +19,23 @@ function TextFieldMultiInput({
     setInput(value);
   };
 
-  const onAddElement = () => {
-    const hasChip = collection.find((chip) => chip === input);
+  const onAddElement = (event) => {
+    const inp = input;
+    event.preventDefault;
+    setInput("");
+    const hasChip = data.find((chip) => chip === inp);
     if (!hasChip) {
-      setChips([...chips, input]);
-      let col = collection;
-      col.push(input);
+      setChips([...chips, inp]);
+      let col = data;
+      col.push(inp);
       onParentUpdate(col);
-      setInput("");
     }
   };
 
-  const onRemoveElement = (deletingChip) => () => {
-    setChips((chips) => chips.filter((chip) => chip !== deletingChip));
-    let col = collection.filter((chip) => chip !== deletingChip);
+  const onRemoveElement = (deletingChip) => {
+    let col = data.filter((chip) => chip !== deletingChip);
     onParentUpdate(col);
+    setChips((chips) => chips.filter((chip) => chip !== deletingChip));
   };
 
   return (
@@ -61,7 +61,7 @@ function TextFieldMultiInput({
                   key={chip}
                   label={chip}
                   variant="outlined"
-                  onDelete={onRemoveElement(chip)}
+                  onDelete={() => onRemoveElement(chip)}
                 />
               );
             })}

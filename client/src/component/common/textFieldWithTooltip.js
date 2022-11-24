@@ -6,7 +6,7 @@ import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
 export default function TextFieldWithTooltip({
   id,
   label,
-  defaultValue,
+  value,
   onChange = (event) => {},
   tooltip,
 }) {
@@ -16,7 +16,7 @@ export default function TextFieldWithTooltip({
       id={id}
       name={id}
       label={label}
-      defaultValue={defaultValue}
+      value={value}
       onChange={onChange}
       InputProps={{
         endAdornment: (

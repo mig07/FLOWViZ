@@ -17,7 +17,7 @@ import NavMenuButtons from "./navMenuButtons";
 const drawerWidth = 250;
 const drawerPages = ["/whiteboard"];
 
-export default function NavBar({ drawerList, auth, children }) {
+export default function NavBar({ drawerList, children }) {
   const navigate = useNavigate();
   const location = useLocation();
   const currentPage = location.pathname;
@@ -33,21 +33,22 @@ export default function NavBar({ drawerList, auth, children }) {
 
   const AppBar = styled(MuiAppBar, {
     shouldForwardProp: (prop) => prop !== "open",
-  })(({ theme, open }) => ({
+  })(({ theme, open, hasDrawer }) => ({
     transition: theme.transitions.create(["margin", "width"], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
-    ...(open && {
-      width: matches
-        ? `calc(100% - ${drawerWidth}px)`
-        : `calc(100% + ${drawerWidth}px)`,
-      marginLeft: `${drawerWidth}px`,
-      transition: theme.transitions.create(["margin", "width"], {
-        easing: theme.transitions.easing.easeOut,
-        duration: theme.transitions.duration.enteringScreen,
+    ...(open &&
+      hasDrawer && {
+        width: matches
+          ? `calc(100% - ${drawerWidth}px)`
+          : `calc(100% + ${drawerWidth}px)`,
+        marginLeft: `${drawerWidth}px`,
+        transition: theme.transitions.create(["margin", "width"], {
+          easing: theme.transitions.easing.easeOut,
+          duration: theme.transitions.duration.enteringScreen,
+        }),
       }),
-    }),
   }));
 
   const handleDrawerOpen = () => {
@@ -90,7 +91,12 @@ export default function NavBar({ drawerList, auth, children }) {
   return (
     <>
       <CssBaseline />
-      <AppBar className={classes.appBar} position="fixed" open={drawerOpen}>
+      <AppBar
+        className={classes.appBar}
+        position="fixed"
+        open={drawerOpen}
+        hasDrawer={hasDrawer}
+      >
         <Toolbar>
           {hasDrawer ? drawerIcon : <></>}
           <NavBarTitle navigateTo={navigateTo} />

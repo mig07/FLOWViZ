@@ -1,4 +1,5 @@
 const nodeFetch = require("node-fetch");
+const ApiException = require("../exceptions/apiException");
 
 module.exports = () => {
   function get(url, auth) {
@@ -31,7 +32,7 @@ module.exports = () => {
     return nodeFetch(url, options)
       .then((response) => {
         if (!response.ok) {
-          return Promise.reject(response);
+          throw new ApiException(response.status, response.statusText);
         }
         return response.json().catch((err) => {
           throw err;

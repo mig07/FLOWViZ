@@ -18,7 +18,7 @@ export default function Workflow({ workflowService }) {
     setter(event.target.value);
   };
 
-  const onError = ({ error }) => {
+  const onError = (error) => {
     return <InfoBar type="error" text={error} />;
   };
 
@@ -55,10 +55,6 @@ export default function Workflow({ workflowService }) {
           </Grid>
         </Grid>
         {children}
-        <PageTitle variant="h5" sx={{ mt: 2, mb: 2 }}>
-          DAG view
-        </PageTitle>
-        <WorkflowView />
         <PageTitle variant="h5" sx={{ mt: 2 }}>
           Airflow script
         </PageTitle>
