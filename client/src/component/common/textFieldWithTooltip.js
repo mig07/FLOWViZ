@@ -7,6 +7,7 @@ export default function TextFieldWithTooltip({
   id,
   label,
   value,
+  defaultValue,
   onChange = (event) => {},
   tooltip,
 }) {
@@ -16,6 +17,7 @@ export default function TextFieldWithTooltip({
       id={id}
       name={id}
       label={label}
+      defaultValue={defaultValue}
       value={value}
       onChange={onChange}
       InputProps={{
