@@ -23,8 +23,6 @@ You can also customize each task inside the workflow.
 
 ![flowviz-task-setup](/docs/pictures/individualTaskSetup.png)
 
-The system architecture was also detailed into an [article](https://inforum.org.pt/sites/default/files/2022-09/Actas_INForum.pdf) (page 206), which was submitted and accepted for presentation at the [Inforum 2022's conference](https://inforum.org.pt/).
-
 # Setup
 
 ## Configuring database
@@ -123,3 +121,19 @@ To run unit tests:
 ```sh
 npm test
 ```
+# Contacts
+
+Project source code repository - [https://github.com/mig07/FLOWViZ](https://github.com/mig07/FLOWViZ)
+
+- Miguel Luís - A43504@alunos.isel.pt
+- Cátia Vaz - cvaz@cc.isel.ipl.pt
+
+# Acknowledgements
+
+This project was developed under the context of Master's degree final project, which was also funded by student grants, as follows:
+- NGPHYLO PTDC/CCI-BIO/29676/2017, an [INESC-ID](https://www.inesc-id.pt/) project, funded by [Fundação para Ciência e Tecnologia](https://www.fct.pt/);
+- IPL/ISEL/DIVA_ISEL, funded by [Polytechnic Institute of Lisbon](https://www.ipl.pt/).
+
+The following articles were also submitted under the context of this project:
+- [https://inforum.org.pt/sites/default/files/2022-09/Actas_INForum.pdf#page=224](https://inforum.org.pt/sites/default/files/2022-09/Actas_INForum.pdf#page=224), single-column format, submitted and publicly presented at the [INForum 2022 conference](https://inforum.org.pt/), which took place at the [Polytechnic Institute of Guarda](http://politecnicoguarda.pt/);
+- [https://arxiv.org/abs/2211.15282](https://arxiv.org/abs/2211.15282), two-column format.
