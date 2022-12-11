@@ -123,17 +123,17 @@ npm test
 ```
 # Contacts
 
-Project source code repository - [https://github.com/mig07/FLOWViZ](https://github.com/mig07/FLOWViZ)
+Source code repository - [https://github.com/mig07/FLOWViZ](https://github.com/mig07/FLOWViZ)
 
 - Miguel Luís - A43504@alunos.isel.pt
 - Cátia Vaz - cvaz@cc.isel.ipl.pt
 
 # Acknowledgements
 
-This project was developed under the context of Master's degree final project, which was also funded by student grants, as follows:
-- NGPHYLO PTDC/CCI-BIO/29676/2017, an [INESC-ID](https://www.inesc-id.pt/) project, funded by [Fundação para Ciência e Tecnologia](https://www.fct.pt/);
-- IPL/ISEL/DIVA_ISEL, funded by [Polytechnic Institute of Lisbon](https://www.ipl.pt/).
+This project was developed under the context of an [Lisbon School of Engineering (ISEL)](https://www.isel.pt/) Master's degree final project, which was also funded by student grants, as follows:
+- NGPHYLO PTDC/CCI-BIO/29676/2017, an [INESC-ID](https://www.inesc-id.pt/) project, funded by [Science and Technology Foundation (FCT)](https://www.fct.pt/);
+- IPL/ISEL/DIVA_ISEL, funded by [Polytechnic Institute of Lisbon (IPL)](https://www.ipl.pt/).
 
 The following articles were also submitted under the context of this project:
-- [https://inforum.org.pt/sites/default/files/2022-09/Actas_INForum.pdf#page=224](https://inforum.org.pt/sites/default/files/2022-09/Actas_INForum.pdf#page=224), single-column format, submitted and publicly presented at the [INForum 2022 conference](https://inforum.org.pt/), which took place at the [Polytechnic Institute of Guarda](http://politecnicoguarda.pt/);
+- [https://inforum.org.pt/sites/default/files/2022-09/Actas_INForum.pdf#page=224](https://inforum.org.pt/sites/default/files/2022-09/Actas_INForum.pdf#page=224), single-column format, submitted and publicly presented at the [INForum 2022 conference](https://inforum.org.pt/), which took place at the [Polytechnic Institute of Guarda (IPG)](http://politecnicoguarda.pt/);
 - [https://arxiv.org/abs/2211.15282](https://arxiv.org/abs/2211.15282), two-column format.
