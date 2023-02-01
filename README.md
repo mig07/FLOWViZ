@@ -25,6 +25,8 @@ You can also customize each task inside the workflow.
 
 # Setup
 
+It is advised to follow the setup guide by the displayed order.
+
 ## Configuring database
 
 1. Install Docker
@@ -40,6 +42,45 @@ docker pull mongo
 ```sh
 docker run --name mongodb -d -p 27017:27017 mongo
 ```
+
+## Configuring Apache Airflow
+
+1. Install and run the Airflow container, along with the required services by executing the following command inside the airflow/ directory:
+
+```sh
+docker-compose up
+```
+2. Create a Docker network:
+
+```sh
+docker network create flowviz-docker-network
+```
+
+3. Add MongoDB container and all Airflow containers to the network (remove brackets and place container name):
+
+```sh
+docker network connect flowviz-docker-network [name of container]
+```
+
+4. Inspect the assigned IP addresses inside the network (following command) and retrieve the MongoDB's container address:
+
+```sh
+docker network inspect flowviz-docker-network
+```
+
+5. Access the Airflow Web client, via web browser. It is exposed by the 8080 port (http://localhost:8080)
+
+6. Using the NavBar, go to **Admin** and then **Connections**. Click **add a new record** (plus icon) and fulfill the displayed fields with the following information:
+
+```
+Connection Id: mongodb_flowviz
+Connection Type: mongo
+Host: [place the retrieved IP address from the MongoDB's container]
+```
+
+7. Copy the dag_generator.py script into the dags/ folder (must be in the same directory where the docker-compose.yaml is)
+
+8. Also, copy the dag_template.py script into the include/ folder (in the same directory)
 
 ## Add server's dot-env environment variables
 
