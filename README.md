@@ -82,9 +82,9 @@ Host: [place the retrieved IP address from the MongoDB's container]
 
 8. Also, copy the dag_template.py script into the include/ folder (in the same directory)
 
-## Add server's dot-env environment variables
+## Add **server**'s dot-env environment variables
 
-1. Create a file called `.env` in `server/` folder.
+1. Create a file called `.env` inside the main folder.
 
 2. Fill it with the variables below (remove the curly brackets and change what is in between them):
 
@@ -100,6 +100,18 @@ AIRFLOW_DAG_GENERATOR={airflow_dag_generator_name}
 JWT_SECRET={jwt_secret}
 AIRFLOW_USERNAME={airflow_username}
 AIRFLOW_PASSWORD={airflow_password}
+```
+
+## Add **client**'s dot-env environment variables
+
+1. Create a file called `.env` inside the `client/` folder.
+
+2. Fill it with the variables below (remove the curly brackets and change what is in between them):
+
+```sh
+REACT_APP_SERVER_PROTOCOL={protocol}
+REACT_APP_SERVER_ADDRESS={server_address}
+REACT_APP_SERVER_PORT={server_port}
 ```
 
 ## Running on localhost
