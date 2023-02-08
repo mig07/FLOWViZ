@@ -1,7 +1,0 @@
-{
-    "server": {
-        "appProtocol": "http",
-        "address": "localhost",
-        "port": 3000
-    }
-}

@@ -2,7 +2,6 @@ import { ThemeProvider } from "@mui/material/styles";
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import NavBar from "./component/navbar/navBar";
-import Config from "./config/dev-config.json";
 import { Theme } from "./config/theme";
 import useNavBar from "./hooks/useNavBar";
 import About from "./page/about";
@@ -27,8 +26,12 @@ export default function App() {
   // Custom hook for pages with side drawer
   const [drawerList, setDrawerList] = useNavBar();
 
-  const config = Config.server;
-  const apiBaseUrl = `${config.appProtocol}://${config.address}:${config.port}/flowapi`;
+  // eslint-disable-next-line no-undef
+  const config = process.env;
+
+  const apiBaseUrl = `${config.REACT_APP_SERVER_PROTOCOL}://${config.REACT_APP_SERVER_ADDRESS}:${config.REACT_APP_SERVER_PORT}/flowapi`;
+
+  console.log(apiBaseUrl);
 
   // Services
   const authService = new AuthService(apiBaseUrl);

@@ -1,12 +1,9 @@
 import HowToRegIcon from "@mui/icons-material/HowToReg";
 import TextField from "@mui/material/TextField";
-import { useState } from "react";
-import React from "react";
+import React, { useState } from "react";
 import InfoBar from "../component/common/infoBar";
 import Loading from "../component/common/loading";
 import UserForm from "../component/common/userForm";
-import AuthService from "../service/authService";
-import config from "../config/dev-config.json";
 
 export default function Register({ authService }) {
   const [email, setEmail] = useState("");

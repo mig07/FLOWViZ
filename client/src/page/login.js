@@ -1,15 +1,12 @@
 import LoginIcon from "@mui/icons-material/Login";
+import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import TextField from "@mui/material/TextField";
-import React from "react";
-import { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import UserForm from "../component/common/userForm";
-import Checkbox from "@mui/material/Checkbox";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import InfoBar from "../component/common/infoBar";
 import Loading from "../component/common/loading";
-import AuthService from "../service/authService";
-import config from "../config/dev-config.json";
+import UserForm from "../component/common/userForm";
 
 export default function Login({ authService }) {
   const [username, setUsername] = useState("");
