@@ -23,21 +23,27 @@ You can also customize each task inside the workflow.
 
 ![flowviz-task-setup](/docs/pictures/individualTaskSetup.png)
 
+# Setup requirements
+
+ - Docker
+ - Node.JS
+ - Tmux (optional)
+
+Before going into the project's setup, follow this [guide](requirements.md), in order to fulfill all setup's requirements.
+
 # Setup
 
 It is advised to follow the setup guide by the displayed order.
 
 ## Configuring database
 
-1. Install Docker
-
-2. Download mongo image
+1. Download mongo image
 
 ```sh
 docker pull mongo
 ```
 
-3. Run and create mongo container, exposing port 27017
+2. Run and create mongo container, exposing port 27017
 
 ```sh
 docker run --name mongodb -d -p 27017:27017 mongo
@@ -45,32 +51,47 @@ docker run --name mongodb -d -p 27017:27017 mongo
 
 ## Configuring Apache Airflow
 
-1. Install and run the Airflow container, along with the required services by executing the following command inside the airflow/ directory:
+1. Configure the Airflow user (inside `airflow/`):
 
 ```sh
-docker-compose up
+echo -e "AIRFLOW_UID=$(id -u)" > .env
 ```
-2. Create a Docker network:
+
+2. Install and run the Airflow container, along with the required services by executing the following command inside `airflow/`:
+
+**Note**: older versions require you to write `docker-compose up` instead `docker compose up`, this has now changed with the latest version. Depending on which package you use, both can be support or just one of them; you can also create an [alias](https://www.cyberciti.biz/faq/create-permanent-bash-alias-linux-unix/) (bash tutorial, also compatible with zsh or fish) to better suit your needs. For more information check the head notes [here](https://docs.docker.com/compose/reference/) and [this article](https://www.docker.com/blog/announcing-compose-v2-general-availability/).
+
+```sh
+docker compose up
+```
+
+To check running containers:
+
+```sh
+docker ps
+```
+
+After all services are up and running, Airflow will expose a web client, which is accessible through the 8080 port ([http://localhost:8080](http://localhost:8080)). The default credentials are username: `airflow` and password: `airflow`. After a successful login, you might see a dashboard containing a list of DAG examples.
+
+3. Create a Docker network:
 
 ```sh
 docker network create flowviz-docker-network
 ```
 
-3. Add MongoDB container and all Airflow containers to the network (remove brackets and place container name):
+4. Add **MongoDB container** and **all Airflow containers** to the network (remove brackets and place container name):
 
 ```sh
 docker network connect flowviz-docker-network [name of container]
 ```
 
-4. Inspect the assigned IP addresses inside the network (following command) and retrieve the MongoDB's container address:
+5. Inspect the assigned IP addresses inside the network (following command) and **retrieve the MongoDB's container IP address**:
 
 ```sh
 docker network inspect flowviz-docker-network
 ```
 
-5. Access the Airflow Web client, via web browser. It is exposed by the 8080 port (http://localhost:8080)
-
-6. Using the NavBar, go to **Admin** and then **Connections**. Click **add a new record** (plus icon) and fulfill the displayed fields with the following information:
+6. Inside the **Apache Airflow web client** ([http://localhost:8080](http://localhost:8080)), using the **NavBar** go to **Admin** and then **Connections**. Click **add a new record** (plus icon) and fulfill the displayed fields with the following information:
 
 ```
 Connection Id: mongodb_flowviz
@@ -116,7 +137,7 @@ REACT_APP_SERVER_PORT={server_port}
 
 ## Running on localhost
 
-1. Install dependencies:
+1. Install npm package dependencies (inside main folder and `client/`):
 
 ```sh
 npm i
@@ -132,30 +153,9 @@ npm run dev
 
 Allows you to isolate each log in a terminal individual session, providing better log visibility than the concurrently way.
 
-1. Install tmux
+1. [Tmux setup (last item)](requirements.md)
 
-Arch distros:
-```sh
-sudo pacman -Sy tmux
-```
-
-Debian distros:
-```sh
-sudo apt-get update && sudo apt-get install tmux
-```
-
-macOS:
-```sh
-brew install tmux
-```
-
-2. Enable tmux mouse scroll (optional)
-
-```sh
-echo "set -g mouse on" >> ~/.tmux.conf && tmux source-file ~/.tmux.conf
-```
-
-3. Execute the start.sh script
+2. Execute the start.sh script
 
 **Note**: if there are no execution permissions, execute:
 ```sh
@@ -169,11 +169,14 @@ Build and start:
 
 ## Testing
 
-To run unit tests:
+To run unit tests (main or `client/` folders):
 
 ```sh
 npm test
 ```
+
+---
+
 # Contacts
 
 Source code repository - [https://github.com/mig07/FLOWViZ](https://github.com/mig07/FLOWViZ)
