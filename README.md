@@ -157,7 +157,7 @@ REACT_APP_SERVER_PORT={server_port}
 npm i
 ```
 
-2. To run both client and server (concurrently):
+2. To run both client and server (concurrently dependency, run this command inside the main folder):
 
 ```sh
 npm run dev
@@ -176,7 +176,7 @@ Allows you to isolate each log in a terminal individual session, providing bette
 chmod +x start.sh
 ```
 
-Build and start:
+Start:
 ```sh
 ./start.sh
 ```
