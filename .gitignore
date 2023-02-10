@@ -1,3 +1,8 @@
+# Airflow folders
+dags/
+include/
+logs/
+plugins/
 
 .cache/
 coverage/
