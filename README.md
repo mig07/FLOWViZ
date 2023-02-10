@@ -95,7 +95,7 @@ done
 docker network inspect flowviz-docker-network
 ```
 
-Or, simply copy the result of this command:
+Or, simply copy the result of this command (you may need to **reset the container** for this command to work):
 
 ```sh
 docker inspect -f '{{with index .NetworkSettings.Networks "flowviz-network-docker"}}{{.IPAddress}}{{end}}' mongodb
@@ -109,9 +109,13 @@ Connection Type: mongo
 Host: [place the retrieved IP address from the MongoDB's container]
 ```
 
-7. Copy the dag_generator.py script into the dags/ folder (must be in the same directory where the docker-compose.yaml is)
+7. Copy the dag_generator.py script into the dags/ folder (must be in the same directory where the docker-compose.yaml is).
 
-8. Also, copy the dag_template.py script into the include/ folder (in the same directory)
+8. Also, copy the dag_template.py script into the include/ folder (in the same directory).
+
+9. Inside the Airflow's dashboard and toggle on the `dag_generator` DAG (switch on the left of the DAG's name).
+
+If everything went well, no errors should be displayed by the client (aka it must not appear that `mongodb_flowviz` connection, used by the dag_generator DAG, is not recognized).
 
 ## Add **server**'s dot-env environment variables
 
