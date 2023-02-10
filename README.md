@@ -79,16 +79,26 @@ After all services are up and running, Airflow will expose a web client, which i
 docker network create flowviz-docker-network
 ```
 
-4. Add **MongoDB container** and **all Airflow containers** to the network (remove brackets and place container name):
+4. Add **MongoDB container** and **all Airflow containers** to the network (the containers must be running):
 
 ```sh
-docker network connect flowviz-docker-network [name of container]
+docker network connect flowviz-docker-network mongodb && \
+for airflowContainer in $(docker ps --format {{.Names}} | grep "airflow-"); \
+do \
+    docker network connect flowviz-docker-network $airflowContainer; \
+done
 ```
 
 5. Inspect the assigned IP addresses inside the network (following command) and **retrieve the MongoDB's container IP address**:
 
 ```sh
 docker network inspect flowviz-docker-network
+```
+
+Or, simply copy the result of this command:
+
+```sh
+docker inspect -f '{{with index .NetworkSettings.Networks "flowviz-network-docker"}}{{.IPAddress}}{{end}}' mongodb
 ```
 
 6. Inside the **Apache Airflow web client** ([http://localhost:8080](http://localhost:8080)), using the **NavBar** go to **Admin** and then **Connections**. Click **add a new record** (plus icon) and fulfill the displayed fields with the following information:
