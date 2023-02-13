@@ -1,4 +1,4 @@
-const { default: mongoose, MongooseError, Error } = require("mongoose");
+const { default: mongoose } = require("mongoose");
 const ApiException = require("../exceptions/apiException");
 
 module.exports = (err, req, res, next) => {
@@ -12,20 +12,20 @@ module.exports = (err, req, res, next) => {
   Even the type mongoose error is not exported to be used for reflection.
   */
   if (err.code && err.code === 11000) {
-    next(ApiException.conflict("This model already exists"));
+    next(ApiException.conflict("This model already exists."));
   }
 
-  switch (err) {
-    case err instanceof mongoose.Error.DocumentNotFoundError:
-      next(ApiException.notFound("The document does not exist"));
+  switch (err.constructor) {
+    case mongoose.Error.ValidationError || mongoose.Error.ValidatorError:
+      next(ApiException.badRequest("Document validation failed."));
       break;
-    case err instanceof mongoose.Error.MissingSchemaError:
+    case mongoose.Error.DocumentNotFoundError:
+      next(ApiException.notFound("The document does not exist."));
+      break;
+    case mongoose.Error.MissingSchemaError:
       next(
-        ApiException.conflict("The model you trying to access does not exist")
+        ApiException.notFound("The schema of the passed model does not exist.")
       );
-      break;
-    case err instanceof mongoose.Error.ValidatorError:
-      next(ApiException.conflict("Your document is not valid"));
       break;
   }
 
