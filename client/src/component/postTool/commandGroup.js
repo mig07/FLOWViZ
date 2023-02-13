@@ -27,6 +27,7 @@ function CommandGroup({ index = 0, data = {}, onParentUpdate = () => {} }) {
   const generateCommand = (index) => {
     return {
       name: `Command ${index}`,
+      description: "",
       invocation: [],
       values: [],
       subCommands: [],

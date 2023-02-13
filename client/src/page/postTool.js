@@ -100,6 +100,7 @@ export default function PostTool({ toolService }) {
       commands: [
         {
           name: "Command 0",
+          description: "",
           invocation: [],
           allowedValues: [],
           subCommands: [],

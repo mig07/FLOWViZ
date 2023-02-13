@@ -33,6 +33,14 @@ function Command({ data = {}, index = 0, onParentUpdate = () => {} }) {
           onChange={(event) => onPropUpdate(event, "name")}
           tooltip={"The name of the command"}
         />
+        <TextFieldWithTooltip
+          id="commandDescription"
+          name="commandDescription"
+          label="Description"
+          defaultValue={command.description}
+          onChange={(event) => onPropUpdate(event, "description")}
+          tooltip={"The description of the command. What does the command do?"}
+        />
         <TextFieldMultiInput
           name="invocation"
           label="Invocation"
