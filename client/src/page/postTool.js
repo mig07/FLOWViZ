@@ -81,7 +81,7 @@ export default function PostTool({ toolService }) {
   const generateEndpoint = (index) => {
     return {
       name: `Endpoint ${index}`,
-      description: [],
+      description: "",
       method: "",
       path: "",
       headers: {},
@@ -229,7 +229,7 @@ export default function PostTool({ toolService }) {
       configMethod === "api"
         ? {
             general: general,
-            access: { _type: configMethod, api: libraryAccess },
+            access: { _type: configMethod, api: apiAccess },
             api: api,
           }
         : {

@@ -8,7 +8,7 @@ export default function ToolFunctions({ tool }) {
   const api = tool.api;
 
   return type === "api" ? (
-    <Api api={api} />
+    <Api endpoints={api} />
   ) : (
     <Library name={tool.general.name} library={library} />
   );
