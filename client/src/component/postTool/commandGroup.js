@@ -1,29 +1,28 @@
-import * as React from "react";
-import SettingsAccordion from "./settingsAccordion";
 import {
+  Box,
+  Container,
+  Divider,
+  FormControlLabel,
   Stack,
   TextField,
-  InputAdornment,
-  Box,
-  Typography,
   Tooltip,
-  Divider,
-  Container,
+  Typography,
 } from "@mui/material";
 import Switch from "@mui/material/Switch";
-import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
-import TextFieldMultiInput from "./textFieldMultiInput";
-import { FormControlLabel } from "@mui/material";
-import Command from "./command";
-import onArrayCountUpdate from "./util";
+import * as React from "react";
+import { useState, memo } from "react";
 import TextFieldWithTooltip from "../common/textFieldWithTooltip";
+import Command from "./command";
+import SettingsAccordion from "./settingsAccordion";
+import TextFieldMultiInput from "./textFieldMultiInput";
+import onArrayCountUpdate from "./util";
 
 function CommandGroup({ index = 0, data = {}, onParentUpdate = () => {} }) {
   const group = data;
   const onCommandGroupUpdate = onParentUpdate;
 
-  const [count, setCount] = React.useState(1);
-  const [checked, setChecked] = React.useState(false);
+  const [count, setCount] = useState(1);
+  const [checked, setChecked] = useState(false);
 
   const generateCommand = (index) => {
     return {
@@ -45,8 +44,6 @@ function CommandGroup({ index = 0, data = {}, onParentUpdate = () => {} }) {
       generateCommand
     );
   };
-
-  console.log(group);
 
   return (
     <SettingsAccordion>
@@ -133,4 +130,4 @@ function CommandGroup({ index = 0, data = {}, onParentUpdate = () => {} }) {
   );
 }
 
-export default CommandGroup;
+export default memo(CommandGroup);

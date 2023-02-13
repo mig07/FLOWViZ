@@ -1,6 +1,7 @@
 import * as React from "react";
+import { memo } from "react";
 import SettingsAccordion from "./settingsAccordion";
-import { Stack, TextField } from "@mui/material";
+import { Stack } from "@mui/material";
 import TextFieldMultiInput from "./textFieldMultiInput";
 import TextFieldWithTooltip from "../common/textFieldWithTooltip";
 
@@ -44,9 +45,9 @@ function Command({ data = {}, index = 0, onParentUpdate = () => {} }) {
         <TextFieldMultiInput
           name="allowedValues"
           label="Values"
-          data={command.values}
+          data={command.allowedValues}
           onParentUpdate={(collection) =>
-            onPropCollectionUpdate(collection, "values")
+            onPropCollectionUpdate(collection, "allowedValues")
           }
           tooltip={"The allowed values which can proceed the command"}
         />
@@ -77,4 +78,4 @@ function Command({ data = {}, index = 0, onParentUpdate = () => {} }) {
   );
 }
 
-export default Command;
+export default memo(Command);

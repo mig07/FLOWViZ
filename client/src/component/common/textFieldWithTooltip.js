@@ -3,7 +3,7 @@ import Typography from "@mui/material/Typography";
 import * as React from "react";
 import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
 
-export default function TextFieldWithTooltip({
+function TextFieldWithTooltip({
   id,
   label,
   value,
@@ -32,3 +32,5 @@ export default function TextFieldWithTooltip({
     />
   );
 }
+
+export default React.memo(TextFieldWithTooltip);

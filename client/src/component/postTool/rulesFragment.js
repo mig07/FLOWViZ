@@ -17,7 +17,6 @@ export default function Rules({
 }) {
   const LibraryConfig = () => (
     <CommandGroups
-      data={library}
       library={library}
       onLibraryUpdate={onLibraryUpdate}
       generateCommandGroup={generateCommandGroup}
@@ -26,7 +25,6 @@ export default function Rules({
 
   const ApiConfig = () => (
     <Endpoints
-      data={api}
       api={api}
       onApiUpdate={onApiUpdate}
       generateEndpoint={generateEndpoint}

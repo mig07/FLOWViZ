@@ -29,7 +29,7 @@ export default function PostTool({ toolService }) {
 
   const [activeStep, setActiveStep] = useState(0);
   const [canAdvance, setCanAdvance] = useState(false);
-  const [configMethod, setConfigMethod] = useState("api");
+  const [configMethod, setConfigMethod] = useState("library");
 
   const onConfigMethodUpdate = (method) => {
     setConfigMethod(method);
@@ -101,7 +101,7 @@ export default function PostTool({ toolService }) {
         {
           name: "Command 0",
           invocation: [],
-          values: [],
+          allowedValues: [],
           subCommands: [],
           subCommandSets: [],
         },

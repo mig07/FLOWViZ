@@ -2,14 +2,15 @@ import * as React from "react";
 import { Accordion, AccordionSummary, Typography } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
-export default function SettingsAccordion({ name, description, children }) {
+function SettingsAccordion({ name, description, children }) {
   const id = `${name}-accordion`;
 
   const [expanded, setExpanded] = React.useState(true);
 
-  const handleChange = (panel) => (event, isExpanded) => {
-    setExpanded(isExpanded ? panel : false);
-  };
+  const handleChange = (panel) =>
+    React.useCallback((event, isExpanded) => {
+      setExpanded(isExpanded ? panel : false);
+    });
 
   return (
     <Accordion expanded={expanded === id} onChange={handleChange(id)}>
@@ -29,3 +30,5 @@ export default function SettingsAccordion({ name, description, children }) {
     </Accordion>
   );
 }
+
+export default React.memo(SettingsAccordion);

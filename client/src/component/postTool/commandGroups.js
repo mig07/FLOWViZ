@@ -25,12 +25,6 @@ export default function CommandGroups({
     );
   };
 
-  const onCommandGroupUpdate = (index, group) => {
-    let gs = { ...library };
-    gs[index] = group;
-    onLibraryUpdate(gs);
-  };
-
   return (
     <Container sx={{ w: "100%" }}>
       <Stack spacing={2}>
@@ -50,9 +44,8 @@ export default function CommandGroups({
           {groups.map((group, index) => (
             <CommandGroup
               key={`commandGroup-${index}`}
-              onCommandGroupUpdate={onCommandGroupUpdate}
-              data={group}
               index={index}
+              data={group}
             />
           ))}
         </Container>

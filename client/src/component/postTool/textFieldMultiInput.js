@@ -14,10 +14,10 @@ function TextFieldMultiInput({
   const [input, setInput] = React.useState("");
   const [chips, setChips] = React.useState([]);
 
-  const onSetInput = (event) => {
+  const onSetInput = React.useCallback((event) => {
     const value = event.target.value;
     setInput(value);
-  };
+  });
 
   const onAddElement = (event) => {
     const inp = input;
