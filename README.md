@@ -191,7 +191,8 @@ npm test
 ---
 # Documentation
 
-Further documentation about the developed solution can be found in this repository [wiki](https://github.com/mig07/FLOWViZ/wiki), namely the [REST API's endpoints](https://github.com/mig07/FLOWViZ/wiki/HTTP-Server's-REST-API-endpoints)
+Further documentation about the developed solution can be found in this repository [wiki](https://github.com/mig07/FLOWViZ/wiki), namely the [REST API's endpoints](https://github.com/mig07/FLOWViZ/wiki/HTTP-Server's-REST-API-endpoints).
+
 ---
 
 # Contacts
