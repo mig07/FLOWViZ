@@ -1,5 +1,6 @@
 const { checkSchema } = require("express-validator");
 const { workflowStep } = require("./models/airflow/workflow/workflow");
+const ToolContract = require("./models/mongodb/tool/ToolContract");
 
 module.exports = (
   app,
@@ -59,6 +60,12 @@ module.exports = (
     workflowMiddleware,
     workflowController.postWorkflow
   );
+
+  // PUTs
+  app.put("/tool/:name", toolController.updateTool);
+
+  // DELETEs
+  app.delete("/tool/:name", toolController.deleteTool);
 
   /* Mongoose specific error handler */
   app.use(mongooseErrorMiddleware);

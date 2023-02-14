@@ -17,15 +17,18 @@ module.exports = () => {
   }
 
   function updateTool(toolName, updatedTool) {
-    return new ToolContract.replaceOne(
-      { "general.name": toolName },
-      updatedTool
-    );
+    return ToolContract.replaceOne({ "general.name": toolName }, updatedTool);
+  }
+
+  function deleteTool(toolName) {
+    return ToolContract.deleteOne({ "general.name": toolName });
   }
 
   return {
     getTools: getTools,
     getTool: getTool,
     addTool: addTool,
+    updateTool: updateTool,
+    deleteTool: deleteTool,
   };
 };

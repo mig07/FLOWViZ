@@ -26,9 +26,30 @@ module.exports = (service) => {
       .catch((err) => next(err));
   }
 
+  function updateTool(req, res, next) {
+    const updatedTool = req.body;
+    const toolName = req.params.name;
+
+    service
+      .updateTool(toolName, updatedTool)
+      .then((data) => onSuccess(res, data))
+      .catch((err) => next(err));
+  }
+
+  function deleteTool(req, res, next) {
+    const toolName = req.params.name;
+
+    service
+      .deleteTool(toolName)
+      .then((data) => onSuccess(res, data))
+      .catch((err) => next(err));
+  }
+
   return {
     getTools: getTools,
     getTool: getTool,
     addTool: addTool,
+    updateTool: updateTool,
+    deleteTool: deleteTool,
   };
 };

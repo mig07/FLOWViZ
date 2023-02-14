@@ -33,9 +33,29 @@ module.exports = (ToolDb, ApiException) => {
     return await ToolDb.addTool(tool);
   }
 
+  /**
+   * Updates an existing tool, provided the tool's name and the new tool's json
+   * contract
+   * @param {The specified tool's name} toolName
+   * @param {The updated tool's JSON contract (sent inside the request body)} tool
+   */
+  async function updateTool(toolName, tool) {
+    return await ToolDb.updateTool(toolName, tool);
+  }
+
+  /**
+   * Deletes an existing tool, provided the tool's name
+   * @param {The specified tool's name} toolName
+   */
+  async function deleteTool(toolName) {
+    return await ToolDb.deleteTool(toolName);
+  }
+
   return {
     getTools: getTools,
     getTool: getTool,
     addTool: addTool,
+    updateTool: updateTool,
+    deleteTool: deleteTool,
   };
 };
