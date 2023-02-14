@@ -231,7 +231,7 @@ module.exports = (WorkflowDb, Airflow, ToolDb) => {
     });
 
     return {
-      start_date: workflow.startDateTime,
+      start_date: workflow.start_date,
       airflow_imports: supplyNonRedundantImportsFromTasks(tasks),
       tasks: tasks,
       execution_order: executionOrder,
