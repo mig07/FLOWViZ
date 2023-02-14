@@ -230,6 +230,9 @@ module.exports = (WorkflowDb, Airflow, ToolDb) => {
       }
     });
 
+    console.log(workflow.tasks);
+    console.log(tasks);
+
     return {
       start_date: workflow.start_date,
       airflow_imports: supplyNonRedundantImportsFromTasks(tasks),
@@ -280,7 +283,13 @@ function supplyNonRedundantImportsFromTasks(tasks) {
 function getExecutionOrder(workflow) {
   const taskMap = new Map();
   let res = "";
-  workflow.tasks.forEach((task) => {
+
+  // Avoid requests with null children
+  const filteredTasks = workflow.tasks.filter(
+    (task) => !task.children.includes(null)
+  );
+
+  filteredTasks.forEach((task) => {
     const children = task.children;
     if (children.length > 0)
       taskMap.set(task.id, children.length === 1 ? children[0] : children);
