@@ -8,7 +8,7 @@ default_args = {
     'start_date'            : startDateToReplace,
 }
 
-with DAG(dagIdToReplace, schedule_interval=None, default_args=default_args) as dag:
+with DAG(dagIdToReplace, schedule_interval="@once", default_args=default_args) as dag:
 
 operatorsToReplace
 
