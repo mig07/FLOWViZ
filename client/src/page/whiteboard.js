@@ -340,18 +340,20 @@ function getWorkflowRequest(workflowSubmission, nodes, edges) {
       }
     });
 
+    const nonNullChildren = children.filter((child) => child != null);
+
     const step = {
       id: data.name,
       tool: toolName,
       action: type === "library" ? { command: action } : {},
-      children: children,
+      children: nonNullChildren,
     };
     workflow.push(step);
   });
   return {
     name: name,
     description: description,
-    startDateTime: startDateTime,
+    start_date: startDateTime,
     tasks: workflow,
   };
 }
