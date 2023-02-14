@@ -6,7 +6,7 @@
   "author": "",
   "license": "ISC",
   "scripts": {
-    "start": "PORT=4000 react-scripts start",
+    "start": "PUBLIC_URL=\"http://localhost:3000/flowviz\" PORT=4000 react-scripts start",
     "build": "react-scripts build",
     "test": "mocha",
     "eject": "react-scripts eject",
