@@ -20,16 +20,15 @@ function TextFieldMultiInput({
   });
 
   const onAddElement = (event) => {
-    const inp = input;
     event.preventDefault;
-    setInput("");
-    const hasChip = data.find((chip) => chip === inp);
+    const hasChip = data.find((chip) => chip === input);
     if (!hasChip) {
-      setChips([...chips, inp]);
+      setChips([...chips, input]);
       let col = data;
-      col.push(inp);
+      col.push(input);
       onParentUpdate(col);
     }
+    setInput("");
   };
 
   const onRemoveElement = (deletingChip) => {
