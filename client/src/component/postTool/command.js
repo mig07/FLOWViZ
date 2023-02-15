@@ -62,9 +62,9 @@ function Command({ data = {}, index = 0, onParentUpdate = () => {} }) {
         <TextFieldMultiInput
           name="allowedCommands"
           label="Allowed sub-commands"
-          data={command.subCommands}
+          data={command.allowedCommands}
           onParentUpdate={(collection) =>
-            onPropCollectionUpdate(collection, "subCommands")
+            onPropCollectionUpdate(collection, "allowedCommands")
           }
           tooltip={
             "The allowed commands that can be invoked after this command"
@@ -73,9 +73,9 @@ function Command({ data = {}, index = 0, onParentUpdate = () => {} }) {
         <TextFieldMultiInput
           name="allowedCommandSets"
           label="Allowed sub-command sets"
-          data={command.subCommandSets}
+          data={command.allowedCommandSets}
           onParentUpdate={(collection) =>
-            onPropCollectionUpdate(collection, "subCommandSets")
+            onPropCollectionUpdate(collection, "allowedCommandSets")
           }
           tooltip={
             "The allowed commands groups that can be invoked after this command"

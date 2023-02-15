@@ -103,14 +103,16 @@ export default function PostTool({ toolService }) {
           description: "",
           invocation: [],
           allowedValues: [],
-          subCommands: [],
-          subCommandSets: [],
+          allowedCommands: [],
+          allowedCommandSets: [],
         },
       ],
     };
   };
 
   const [library, setLibrary] = useState([generateCommandGroup(0)]);
+
+  console.log(library);
 
   const onApiUpdate = (updatedApi) => {
     setApi(updatedApi);
