@@ -97,20 +97,29 @@ export default function PostTool({ toolService }) {
       invocation: [],
       order: index,
       allowCommandRep: false,
-      commands: [
-        {
-          name: "Command 0",
-          description: "",
-          invocation: [],
-          allowedValues: [],
-          allowedCommands: [],
-          allowedCommandSets: [],
-        },
-      ],
     };
   };
 
   const [library, setLibrary] = useState([generateCommandGroup(0)]);
+
+  const [libraryCommandGroups, setLibraryCommandGroups] = useState([
+    generateCommandGroup(0),
+  ]);
+
+  const generateCommand = (index) => {
+    return {
+      name: `Command ${index}`,
+      description: "",
+      invocation: [],
+      values: [],
+      subCommands: [],
+      subCommandSets: [],
+    };
+  };
+
+  const [libraryCommandGroupCmds, setLibraryCommandGroupCmds] = useState([
+    generateCommand(0),
+  ]);
 
   console.log(library);
 
@@ -163,8 +172,8 @@ export default function PostTool({ toolService }) {
           api={api}
           library={library}
           configMethod={configMethod}
-          onLibraryUpdate={onLibraryUpdate}
-          generateCommandGroup={generateCommandGroup}
+          commandGroupsSetter={setLibraryCommandGroups}
+          commandsSetter={setLibraryCommandGroupCmds}
           onApiUpdate={onApiUpdate}
           generateEndpoint={generateEndpoint}
         />

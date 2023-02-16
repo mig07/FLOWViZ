@@ -17,8 +17,13 @@ import SettingsAccordion from "./settingsAccordion";
 import TextFieldMultiInput from "./textFieldMultiInput";
 import onArrayCountUpdate from "./util";
 
-function CommandGroup({ index = 0, data = {}, onParentUpdate = () => {} }) {
-  const group = data;
+function CommandGroup({
+  index = 0,
+  group = {},
+  commandGroupsSetter,
+  commandsSetter,
+  onParentUpdate = () => {},
+}) {
   const onCommandGroupUpdate = onParentUpdate;
 
   const [count, setCount] = useState(1);
@@ -55,9 +60,13 @@ function CommandGroup({ index = 0, data = {}, onParentUpdate = () => {} }) {
           defaultValue={group.name}
           onChange={(event) => {
             const value = event.target.value;
-            let g = group;
-            g.name = value;
-            onCommandGroupUpdate(index, g);
+            const g = { ...group };
+            g[index]["name"] = value;
+            commandGroupsSetter((prevCmdGroups) => {
+              const cmdGroups = [...prevCmdGroups];
+              cmdGroups[index] = g;
+              return cmdGroups;
+            });
           }}
           tooltip={"The name of this command set"}
         />
@@ -80,9 +89,13 @@ function CommandGroup({ index = 0, data = {}, onParentUpdate = () => {} }) {
           defaultValue={index}
           onChange={(event) => {
             const value = Number(event.target.value);
-            let g = group;
-            g.order = value;
-            onCommandGroupUpdate(index, g);
+            const g = { ...group };
+            g[index]["order"] = value;
+            commandGroupsSetter((prevCmdGroups) => {
+              const cmdGroups = [...prevCmdGroups];
+              cmdGroups[index] = g;
+              return cmdGroups;
+            });
           }}
           tooltip={"The order of this command group inside the command tree"}
         />
@@ -94,13 +107,16 @@ function CommandGroup({ index = 0, data = {}, onParentUpdate = () => {} }) {
           <FormControlLabel
             control={
               <Switch
-                checked={checked}
+                checked={g[index]["checked"]}
                 onChange={(event) => {
                   const value = event.target.checked;
-                  setChecked(value);
-                  let g = group;
-                  g.allowCommandRep = value;
-                  onCommandGroupUpdate(index, g);
+                  const g = { ...group };
+                  g[index]["checked"] = value;
+                  commandGroupsSetter((prevCmdGroups) => {
+                    const cmdGroups = [...prevCmdGroups];
+                    cmdGroups[index] = g;
+                    return cmdGroups;
+                  });
                 }}
               />
             }

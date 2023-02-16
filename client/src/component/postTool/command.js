@@ -5,7 +5,12 @@ import { Stack } from "@mui/material";
 import TextFieldMultiInput from "./textFieldMultiInput";
 import TextFieldWithTooltip from "../common/textFieldWithTooltip";
 
-function Command({ data = {}, index = 0, onParentUpdate = () => {} }) {
+function Command({
+  data = {},
+  index = 0,
+  commandsSetter,
+  onParentUpdate = () => {},
+}) {
   const command = data;
   const onGroupCommandsUpdate = onParentUpdate;
 

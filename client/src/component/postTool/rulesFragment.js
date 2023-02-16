@@ -10,16 +10,16 @@ export default function Rules({
   api,
   library,
   configMethod,
-  onLibraryUpdate = () => {},
-  generateCommandGroup,
+  commandGroupsSetter,
+  commandsSetter,
   onApiUpdate = () => {},
   generateEndpoint,
 }) {
   const LibraryConfig = () => (
     <CommandGroups
-      library={library}
-      onLibraryUpdate={onLibraryUpdate}
-      generateCommandGroup={generateCommandGroup}
+      groups={library}
+      commandGroupsSetter={commandGroupsSetter}
+      commandsSetter={commandsSetter}
     />
   );
 
