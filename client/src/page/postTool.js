@@ -23,11 +23,15 @@ import Loading from "../component/common/loading";
 import Access from "../component/postTool/accessFragment";
 import General from "../component/postTool/generalFragment";
 import Rules from "../component/postTool/rulesFragment";
+import CommandGroupsProvider, {
+  CommandGroupsContext,
+} from "../context/commandGroupsProvider";
+import CommandsProvider, { CommandsContext } from "../context/commandsProvider";
 
 export default function PostTool({ toolService }) {
   const navigate = useNavigate();
 
-  const [activeStep, setActiveStep] = useState(0);
+  const [activeStep, setActiveStep] = useState(2);
   const [canAdvance, setCanAdvance] = useState(false);
   const [configMethod, setConfigMethod] = useState("library");
 
@@ -91,45 +95,15 @@ export default function PostTool({ toolService }) {
 
   const [api, setApi] = useState([generateEndpoint(0)]);
 
-  const generateCommandGroup = (index) => {
-    return {
-      name: `Command Set ${index}`,
-      invocation: [],
-      order: index,
-      allowCommandRep: false,
-    };
-  };
-
-  const [library, setLibrary] = useState([generateCommandGroup(0)]);
-
-  const [libraryCommandGroups, setLibraryCommandGroups] = useState([
-    generateCommandGroup(0),
-  ]);
-
-  const generateCommand = (index) => {
-    return {
-      name: `Command ${index}`,
-      description: "",
-      invocation: [],
-      values: [],
-      subCommands: [],
-      subCommandSets: [],
-    };
-  };
-
-  const [libraryCommandGroupCmds, setLibraryCommandGroupCmds] = useState([
-    generateCommand(0),
-  ]);
-
-  console.log(library);
+  //const [library, setLibrary] = useState([generateCommandGroup(0)]);
 
   const onApiUpdate = (updatedApi) => {
     setApi(updatedApi);
   };
 
-  const onLibraryUpdate = (updatedLib) => {
+  /* const onLibraryUpdate = (updatedLib) => {
     setLibrary(updatedLib);
-  };
+  }; */
 
   const [submitting, setSubmitting] = useState(false);
 
@@ -168,15 +142,16 @@ export default function PostTool({ toolService }) {
       description:
         "The rules and guidelines needed to configure and use the tool.",
       fragment: (
-        <Rules
-          api={api}
-          library={library}
-          configMethod={configMethod}
-          commandGroupsSetter={setLibraryCommandGroups}
-          commandsSetter={setLibraryCommandGroupCmds}
-          onApiUpdate={onApiUpdate}
-          generateEndpoint={generateEndpoint}
-        />
+        <CommandGroupsProvider>
+          <CommandsProvider>
+            <Rules
+              api={api}
+              configMethod={configMethod}
+              onApiUpdate={onApiUpdate}
+              generateEndpoint={generateEndpoint}
+            />
+          </CommandsProvider>
+        </CommandGroupsProvider>
       ),
     },
   ];
@@ -246,7 +221,7 @@ export default function PostTool({ toolService }) {
         : {
             general: general,
             access: { _type: configMethod, library: libraryAccess },
-            library: library,
+            //library: library,
           }
     );
     return toolService.postTool(body, onError, onSuccess, <Loading />);

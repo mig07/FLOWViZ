@@ -12,137 +12,105 @@ import Switch from "@mui/material/Switch";
 import * as React from "react";
 import { useState, memo } from "react";
 import TextFieldWithTooltip from "../common/textFieldWithTooltip";
-import Command from "./command";
 import SettingsAccordion from "./settingsAccordion";
 import TextFieldMultiInput from "./textFieldMultiInput";
 import onArrayCountUpdate from "./util";
+import Command from "./command";
+import CommandGroupsProvider, {
+  CommandGroupsContext,
+} from "../../context/commandGroupsProvider";
+import CommandsProvider, {
+  CommandsContext,
+} from "../../context/commandsProvider";
 
-function CommandGroup({
-  index = 0,
-  group = {},
-  commandGroupsSetter,
-  commandsSetter,
-  onParentUpdate = () => {},
-}) {
-  const onCommandGroupUpdate = onParentUpdate;
-
-  const [count, setCount] = useState(1);
-  const [checked, setChecked] = useState(false);
-
-  const generateCommand = (index) => {
-    return {
-      name: `Command ${index}`,
-      description: "",
-      invocation: [],
-      values: [],
-      subCommands: [],
-      subCommandSets: [],
-    };
-  };
-
-  const onCommandsCountUpdate = (event) => {
-    onArrayCountUpdate(
-      event,
-      group.commands,
-      count,
-      onCommandGroupUpdate,
-      setCount,
-      generateCommand
-    );
-  };
-
+function CommandGroup({ index = 0, group = {} }) {
   return (
     <SettingsAccordion>
-      <Stack sx={{ p: 2 }} spacing={2}>
-        <TextFieldWithTooltip
-          id="groupName"
-          label="Name"
-          defaultValue={group.name}
-          onChange={(event) => {
-            const value = event.target.value;
-            const g = { ...group };
-            g[index]["name"] = value;
-            commandGroupsSetter((prevCmdGroups) => {
-              const cmdGroups = [...prevCmdGroups];
-              cmdGroups[index] = g;
-              return cmdGroups;
-            });
-          }}
-          tooltip={"The name of this command set"}
-        />
-
-        <TextFieldMultiInput
-          name="invocation"
-          label="Invocation"
-          data={group.invocation}
-          tooltip={"The invocation of the command group"}
-          onParentUpdate={(collection) => {
-            let g = group;
-            g.invocation = collection;
-            onCommandGroupUpdate(index, g);
-          }}
-        />
-        <TextFieldWithTooltip
-          id="order"
-          label="order"
-          InputProps={{ inputProps: { min: 1, max: 10 } }}
-          defaultValue={index}
-          onChange={(event) => {
-            const value = Number(event.target.value);
-            const g = { ...group };
-            g[index]["order"] = value;
-            commandGroupsSetter((prevCmdGroups) => {
-              const cmdGroups = [...prevCmdGroups];
-              cmdGroups[index] = g;
-              return cmdGroups;
-            });
-          }}
-          tooltip={"The order of this command group inside the command tree"}
-        />
-        <Tooltip
-          title={
-            "If the command can be invoked multiple times after the first invocation"
-          }
-        >
-          <FormControlLabel
-            control={
-              <Switch
-                checked={g[index]["checked"]}
-                onChange={(event) => {
-                  const value = event.target.checked;
-                  const g = { ...group };
-                  g[index]["checked"] = value;
-                  commandGroupsSetter((prevCmdGroups) => {
-                    const cmdGroups = [...prevCmdGroups];
-                    cmdGroups[index] = g;
-                    return cmdGroups;
-                  });
-                }}
+      <CommandGroupsContext.Consumer>
+        {({
+          onNameUpdate,
+          onInvocationUpdate,
+          onOrderUpdate,
+          onAllowCommandRepUpdate,
+        }) => (
+          <Stack sx={{ p: 2 }} spacing={2}>
+            <TextFieldWithTooltip
+              id="groupName"
+              label="Name"
+              defaultValue={group.name}
+              onChange={(event) => onNameUpdate(index, event)}
+              tooltip={"The name of this command set"}
+            />
+            <TextFieldMultiInput
+              name="invocation"
+              label="Invocation"
+              data={group.invocation}
+              tooltip={"The invocation of the command group"}
+              onParentUpdate={(event) => onInvocationUpdate(index, event)}
+            />
+            <TextFieldWithTooltip
+              id="order"
+              label="order"
+              InputProps={{ inputProps: { min: 1, max: 10 } }}
+              defaultValue={index}
+              onChange={(event) => onOrderUpdate(index, event)}
+              tooltip={
+                "The order of this command group inside the command tree"
+              }
+            />
+            <Tooltip
+              title={
+                "If the command can be invoked multiple times after the first invocation"
+              }
+            >
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={group["allowCommandRep"]}
+                    onChange={(event) => onAllowCommandRepUpdate(index, event)}
+                  />
+                }
+                label="Allow command repetition"
               />
-            }
-            label="Allow command repetition"
-          />
-        </Tooltip>
-        <Box display="flex" alignItems="center" justifyContent="center">
-          <Typography variant="h6" sx={{ mr: 2 }}>
-            Number of commands
-          </Typography>
-          <TextField
-            margin="normal"
-            type="number"
-            InputProps={{ inputProps: { min: 1, max: 20 } }}
-            defaultValue={count}
-            onChange={onCommandsCountUpdate}
-          />
-        </Box>
-        <Typography variant="h6">Commands</Typography>
-        <Divider />
-        <Container sx={{ mt: 2 }}>
-          {group.commands.map((command, index) => (
-            <Command key={`command-${index}`} data={command} index={index} />
-          ))}
-        </Container>
-      </Stack>
+            </Tooltip>
+            <CommandsProvider>
+              <CommandsContext.Consumer>
+                {({ commands, onCommandsCountUpdate }) => (
+                  <>
+                    <Box
+                      display="flex"
+                      alignItems="center"
+                      justifyContent="center"
+                    >
+                      <Typography variant="h6" sx={{ mr: 2 }}>
+                        Number of commands
+                      </Typography>
+                      <TextField
+                        margin="normal"
+                        type="number"
+                        InputProps={{ inputProps: { min: 1, max: 20 } }}
+                        defaultValue={commands.length}
+                        onChange={onCommandsCountUpdate}
+                      />
+                    </Box>
+                    <Typography variant="h6">Commands</Typography>
+                    <Divider />
+                    <Container sx={{ mt: 2 }}>
+                      {commands.map((command, index) => (
+                        <Command
+                          key={`command-${index}`}
+                          command={command}
+                          index={index}
+                        />
+                      ))}
+                    </Container>
+                  </>
+                )}
+              </CommandsContext.Consumer>
+            </CommandsProvider>
+          </Stack>
+        )}
+      </CommandGroupsContext.Consumer>
     </SettingsAccordion>
   );
 }
