@@ -5,7 +5,7 @@ const DockerVolume = new Schema(
   {
     source: { type: String, maxlength: 256 },
     target: { type: String, maxlength: 256 },
-    _type: { type: String, enum: ["bind"] },
+    _type: { type: String, enum: ["bind"], default: "bind" },
   },
   { _id: false }
 );
@@ -14,13 +14,21 @@ const LibraryAccess = new Schema(
   {
     address: { type: String, maxlength: 60 },
     port: { type: String, maxlength: 5 },
-    dockerUrl: { type: String, maxlength: 60 },
+    dockerUrl: {
+      type: String,
+      maxlength: 60,
+      default: "unix://var/run/docker.sock",
+    },
     dockerImage: { type: String, maxlength: 60 },
     dockerContainer: { type: String, maxlength: 60 },
     dockerVolumes: [DockerVolume],
-    dockerAutoRemove: { type: Boolean },
-    dockerNetworkMode: { type: String, enum: ["bridge", "None"] },
-    dockerApiVersion: { type: String, enum: ["auto"] },
+    dockerAutoRemove: { type: Boolean, default: true },
+    dockerNetworkMode: {
+      type: String,
+      enum: ["bridge", "None"],
+      default: "bridge",
+    },
+    dockerApiVersion: { type: String, enum: ["auto"], default: "auto" },
   },
   { _id: false }
 );
