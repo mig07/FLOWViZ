@@ -4,6 +4,8 @@ import { IconButton } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import TextFieldWithTooltip from "../common/textFieldWithTooltip";
 
+const ENTER_KEY_CODE = "13";
+
 function TextFieldMultiInput({
   name = "",
   label = "",
@@ -21,6 +23,7 @@ function TextFieldMultiInput({
 
   const onAddElement = (event) => {
     event.preventDefault;
+    if (input === "") return;
     const hasChip = data.find((chip) => chip === input);
     if (!hasChip) {
       setChips([...chips, input]);
@@ -29,6 +32,12 @@ function TextFieldMultiInput({
       onParentUpdate(col);
     }
     setInput("");
+  };
+
+  const onAddElementKeyPress = (event) => {
+    if (event.key === "Enter") {
+      return onAddElement(event);
+    }
   };
 
   const onRemoveElement = (deletingChip) => {
@@ -45,6 +54,7 @@ function TextFieldMultiInput({
           label={label}
           value={input}
           onChange={onSetInput}
+          onKeyPress={onAddElementKeyPress}
           tooltip={tooltip}
         />
         <IconButton onClick={onAddElement}>

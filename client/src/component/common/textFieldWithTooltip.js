@@ -9,6 +9,7 @@ function TextFieldWithTooltip({
   value,
   defaultValue,
   onChange = (event) => {},
+  onKeyPress = (event) => {},
   tooltip,
 }) {
   return (
@@ -20,6 +21,7 @@ function TextFieldWithTooltip({
       defaultValue={defaultValue}
       value={value}
       onChange={onChange}
+      onKeyPress={onKeyPress}
       InputProps={{
         endAdornment: (
           <InputAdornment position="end">
