@@ -1,14 +1,26 @@
 import React, { useState } from "react";
 
-export const CommandGroupsContext = React.createContext({});
+export const LibraryRulesContext = React.createContext({});
 
-export default function CommandGroupsProvider({ children }) {
+export default function LibraryRulesProvider({ children }) {
   const generateCommandGroup = (index) => {
     return {
       name: `Command Set ${index}`,
       invocation: [],
       order: index,
       allowCommandRep: false,
+      commands: [generateCommand(0)],
+    };
+  };
+
+  const generateCommand = (index) => {
+    return {
+      name: `Command ${index}`,
+      description: "",
+      invocation: [],
+      allowedValues: [],
+      allowedCommands: [],
+      allowedCommandSets: [],
     };
   };
 
@@ -16,7 +28,7 @@ export default function CommandGroupsProvider({ children }) {
 
   console.log(commandGroups);
 
-  const onCommandsCountUpdate = (event) => {
+  const onCommandGroupsCountUpdate = (event) => {
     const updatedNumber = Number(event.target.value);
     setCommandGroups((prevCommandSets) => {
       const oldNumber = prevCommandSets.length;
@@ -36,6 +48,46 @@ export default function CommandGroupsProvider({ children }) {
         }
       }
       return cmdSets;
+    });
+  };
+
+  const onCommandsCountUpdate = (event, group) => {
+    const updatedNumber = Number(event.target.value);
+    setCommandGroups((prevCommandSets) => {
+      const oldNumber = prevCommandSets[group].commands.length;
+      const cmdSets = [...prevCommandSets];
+
+      if (updatedNumber < 1) return;
+
+      const diff = updatedNumber - oldNumber;
+
+      if (diff < 0) {
+        for (var k = diff; k < 0; k++) {
+          cmdSets[group].commands.pop();
+        }
+      } else {
+        for (var i = oldNumber; i < updatedNumber; i++) {
+          cmdSets[group].commands.push(generateCommand(i));
+        }
+      }
+      return cmdSets;
+    });
+  };
+
+  const onCommandPropUpdate = (groupIndex, index, prop, event) => {
+    setCommandGroups((oldCommandGroups) => {
+      const updatedPropValue = event.target.value;
+      const cmdGroups = [...oldCommandGroups];
+      cmdGroups[groupIndex].commands[index][prop] = updatedPropValue;
+      return cmdGroups;
+    });
+  };
+
+  const onCommandCollectionUpdate = (groupIndex, index, prop, collection) => {
+    setCommandGroups((oldCommandGroups) => {
+      const cmdGroups = [...oldCommandGroups];
+      cmdGroups[groupIndex].commands[index][prop] = collection;
+      return cmdGroups;
     });
   };
 
@@ -74,17 +126,20 @@ export default function CommandGroupsProvider({ children }) {
   };
 
   return (
-    <CommandGroupsContext.Provider
+    <LibraryRulesContext.Provider
       value={{
         commandGroups,
         onNameUpdate,
         onInvocationUpdate,
         onOrderUpdate,
         onAllowCommandRepUpdate,
+        onCommandGroupsCountUpdate,
         onCommandsCountUpdate,
+        onCommandPropUpdate,
+        onCommandCollectionUpdate,
       }}
     >
       {children}
-    </CommandGroupsContext.Provider>
+    </LibraryRulesContext.Provider>
   );
 }

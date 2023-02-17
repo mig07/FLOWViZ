@@ -19,19 +19,18 @@ import * as React from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import InfoBar from "../component/common/infoBar";
-import Loading from "../component/common/loading";
 import Access from "../component/postTool/accessFragment";
 import General from "../component/postTool/generalFragment";
+import Loading from "../component/common/loading";
 import Rules from "../component/postTool/rulesFragment";
-import CommandGroupsProvider, {
-  CommandGroupsContext,
-} from "../context/commandGroupsProvider";
-import CommandsProvider, { CommandsContext } from "../context/commandsProvider";
+import LibraryRulesProvider, {
+  LibraryRulesContext,
+} from "../context/libraryRulesProvider";
 
 export default function PostTool({ toolService }) {
   const navigate = useNavigate();
 
-  const [activeStep, setActiveStep] = useState(2);
+  const [activeStep, setActiveStep] = useState(0);
   const [canAdvance, setCanAdvance] = useState(false);
   const [configMethod, setConfigMethod] = useState("library");
 
@@ -95,15 +94,9 @@ export default function PostTool({ toolService }) {
 
   const [api, setApi] = useState([generateEndpoint(0)]);
 
-  //const [library, setLibrary] = useState([generateCommandGroup(0)]);
-
   const onApiUpdate = (updatedApi) => {
     setApi(updatedApi);
   };
-
-  /* const onLibraryUpdate = (updatedLib) => {
-    setLibrary(updatedLib);
-  }; */
 
   const [submitting, setSubmitting] = useState(false);
 
@@ -142,16 +135,12 @@ export default function PostTool({ toolService }) {
       description:
         "The rules and guidelines needed to configure and use the tool.",
       fragment: (
-        <CommandGroupsProvider>
-          <CommandsProvider>
-            <Rules
-              api={api}
-              configMethod={configMethod}
-              onApiUpdate={onApiUpdate}
-              generateEndpoint={generateEndpoint}
-            />
-          </CommandsProvider>
-        </CommandGroupsProvider>
+        <Rules
+          api={api}
+          configMethod={configMethod}
+          onApiUpdate={onApiUpdate}
+          generateEndpoint={generateEndpoint}
+        />
       ),
     },
   ];
@@ -210,7 +199,7 @@ export default function PostTool({ toolService }) {
     return <></>;
   };
 
-  const OnSubmit = () => {
+  const OnSubmit = ({ library }) => {
     const body = JSON.stringify(
       configMethod === "api"
         ? {
@@ -221,9 +210,10 @@ export default function PostTool({ toolService }) {
         : {
             general: general,
             access: { _type: configMethod, library: libraryAccess },
-            //library: library,
+            library: library,
           }
     );
+
     return toolService.postTool(body, onError, onSuccess, <Loading />);
   };
 
@@ -259,34 +249,40 @@ export default function PostTool({ toolService }) {
     </Grid>
   );
 
-  return submitting ? (
-    <OnSubmit />
-  ) : (
-    <Container component="main" maxWidth="lg">
-      <Toolbar />
-      <>
-        <Typography variant="h2">Add tool</Typography>
-        <Divider />
-        <Toolbar />
-      </>
-      <>
-        <Stepper
-          activeStep={activeStep}
-          orientation="horizontal"
-          sx={{ mt: 2 }}
-        >
-          {steps.map((step) => (
-            <Step key={step.label}>
-              <StepLabel icon={step.icon}>{step.label}</StepLabel>
-            </Step>
-          ))}
-        </Stepper>
-        {steps[activeStep].fragment}
-        <Grid container>
-          <BackButton />
-          <NextButton />
-        </Grid>
-      </>
-    </Container>
+  return (
+    <LibraryRulesProvider>
+      {submitting ? (
+        <LibraryRulesContext.Consumer>
+          {({ commandGroups }) => <OnSubmit library={commandGroups} />}
+        </LibraryRulesContext.Consumer>
+      ) : (
+        <Container component="main" maxWidth="lg">
+          <Toolbar />
+          <>
+            <Typography variant="h2">Add tool</Typography>
+            <Divider />
+            <Toolbar />
+          </>
+          <>
+            <Stepper
+              activeStep={activeStep}
+              orientation="horizontal"
+              sx={{ mt: 2 }}
+            >
+              {steps.map((step) => (
+                <Step key={step.label}>
+                  <StepLabel icon={step.icon}>{step.label}</StepLabel>
+                </Step>
+              ))}
+            </Stepper>
+            {steps[activeStep].fragment}
+            <Grid container>
+              <BackButton />
+              <NextButton />
+            </Grid>
+          </>
+        </Container>
+      )}
+    </LibraryRulesProvider>
   );
 }

@@ -2,21 +2,16 @@ import * as React from "react";
 import { useState } from "react";
 import { Stack, Typography, TextField, Divider, Box } from "@mui/material";
 import { Container } from "@mui/material";
-import CommandGroupsProvider, {
-  CommandGroupsContext,
-} from "../../context/commandGroupsProvider";
+import LibraryRulesProvider, {
+  LibraryRulesContext,
+} from "../../context/libraryRulesProvider";
 import CommandGroup from "./commandGroup";
 import onArrayCountUpdate from "./util";
 
-export default function CommandGroups({
-  groups,
-  commandGroupsSetter,
-  commandsSetter,
-  generateCommandGroup,
-}) {
+export default function CommandGroups() {
   return (
-    <CommandGroupsContext.Consumer>
-      {({ commandGroups, onCommandsCountUpdate }) => (
+    <LibraryRulesContext.Consumer>
+      {({ commandGroups, onCommandGroupsCountUpdate }) => (
         <Container sx={{ w: "100%" }}>
           <Stack spacing={2}>
             <Box display="flex" alignItems="center" justifyContent="center">
@@ -28,7 +23,7 @@ export default function CommandGroups({
                 type="number"
                 InputProps={{ inputProps: { min: 1, max: 10 } }}
                 defaultValue={commandGroups.length}
-                onChange={onCommandsCountUpdate}
+                onChange={onCommandGroupsCountUpdate}
               />
             </Box>
             <Container sx={{ mt: 2 }}>
@@ -43,6 +38,6 @@ export default function CommandGroups({
           </Stack>
         </Container>
       )}
-    </CommandGroupsContext.Consumer>
+    </LibraryRulesContext.Consumer>
   );
 }

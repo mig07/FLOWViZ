@@ -1,25 +1,25 @@
+import { Stack } from "@mui/material";
 import * as React from "react";
 import { memo } from "react";
-import SettingsAccordion from "./settingsAccordion";
-import { Stack } from "@mui/material";
-import TextFieldMultiInput from "./textFieldMultiInput";
+import { LibraryRulesContext } from "../../context/libraryRulesProvider";
 import TextFieldWithTooltip from "../common/textFieldWithTooltip";
-import CommandsProvider, {
-  CommandsContext,
-} from "../../context/commandsProvider";
+import SettingsAccordion from "./settingsAccordion";
+import TextFieldMultiInput from "./textFieldMultiInput";
 
-function Command({ command = {}, index = 0 }) {
+function Command({ command = {}, groupIndex = 0, index = 0 }) {
   return (
     <SettingsAccordion>
-      <CommandsContext.Consumer>
-        {({ onNameUpdate, onDescriptionUpdate, onCollectionUpdate }) => (
+      <LibraryRulesContext.Consumer>
+        {({ onCommandPropUpdate, onCommandCollectionUpdate }) => (
           <Stack sx={{ m: 2 }}>
             <TextFieldWithTooltip
               id="commandName"
               name="commandName"
               label="Name"
               defaultValue={command.name}
-              onChange={(event) => onNameUpdate(index, event)}
+              onChange={(event) =>
+                onCommandPropUpdate(groupIndex, index, "name", event)
+              }
               tooltip={"The name of the command"}
             />
             <TextFieldWithTooltip
@@ -27,7 +27,9 @@ function Command({ command = {}, index = 0 }) {
               name="commandDescription"
               label="Description"
               defaultValue={command.description}
-              onChange={(event) => onDescriptionUpdate(index, event)}
+              onChange={(event) =>
+                onCommandPropUpdate(groupIndex, index, "description", event)
+              }
               tooltip={
                 "The description of the command. What does the command do?"
               }
@@ -37,7 +39,12 @@ function Command({ command = {}, index = 0 }) {
               label="Invocation"
               data={command.invocation}
               onParentUpdate={(collection) =>
-                onCollectionUpdate(index, "invocation", collection)
+                onCommandCollectionUpdate(
+                  groupIndex,
+                  index,
+                  "invocation",
+                  collection
+                )
               }
               tooltip={"The invocation of the command"}
             />
@@ -46,7 +53,12 @@ function Command({ command = {}, index = 0 }) {
               label="Values"
               data={command.allowedValues}
               onParentUpdate={(collection) =>
-                onCollectionUpdate(index, "allowedValues", collection)
+                onCommandCollectionUpdate(
+                  groupIndex,
+                  index,
+                  "allowedValues",
+                  collection
+                )
               }
               tooltip={"The allowed values which can proceed the command"}
             />
@@ -55,7 +67,12 @@ function Command({ command = {}, index = 0 }) {
               label="Allowed sub-commands"
               data={command.allowedCommands}
               onParentUpdate={(collection) =>
-                onCollectionUpdate(index, "allowedCommands", collection)
+                onCommandCollectionUpdate(
+                  groupIndex,
+                  index,
+                  "allowedCommands",
+                  collection
+                )
               }
               tooltip={
                 "The allowed commands that can be invoked after this command"
@@ -66,7 +83,12 @@ function Command({ command = {}, index = 0 }) {
               label="Allowed sub-command sets"
               data={command.allowedCommandSets}
               onParentUpdate={(collection) =>
-                onCollectionUpdate(index, "allowedCommandSets", collection)
+                onCommandCollectionUpdate(
+                  groupIndex,
+                  index,
+                  "allowedCommandSets",
+                  collection
+                )
               }
               tooltip={
                 "The allowed commands groups that can be invoked after this command"
@@ -74,7 +96,7 @@ function Command({ command = {}, index = 0 }) {
             />
           </Stack>
         )}
-      </CommandsContext.Consumer>
+      </LibraryRulesContext.Consumer>
     </SettingsAccordion>
   );
 }
