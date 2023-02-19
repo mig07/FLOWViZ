@@ -29,12 +29,14 @@ export default function LibraryRulesProvider({ children }) {
   console.log(commandGroups);
 
   const onCommandGroupsCountUpdate = React.useCallback((event) => {
-    const updatedNumber = Number(event.target.value);
+    const value = event.target.value;
+    if (typeof value != "string" || value == "") return;
+    const updatedNumber = Number(value);
+    if (updatedNumber < 1 || updatedNumber > 10) return;
+
     setCommandGroups((prevCommandSets) => {
       const oldNumber = prevCommandSets.length;
       const cmdSets = [...prevCommandSets];
-
-      if (updatedNumber < 1) return;
 
       const diff = updatedNumber - oldNumber;
 
@@ -52,12 +54,14 @@ export default function LibraryRulesProvider({ children }) {
   }, []);
 
   const onCommandsCountUpdate = React.useCallback((event, group) => {
-    const updatedNumber = Number(event.target.value);
+    const value = event.target.value;
+    if (typeof value != "string" || value == "") return;
+    const updatedNumber = Number(value);
+    if (updatedNumber < 1 || updatedNumber > 20) return;
+
     setCommandGroups((prevCommandSets) => {
       const oldNumber = prevCommandSets[group].commands.length;
       const cmdSets = [...prevCommandSets];
-
-      if (updatedNumber < 1) return;
 
       const diff = updatedNumber - oldNumber;
 
@@ -130,8 +134,6 @@ export default function LibraryRulesProvider({ children }) {
 
   const onAllowCommandRepUpdate = (index, event) => {
     const updatedAllowCommandRep = event.target.checked;
-    console.log(updatedAllowCommandRep);
-    console.log(event.target.value);
     return setCommandGroups((oldCommandGroups) => {
       const cmdGroups = [...oldCommandGroups];
       cmdGroups[index]["allowCommandRep"] = updatedAllowCommandRep;

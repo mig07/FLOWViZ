@@ -5,17 +5,16 @@ import {
   FormControlLabel,
   Stack,
   TextField,
-  Tooltip,
   Typography,
 } from "@mui/material";
 import Switch from "@mui/material/Switch";
 import * as React from "react";
 import { memo } from "react";
+import { LibraryRulesContext } from "../../context/libraryRulesProvider";
 import TextFieldWithTooltip from "../common/textFieldWithTooltip";
 import Command from "./command";
 import SettingsAccordion from "./settingsAccordion";
 import TextFieldMultiInput from "./textFieldMultiInput";
-import { LibraryRulesContext } from "../../context/libraryRulesProvider";
 
 function CommandGroup({ index = 0, group = {}, groupFunctions = {} }) {
   const onNameUpdate = groupFunctions.onNameUpdate;
@@ -28,8 +27,6 @@ function CommandGroup({ index = 0, group = {}, groupFunctions = {} }) {
     onCommandPropUpdate: groupFunctions.onCommandPropUpdate,
     onCommandCollectionUpdate: groupFunctions.onCommandCollectionUpdate,
   };
-
-  console.log(group.allowCommandRep);
 
   return (
     <SettingsAccordion>
