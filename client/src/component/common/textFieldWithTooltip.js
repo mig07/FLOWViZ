@@ -35,4 +35,8 @@ function TextFieldWithTooltip({
   );
 }
 
-export default React.memo(TextFieldWithTooltip);
+function arePropsEqual(oldProps, newProps) {
+  return oldProps.value === newProps.value;
+}
+
+export default React.memo(TextFieldWithTooltip, arePropsEqual);

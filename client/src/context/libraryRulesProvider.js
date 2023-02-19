@@ -28,7 +28,7 @@ export default function LibraryRulesProvider({ children }) {
 
   console.log(commandGroups);
 
-  const onCommandGroupsCountUpdate = (event) => {
+  const onCommandGroupsCountUpdate = React.useCallback((event) => {
     const updatedNumber = Number(event.target.value);
     setCommandGroups((prevCommandSets) => {
       const oldNumber = prevCommandSets.length;
@@ -49,9 +49,9 @@ export default function LibraryRulesProvider({ children }) {
       }
       return cmdSets;
     });
-  };
+  }, []);
 
-  const onCommandsCountUpdate = (event, group) => {
+  const onCommandsCountUpdate = React.useCallback((event, group) => {
     const updatedNumber = Number(event.target.value);
     setCommandGroups((prevCommandSets) => {
       const oldNumber = prevCommandSets[group].commands.length;
@@ -72,41 +72,53 @@ export default function LibraryRulesProvider({ children }) {
       }
       return cmdSets;
     });
-  };
+  }, []);
 
-  const onCommandPropUpdate = (groupIndex, index, prop, event) => {
-    setCommandGroups((oldCommandGroups) => {
-      const updatedPropValue = event.target.value;
-      const cmdGroups = [...oldCommandGroups];
-      cmdGroups[groupIndex].commands[index][prop] = updatedPropValue;
-      return cmdGroups;
-    });
-  };
+  const onCommandPropUpdate = React.useCallback(
+    (groupIndex, index, prop, event) => {
+      setCommandGroups((oldCommandGroups) => {
+        const updatedPropValue = event.target.value;
+        const cmdGroups = [...oldCommandGroups];
+        cmdGroups[groupIndex].commands[index][prop] = updatedPropValue;
+        return cmdGroups;
+      });
+    },
+    []
+  );
 
-  const onCommandCollectionUpdate = (groupIndex, index, prop, collection) => {
-    setCommandGroups((oldCommandGroups) => {
-      const cmdGroups = [...oldCommandGroups];
-      cmdGroups[groupIndex].commands[index][prop] = collection;
-      return cmdGroups;
-    });
-  };
+  const onCommandCollectionUpdate = React.useCallback(
+    (groupIndex, index, prop, collection) => {
+      setCommandGroups((oldCommandGroups) => {
+        const cmdGroups = [...oldCommandGroups];
+        cmdGroups[groupIndex].commands[index][prop] = collection;
+        return cmdGroups;
+      });
+    },
+    []
+  );
 
-  const onNameUpdate = (index, event) =>
-    setCommandGroups((oldCommandGroups) => {
-      const updatedName = event.target.value;
-      const cmdGroups = [...oldCommandGroups];
-      cmdGroups[index]["name"] = updatedName;
-      return cmdGroups;
-    });
+  const onNameUpdate = React.useCallback(
+    (index, event) =>
+      setCommandGroups((oldCommandGroups) => {
+        const updatedName = event.target.value;
+        const cmdGroups = [...oldCommandGroups];
+        cmdGroups[index]["name"] = updatedName;
+        return cmdGroups;
+      }),
+    []
+  );
 
-  const onInvocationUpdate = (index, collection) =>
-    setCommandGroups((oldCommandGroups) => {
-      const cmdGroups = [...oldCommandGroups];
-      cmdGroups[index]["invocation"] = collection;
-      return cmdGroups;
-    });
+  const onInvocationUpdate = React.useCallback(
+    (index, collection) =>
+      setCommandGroups((oldCommandGroups) => {
+        const cmdGroups = [...oldCommandGroups];
+        cmdGroups[index]["invocation"] = collection;
+        return cmdGroups;
+      }),
+    []
+  );
 
-  const onOrderUpdate = (index, event) => {
+  const onOrderUpdate = React.useCallback((index, event) => {
     const updatedOrder = Number(event.target.value);
     if (updatedOrder < 1) return;
     return setCommandGroups((oldCommandGroups) => {
@@ -114,7 +126,7 @@ export default function LibraryRulesProvider({ children }) {
       cmdGroups[index]["order"] = updatedOrder;
       return cmdGroups;
     });
-  };
+  }, []);
 
   const onAllowCommandRepUpdate = (index, event) => {
     const updatedAllowCommandRep = event.target.value;

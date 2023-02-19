@@ -1,26 +1,20 @@
-import { Box, Button, Grid, Toolbar, Typography } from "@mui/material";
+import { Toolbar } from "@mui/material";
 import * as React from "react";
+import { LibraryRulesContext } from "../../context/libraryRulesProvider";
 import CommandGroups from "./commandGroups";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { useState } from "react";
-import onArrayCountUpdate from "./util";
+
 import Endpoints from "./endpoints";
 
-export default function Rules({
+function Rules({
   api,
-  library,
   configMethod,
-  commandGroupsSetter,
-  commandsSetter,
   onApiUpdate = () => {},
   generateEndpoint,
 }) {
   const LibraryConfig = () => (
-    <CommandGroups
-      groups={library}
-      commandGroupsSetter={commandGroupsSetter}
-      commandsSetter={commandsSetter}
-    />
+    <LibraryRulesContext.Consumer>
+      {(props) => <CommandGroups props={props} />}
+    </LibraryRulesContext.Consumer>
   );
 
   const ApiConfig = () => (
@@ -49,3 +43,5 @@ export default function Rules({
     </>
   );
 }
+
+export default React.memo(Rules);

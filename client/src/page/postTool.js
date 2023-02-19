@@ -250,39 +250,39 @@ export default function PostTool({ toolService }) {
   );
 
   return (
-    <LibraryRulesProvider>
-      {submitting ? (
-        <LibraryRulesContext.Consumer>
-          {({ commandGroups }) => <OnSubmit library={commandGroups} />}
-        </LibraryRulesContext.Consumer>
-      ) : (
-        <Container component="main" maxWidth="lg">
-          <Toolbar />
-          <>
-            <Typography variant="h2">Add tool</Typography>
-            <Divider />
-            <Toolbar />
-          </>
-          <>
-            <Stepper
-              activeStep={activeStep}
-              orientation="horizontal"
-              sx={{ mt: 2 }}
-            >
-              {steps.map((step) => (
-                <Step key={step.label}>
-                  <StepLabel icon={step.icon}>{step.label}</StepLabel>
-                </Step>
-              ))}
-            </Stepper>
-            {steps[activeStep].fragment}
-            <Grid container>
-              <BackButton />
-              <NextButton />
-            </Grid>
-          </>
-        </Container>
-      )}
-    </LibraryRulesProvider>
+    <Container component="main" maxWidth="lg">
+      <Toolbar />
+      <>
+        <Typography variant="h2">Add tool</Typography>
+        <Divider />
+        <Toolbar />
+      </>
+      <>
+        <Stepper
+          activeStep={activeStep}
+          orientation="horizontal"
+          sx={{ mt: 2 }}
+        >
+          {steps.map((step) => (
+            <Step key={step.label}>
+              <StepLabel icon={step.icon}>{step.label}</StepLabel>
+            </Step>
+          ))}
+        </Stepper>
+        <LibraryRulesProvider>
+          {submitting ? (
+            <LibraryRulesContext.Consumer>
+              {({ commandGroups }) => <OnSubmit library={commandGroups} />}
+            </LibraryRulesContext.Consumer>
+          ) : (
+            steps[activeStep].fragment
+          )}
+        </LibraryRulesProvider>
+        <Grid container>
+          <BackButton />
+          <NextButton />
+        </Grid>
+      </>
+    </Container>
   );
 }

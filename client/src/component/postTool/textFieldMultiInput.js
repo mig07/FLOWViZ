@@ -4,8 +4,6 @@ import { IconButton } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import TextFieldWithTooltip from "../common/textFieldWithTooltip";
 
-const ENTER_KEY_CODE = "13";
-
 function TextFieldMultiInput({
   name = "",
   label = "",
@@ -83,4 +81,8 @@ function TextFieldMultiInput({
   );
 }
 
-export default TextFieldMultiInput;
+function arePropsEqual(oldProps, newProps) {
+  return oldProps.data.length === newProps.data.length;
+}
+
+export default React.memo(TextFieldMultiInput, arePropsEqual);
