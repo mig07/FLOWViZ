@@ -129,7 +129,9 @@ export default function LibraryRulesProvider({ children }) {
   }, []);
 
   const onAllowCommandRepUpdate = (index, event) => {
-    const updatedAllowCommandRep = event.target.value;
+    const updatedAllowCommandRep = event.target.checked;
+    console.log(updatedAllowCommandRep);
+    console.log(event.target.value);
     return setCommandGroups((oldCommandGroups) => {
       const cmdGroups = [...oldCommandGroups];
       cmdGroups[index]["allowCommandRep"] = updatedAllowCommandRep;

@@ -82,7 +82,7 @@ function TextFieldMultiInput({
 }
 
 function arePropsEqual(oldProps, newProps) {
-  return oldProps.data.length === newProps.data.length;
+  return JSON.stringify(oldProps.data) === JSON.stringify(newProps.data);
 }
 
 export default React.memo(TextFieldMultiInput, arePropsEqual);
