@@ -31,8 +31,6 @@ export default function App() {
 
   const apiBaseUrl = `${config.REACT_APP_SERVER_PROTOCOL}://${config.REACT_APP_SERVER_ADDRESS}:${config.REACT_APP_SERVER_PORT}/flowapi`;
 
-  console.log(apiBaseUrl);
-
   // Services
   const authService = new AuthService(apiBaseUrl);
   const workflowService = new WorkflowService(apiBaseUrl);

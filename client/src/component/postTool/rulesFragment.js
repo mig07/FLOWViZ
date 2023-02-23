@@ -38,7 +38,8 @@ function Rules({
 
   return (
     <>
-      <Method />
+      {/* <Method /> */}
+      <LibraryConfig />
       <Toolbar />
     </>
   );

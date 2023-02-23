@@ -106,11 +106,13 @@ export default function PostTool({ toolService }) {
       icon: <BadgeOutlinedIcon />,
       description: "Tool's relevant metadata.",
       fragment: (
-        <General
-          onGeneralUpdate={onGeneralUpdate}
-          setCanAdvance={setCanAdvance}
-          general={general}
-        />
+        <React.Fragment>
+          <General
+            onGeneralUpdate={onGeneralUpdate}
+            setCanAdvance={setCanAdvance}
+            general={general}
+          />
+        </React.Fragment>
       ),
     },
     {
@@ -118,15 +120,17 @@ export default function PostTool({ toolService }) {
       icon: <CellTowerIcon />,
       description: "Where the tool is located and how it can be accessed.",
       fragment: (
-        <Access
-          apiAccess={apiAccess}
-          libraryAccess={libraryAccess}
-          configMethod={configMethod}
-          onLibraryAccessUpdate={onLibraryAccessUpdate}
-          onApiAccessUpdate={onApiAccessUpdate}
-          setCanAdvance={setCanAdvance}
-          onMethodChoice={onConfigMethodUpdate}
-        />
+        <React.Fragment>
+          <Access
+            apiAccess={apiAccess}
+            libraryAccess={libraryAccess}
+            configMethod={configMethod}
+            onLibraryAccessUpdate={onLibraryAccessUpdate}
+            onApiAccessUpdate={onApiAccessUpdate}
+            setCanAdvance={setCanAdvance}
+            onMethodChoice={onConfigMethodUpdate}
+          />
+        </React.Fragment>
       ),
     },
     {
@@ -135,12 +139,14 @@ export default function PostTool({ toolService }) {
       description:
         "The rules and guidelines needed to configure and use the tool.",
       fragment: (
-        <Rules
-          api={api}
-          configMethod={configMethod}
-          onApiUpdate={onApiUpdate}
-          generateEndpoint={generateEndpoint}
-        />
+        <React.Fragment>
+          <Rules
+            api={api}
+            configMethod={configMethod}
+            onApiUpdate={onApiUpdate}
+            generateEndpoint={generateEndpoint}
+          />
+        </React.Fragment>
       ),
     },
   ];

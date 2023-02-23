@@ -19,6 +19,7 @@ import Checkbox from "@mui/material/Checkbox";
 import ChipContainer from "../common/chipContainer";
 import AddIcon from "@mui/icons-material/Add";
 import CenteredContainer from "../common/centeredContainer";
+import TextFieldWithTooltip from "../common/textFieldWithTooltip";
 
 import { validateInputs } from "./util";
 
@@ -41,7 +42,8 @@ export default function Access({
   const dockerContainer = libraryAccess.dockerContainer;
   const dockerVolumes = libraryAccess.dockerVolumes;
 
-  const requiredFields = configMethod === "api" ? [url, apiKey] : [address];
+  // const requiredFields = configMethod === "api" ? [url, apiKey] : [address];
+  const requiredFields = [dockerDaemon, dockerImage];
 
   const [volumeSource, setVolumeSource] = useState("");
   const [volumeTarget, setVolumeTarget] = useState("");
@@ -86,28 +88,10 @@ export default function Access({
   const DockerForm = () => {
     return (
       <>
-        <TextField
-          required
-          margin="normal"
-          id="image"
-          label="Docker image"
-          name="image"
-          autoComplete="image"
-          value={dockerImage}
-          onChange={(event) =>
-            onLibraryAccessUpdate((prevState) => ({
-              ...prevState,
-              dockerImage: event.target.value,
-            }))
-          }
-        />
-        <TextField
-          required
-          margin="normal"
+        <TextFieldWithTooltip
           id="dockerUrl"
           label="Docker URL"
           name="docker url"
-          autoComplete="docker url"
           value={dockerDaemon}
           onChange={(event) =>
             onLibraryAccessUpdate((prevState) => ({
@@ -115,13 +99,25 @@ export default function Access({
               dockerDaemon: event.target.value,
             }))
           }
+          tooltip={"The Docker daemon's URL where the container is hosted."}
         />
-        <TextField
-          margin="normal"
+        <TextFieldWithTooltip
+          id="image"
+          label="Docker image"
+          name="image"
+          value={dockerImage}
+          onChange={(event) =>
+            onLibraryAccessUpdate((prevState) => ({
+              ...prevState,
+              dockerImage: event.target.value,
+            }))
+          }
+          tooltip={"The Docker image of the container that hosts the tool."}
+        />
+        <TextFieldWithTooltip
           id="container"
           label="Docker container"
           name="container"
-          autoComplete="container"
           value={dockerContainer}
           onChange={(event) =>
             onLibraryAccessUpdate((prevState) => ({
@@ -129,25 +125,28 @@ export default function Access({
               dockerContainer: event.target.value,
             }))
           }
+          tooltip={"The Docker container that hosts the tool."}
         />
         <CenteredContainer>
-          <TextField
-            margin="normal"
+          <TextFieldWithTooltip
             id="volume source"
             label="Volume source"
             name="volume source"
-            autoComplete="volume source"
             value={volumeSource}
             onChange={(e) => setVolumeSource(e.target.value)}
+            tooltip={
+              "The Docker's volume source: the directory of the file system in which the Docker's daemon is executed."
+            }
           />
-          <TextField
-            margin="normal"
+          <TextFieldWithTooltip
             id="volume target"
             label="Volume target"
             name="volume target"
-            autoComplete="volume target"
             value={volumeTarget}
             onChange={(e) => setVolumeTarget(e.target.value)}
+            tooltip={
+              "The Docker's volume destination: the directory inside the container's file system."
+            }
           />
           <IconButton>
             <AddIcon
@@ -307,9 +306,10 @@ export default function Access({
   return (
     <Container sx={{ p: 2 }}>
       <Stack sx={{ p: 2 }}>
-        <MethodChoice />
+        {/* <MethodChoice /> */}
         <Typography variant="h5">Access</Typography>
-        {AccessForm()}
+        {/* {AccessForm()} */}
+        {DockerForm()}
       </Stack>
     </Container>
   );

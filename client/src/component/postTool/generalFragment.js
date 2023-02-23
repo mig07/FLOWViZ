@@ -1,5 +1,6 @@
 import { Container, Stack, TextField, Typography } from "@mui/material";
 import * as React from "react";
+import TextFieldWithTooltip from "../common/textFieldWithTooltip";
 import { validateInputs } from "./util";
 
 export default function General({
@@ -20,14 +21,10 @@ export default function General({
     <Container sx={{ p: 2 }}>
       <Stack sx={{ p: 2 }}>
         <Typography variant="h5">General</Typography>
-        <TextField
-          margin="normal"
-          required
+        <TextFieldWithTooltip
           id="name"
           label="Tool name"
           name="name"
-          autoComplete="name"
-          defaultValue={name}
           value={name}
           onChange={(event) =>
             onGeneralUpdate((prevState) => ({
@@ -35,15 +32,12 @@ export default function General({
               name: event.target.value,
             }))
           }
+          tooltip={"The tool's unique name."}
         />
-        <TextField
-          margin="normal"
-          required
+        <TextFieldWithTooltip
           id="description"
           label="Tool description"
           name="description"
-          autoComplete="description"
-          defaultValue={description}
           value={description}
           onChange={(event) =>
             onGeneralUpdate((prevState) => ({
@@ -51,6 +45,7 @@ export default function General({
               description: event.target.value,
             }))
           }
+          tooltip={"The tool's description. What does the tool do?"}
         />
       </Stack>
     </Container>

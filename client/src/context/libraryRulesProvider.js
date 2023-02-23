@@ -26,8 +26,6 @@ export default function LibraryRulesProvider({ children }) {
 
   const [commandGroups, setCommandGroups] = useState([generateCommandGroup(0)]);
 
-  console.log(commandGroups);
-
   const onCommandGroupsCountUpdate = React.useCallback((event) => {
     const value = event.target.value;
     if (typeof value != "string" || value == "") return;
