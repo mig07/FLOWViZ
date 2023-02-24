@@ -2,14 +2,11 @@ import styled from "@emotion/styled";
 import { Typography } from "@material-ui/core";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
-import MenuIcon from "@mui/icons-material/Menu";
 import { Divider, Drawer, IconButton, ListItemButton } from "@mui/material";
-import CssBaseline from "@mui/material/CssBaseline";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import * as React from "react";
-import { useState } from "react";
 
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
@@ -27,11 +24,8 @@ export default function NavBarDrawer({
   open,
   handleDrawerClose,
 }) {
-  const onDragStart = (event) => {
-    event.dataTransfer.setData(
-      "application/reactflow",
-      event.target.textContent
-    );
+  const onDragStart = (event, toolName) => {
+    event.dataTransfer.setData("application/reactflow", toolName);
     event.dataTransfer.effectAllowed = "move";
   };
 
@@ -60,17 +54,32 @@ export default function NavBarDrawer({
       </DrawerHeader>
       <Divider />
       <List>
-        {drawerList.map((item) => (
-          <ListItem key={item.name}>
-            <ListItemButton sx={{ borderRadius: 4 }}>
-              <ListItemText
-                onDragStart={(event) => onDragStart(event)}
-                draggable
-                primary={item.name}
-              />
-            </ListItemButton>
-          </ListItem>
-        ))}
+        {drawerList.map((item) => {
+          const toolName = item.name;
+          const type = item.type;
+          const url = item.url;
+          return (
+            <ListItem key={toolName}>
+              <ListItemButton sx={{ borderRadius: 4 }}>
+                <ListItemText
+                  onDragStart={(event) => onDragStart(event, toolName)}
+                  draggable
+                  primary={
+                    <>
+                      <Typography variant="button">{type}</Typography>
+                      <Typography variant="h6">{toolName}</Typography>
+                    </>
+                  }
+                  secondary={
+                    <>
+                      {type === "library" ? "Docker URL:" : "URL:"} {url}
+                    </>
+                  }
+                />
+              </ListItemButton>
+            </ListItem>
+          );
+        })}
       </List>
     </Drawer>
   );
