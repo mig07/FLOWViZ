@@ -8,9 +8,15 @@ module.exports = (ToolDb, ApiException) => {
   async function getTools() {
     return await ToolDb.getTools().then((tools) =>
       tools.map((tool) => {
+        const type = tool.access._type;
         return {
           name: tool.general.name,
           description: tool.general.description,
+          type: type,
+          url:
+            type === "library"
+              ? tool.access.library.dockerUrl
+              : tool.access.api.url,
         };
       })
     );
