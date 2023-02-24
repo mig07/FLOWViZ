@@ -5,17 +5,21 @@ import Typography from "@mui/material/Typography";
 import { CardActionArea } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
-export default function ToolCard({ name, description }) {
+export default function ToolCard({ name, description, type, url }) {
   const navigate = useNavigate();
   return (
     <Card sx={{ width: 350 }}>
       <CardActionArea onClick={() => navigate(name)}>
         <CardContent>
-          <Typography variant="h5" component="div">
+          <Typography variant="button" color="text.secondary">
+            {type}
+          </Typography>
+          <Typography sx={{ mb: 1 }} variant="h6" component="div">
             {name}
           </Typography>
+          <Typography>{description}</Typography>
           <Typography sx={{ mb: 1.5 }} color="text.secondary">
-            {description}
+            {type === "library" ? "Docker URL:" : "URL:"} {url}
           </Typography>
         </CardContent>
       </CardActionArea>

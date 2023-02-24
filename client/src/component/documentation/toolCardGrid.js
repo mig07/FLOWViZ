@@ -13,10 +13,15 @@ export default function ToolCardGrid(tools) {
       <Grid container item marginTop={5} justifyContent="center" spacing={3}>
         {tools.map((tool) => {
           const name = tool.name;
-          const description = tool.description;
           return (
             <Grid key={name} item>
-              <ToolCard key={name} name={name} description={description} />
+              <ToolCard
+                key={name}
+                name={name}
+                description={tool.description}
+                type={tool.type}
+                url={tool.url}
+              />
             </Grid>
           );
         })}
