@@ -15,7 +15,7 @@ const pageButtonsGroups = [
         icon: <HomeIcon />,
       },
       {
-        name: "Documentation",
+        name: "Tools",
         url: "/documentation",
         icon: <LibraryBooksIcon />,
       },
