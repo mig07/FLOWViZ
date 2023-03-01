@@ -139,8 +139,8 @@ module.exports = (WorkflowDb, Airflow, ToolDb) => {
       });
   }
 
-  /* Private methods - invoke them in methods where user authorization was
-  already made */
+  /* Private methods - to invoke in methods where user authorization was
+  already performed */
 
   async function getAirflowWorkflow(workflowName) {
     return await Airflow.getWorkflow(workflowName)
@@ -230,9 +230,6 @@ module.exports = (WorkflowDb, Airflow, ToolDb) => {
       }
     });
 
-    console.log(workflow.tasks);
-    console.log(tasks);
-
     return {
       start_date: workflow.start_date,
       airflow_imports: supplyNonRedundantImportsFromTasks(tasks),
@@ -281,13 +278,23 @@ function supplyNonRedundantImportsFromTasks(tasks) {
  * @returns {Workflow's execution order string, formatted to request Airflow}
  */
 function getExecutionOrder(workflow) {
+  const tasks = workflow.tasks;
+
+  if (tasks.length == 0) {
+    throw ApiException.badRequest(
+      "The submitted workflow does not have any tasks!"
+    );
+  }
+
+  if (tasks.length == 1) {
+    return tasks[0].id;
+  }
+
   const taskMap = new Map();
   let res = "";
 
   // Avoid requests with null children
-  const filteredTasks = workflow.tasks.filter(
-    (task) => !task.children.includes(null)
-  );
+  const filteredTasks = tasks.filter((task) => !task.children.includes(null));
 
   filteredTasks.forEach((task) => {
     const children = task.children;
