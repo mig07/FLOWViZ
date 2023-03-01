@@ -7,7 +7,8 @@
     "server": "nodemon ./server/src/test.js",
     "client": "npm start --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "test": "mocha ./server/src/test/*"
+    "test": "mocha ./server/src/test/*",
+    "setup": "npm i && cd client/ && npm i"
   },
   "keywords": [
     "Bioinformatics",
