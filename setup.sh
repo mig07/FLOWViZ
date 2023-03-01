@@ -15,11 +15,6 @@ downloadAndCreateMongoContainer() {
     docker run --name mongodb -d -p 27017:27017 mongo
 }
 
-# Creates Airflow user and composes services.
-setupAirflow() {
-    cd airflow/ && echo -e "AIRFLOW_UID=$(id -u)" > .env && docker compose up
-}
-
 # Creates a Docker network and adds the Airflow and MongoDB containers.
 setupDockerNetwork() {
     docker network create flowviz-docker-network
@@ -48,6 +43,5 @@ setupFlowviz() {
 
 startDocker
 downloadAndCreateMongoContainer
-setupAirflow
 setupDockerNetwork
 setupFlowviz
