@@ -21,5 +21,9 @@ node_modules/
 ehthumbs.db
 Thumbs.db
 
+# Let .defaults included
+!.defaults/server/.env
+!.defaults/client/.env
+
 # Remove when deploying
 #build/
