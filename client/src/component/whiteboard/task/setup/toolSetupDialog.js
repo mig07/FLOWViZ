@@ -32,7 +32,7 @@ export default function ToolSetupDialog({
   const descriptionElementRef = React.useRef(null);
 
   // For tools that provide both setup methods
-  const [setupMethod, setSetupMethod] = useState("library");
+  // const [setupMethod, setSetupMethod] = useState("library");
 
   const relayedOutputs = relayedOuts.flatMap((elem) => elem);
 
@@ -45,22 +45,13 @@ export default function ToolSetupDialog({
   // A clean command when adding new commands inside the task
   const cleanCommand = {
     groupName: cmdGroup.name,
-    name: "",
+    name: cmdGroup.commands[0].name,
     value: "",
     io: "",
   };
 
   // The library configuration state
   const [inputCommands, setInputCommands] = useState([cleanCommand]);
-
-  const [endpoints, setEndpoints] = useState([
-    {
-      groupName: cmdGroup.name,
-      name: firstCmdName,
-      value: "",
-      io: "",
-    },
-  ]);
 
   const onAddElement = (collection, keyValuePair, setter) => {
     const key = keyValuePair.key;
@@ -102,15 +93,18 @@ export default function ToolSetupDialog({
   };
 
   //TODO
+  const getCmdAttribute = (str) => (str && str !== "" ? ` ${str}` : "");
+
   const cmdPreview = inputCommands
     .map((cmd) => {
-      return `${getInvocationFromCmd(tool.library, cmd.groupName, cmd.name)} ${
-        reservedValues.includes(cmd.value) ? "" : cmd.value
-      } ${!cmd.io ? "" : cmd.io}`;
+      return `${getInvocationFromCmd(tool.library, cmd.groupName, cmd.name)}${
+        reservedValues.includes(cmd.value) ? "" : getCmdAttribute(cmd.value)
+      }${getCmdAttribute(cmd.io)}`;
     })
     .toString()
-    .replace(",", "")
-    .replace(",", " ");
+    .replaceAll(",", " ")
+    .replaceAll("  ", " ")
+    .trim();
 
   const onCancel = (event) => {
     setInputCommands([cleanCommand]);
@@ -225,17 +219,21 @@ export default function ToolSetupDialog({
   );
 }
 
-const getInvocationFromCmd = (library, cmdGroup, cmdName) => {
-  const cmdGroupCommands = library.find(
-    (commandGroup) => commandGroup.name === cmdGroup
-  ).commands;
+const getInvocationFromCmd = (library, cmdGroupName, cmdName) => {
+  const cmdGroup = library.find(
+    (commandGroup) => commandGroup.name === cmdGroupName
+  );
 
+  const cmdGroupCommands = cmdGroup.commands;
   const cmd =
     cmdName !== ""
       ? cmdGroupCommands.find((cmd) => cmd.name === cmdName)
       : cmdGroupCommands[0];
 
-  return cmd.invocation[0];
+  const cmdGroupInvocation = cmdGroup.invocation[0] || "";
+  const cmdInvocation = cmd.invocation[0] || "";
+
+  return `${cmdGroupInvocation} ${cmdInvocation}`;
 };
 
 function getLibrary(tool) {

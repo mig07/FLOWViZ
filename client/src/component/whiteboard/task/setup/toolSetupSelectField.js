@@ -2,18 +2,18 @@ import * as React from "react";
 import { Grid } from "@mui/material";
 import { FormControl, Select, MenuItem } from "@material-ui/core";
 
-export default function ToolSetupSelectField(props) {
-  const id = props.id;
-  const label = props.label;
-  const currValue = props.currValue;
-  const values = props.values;
-  const fieldWidth = Number(props.fieldWidth);
-  const onCurrValueUpdate = props.onCurrValueUpdate;
-  const stateDependency = props.stateDependency;
-
+export default function ToolSetupSelectField({
+  id,
+  label,
+  currValue,
+  values,
+  fieldWidth,
+  onCurrValueUpdate,
+  stateDependency,
+}) {
   const hasCollection = values && values.length > 0;
 
-  return (hasCollection && !stateDependency) || stateDependency !== "" ? (
+  return hasCollection ? (
     <Grid item xs={fieldWidth}>
       <FormControl fullWidth>
         <Select
