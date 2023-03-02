@@ -31,7 +31,19 @@ You can also customize each task inside the workflow.
 
 Before going into the project's setup, follow this [guide](requirements.md), in order to fulfill all setup's requirements.
 
-# Setup
+# Scripted setup
+
+If you use a **Linux distribution** that use **systemd**, you can easily execute the setup script by the following order (provided you have already installed the previously mentioned requirements):
+
+1. Execute `setupAirflow.sh`. Make sure Airflow has all its services running, including the Web server (access it first, before going to step 2);
+
+2. Execute `setup.sh`. This script will also copy the default `.env` files from `default/`. If you want to deploy the project or add your own values, you **must change** the copied .env files (in `./.env` and `./client/.env`), specially credentials and sensitive information;
+
+3. (**Optional**, requires tmux) Execute `start.sh` to start both client and server in different tmux sessions.
+
+**Note**: **Execute setupAirflow.sh and setup.sh just once**.
+
+# Manual setup
 
 It is advised to follow the setup guide by the displayed order.
 
@@ -98,7 +110,7 @@ docker network inspect flowviz-docker-network
 Or, simply copy the result of this command (you may need to **reset the container** for this command to work):
 
 ```sh
-docker inspect -f '{{with index .NetworkSettings.Networks "flowviz-network-docker"}}{{.IPAddress}}{{end}}' mongodb
+docker inspect -f '{{with index .NetworkSettings.Networks "flowviz-docker-network"}}{{.IPAddress}}{{end}}' mongodb
 ```
 
 6. Inside the **Apache Airflow web client** ([http://localhost:8080](http://localhost:8080)), using the **NavBar** go to **Admin** and then **Connections**. Click **add a new record** (plus icon) and fulfill the displayed fields with the following information:
