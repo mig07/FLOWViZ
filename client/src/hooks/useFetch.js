@@ -1,19 +1,19 @@
 import { useState, useEffect } from "react";
 
 export const RequestState = {
-  starting: "starting",
   fetching: "fetching",
   error: "error",
   success: "success",
 };
 
-export default function useFetch(url, options) {
+export default function useFetch(url, options, requestNow = false) {
   const [data, setData] = useState(null);
   const [reqState, setReqState] = useState(null);
   const [error, setError] = useState(null);
+  const [isRequesting, setIsRequesting] = useState(requestNow);
 
   useEffect(async () => {
-    setReqState(RequestState.starting);
+    if (!isRequesting) return;
 
     try {
       setReqState(RequestState.fetching);
@@ -24,6 +24,7 @@ export default function useFetch(url, options) {
       if (!response.ok) {
         setError(res);
         setReqState(RequestState.error);
+        setIsRequesting(false);
         return;
       }
 
@@ -33,7 +34,9 @@ export default function useFetch(url, options) {
     } catch (error) {
       setError(error);
       setReqState(RequestState.error);
+    } finally {
+      setIsRequesting(false);
     }
-  }, [url]);
-  return [data, reqState, error];
+  }, [url, isRequesting]);
+  return [data, reqState, error, isRequesting, setIsRequesting];
 }

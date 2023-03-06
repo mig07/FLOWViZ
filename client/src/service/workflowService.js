@@ -1,5 +1,6 @@
 import Request from "./request";
 import httpOptions from "./httpOptions";
+import useFetch from "../hooks/useFetch";
 
 class WorkflowService {
   constructor(baseUrl) {
@@ -71,14 +72,8 @@ class WorkflowService {
     );
   }
 
-  postWorkflow(body, onError, onSuccess, loading) {
-    return Request(
-      this.baseUrl,
-      httpOptions.postAuth(body),
-      onError,
-      onSuccess,
-      loading
-    );
+  postWorkflow(body) {
+    return useFetch(this.baseUrl, httpOptions.postAuth(body));
   }
 }
 

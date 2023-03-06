@@ -1,29 +1,18 @@
 import Request from "./request";
 import httpOptions from "./httpOptions";
+import useFetch from "../hooks/useFetch";
 
 class AuthService {
   constructor(baseUrl) {
     this.baseUrl = baseUrl;
   }
 
-  register(body, onError, onSuccess, loading) {
-    return Request(
-      `${this.baseUrl}/register`,
-      httpOptions.post(body),
-      onError,
-      onSuccess,
-      loading
-    );
+  register(body) {
+    return useFetch(`${this.baseUrl}/register`, httpOptions.post(body));
   }
 
-  login(body, onError, onSuccess, loading) {
-    return Request(
-      `${this.baseUrl}/login`,
-      httpOptions.post(body),
-      onError,
-      onSuccess,
-      loading
-    );
+  login(body) {
+    return useFetch(`${this.baseUrl}/login`, httpOptions.post(body));
   }
 
   profile(onError, onSuccess, loading) {
