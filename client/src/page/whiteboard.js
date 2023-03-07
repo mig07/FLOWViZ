@@ -17,6 +17,7 @@ import GenericErrorBar from "../component/common/genericErrorBar";
 import Loading from "../component/common/loading";
 import ToolNode from "../component/whiteboard/task/toolNode";
 import WorkflowSubmitDialog from "../component/whiteboard/workflowSubmitDialog";
+import { RequestState } from "../hooks/useFetch";
 
 let id = -1;
 const getId = () => `node${++id}`;
@@ -53,9 +54,6 @@ export default function Whiteboard({
 
   const [nodeChanged, setNodeChanged] = useState(null);
 
-  // States if the workflow can be commited
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
   // Is the user dropping a tool into the whiteboard
   const [isToolDrop, setIsToolDrop] = useState(false);
   const [droppingToolName, setDroppingToolName] = useState("");
@@ -85,19 +83,6 @@ export default function Whiteboard({
 
     targets.forEach((t) => updateNodeInputs(nodeChanged, t));
   }, [nodeChanged]);
-
-  const onWorkflowSubmission = (
-    workflowName,
-    workflowDescription,
-    startDateTime
-  ) => {
-    setWorkflowSubmission({
-      workflowName: workflowName,
-      workflowDescription: workflowDescription,
-      startDateTime: startDateTime,
-    });
-    setIsSubmitting(true);
-  };
 
   toolService.getTools(GenericErrorBar, setDrawerList, <Loading />);
 
@@ -230,32 +215,36 @@ export default function Whiteboard({
     },
     [reactFlowInstance]
   );
-
-  function WorkflowRequest() {
-    const workflowRequest = getWorkflowRequest(
-      workflowSubmission,
-      nodes,
-      edges
+  const [data, reqState, error, isRequesting, setIsRequesting] =
+    workflowService.postWorkflow(
+      JSON.stringify(getWorkflowRequest(workflowSubmission, nodes, edges))
     );
 
-    const OnSuccess = () => {
-      navigate("/submission", {
-        state: {
-          text: `Workflow ${workflowSubmission.workflowName} was successfully submitted!`,
-          resourcePageLabel: workflowSubmission.workflowName,
-          resourcePageUrl: `/workflow/${workflowSubmission.workflowName}`,
-        },
-      });
-      return <></>;
-    };
+  const onWorkflowSubmission = (
+    workflowName,
+    workflowDescription,
+    startDateTime
+  ) => {
+    setWorkflowSubmission({
+      workflowName: workflowName,
+      workflowDescription: workflowDescription,
+      startDateTime: startDateTime,
+    });
+    setIsRequesting(true);
+  };
 
-    return workflowService.postWorkflow(
-      JSON.stringify(workflowRequest),
-      (error) => <GenericErrorBar error={error} />,
-      OnSuccess,
-      <Loading />
-    );
-  }
+  const onSuccess = () => {
+    navigate("/submission", {
+      state: {
+        text: `Workflow ${workflowSubmission.workflowName} was successfully submitted!`,
+        resourcePageLabel: workflowSubmission.workflowName,
+        resourcePageUrl: `/workflow/${workflowSubmission.workflowName}`,
+      },
+    });
+    return <></>;
+  };
+
+  const onError = (error) => <GenericErrorBar error={error} />;
 
   return (
     <Grid container>
@@ -314,7 +303,9 @@ export default function Whiteboard({
           onCancel={() => setDialogOpen(false)}
         />
         {isToolDrop ? <OnToolDrop /> : <></>}
-        {isSubmitting ? <WorkflowRequest /> : <></>}
+        {reqState === RequestState.fetching ? <Loading /> : <></>}
+        {reqState === RequestState.success ? onSuccess(data) : <></>}
+        {reqState === RequestState.error ? onError(error) : <></>}
       </Grid>
     </Grid>
   );

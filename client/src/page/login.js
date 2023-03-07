@@ -7,12 +7,12 @@ import { useNavigate } from "react-router-dom";
 import InfoBar from "../component/common/infoBar";
 import Loading from "../component/common/loading";
 import UserForm from "../component/common/userForm";
+import { RequestState } from "../hooks/useFetch";
 
 export default function Login({ authService }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isTrusted, setIsTrusted] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
 
   const navigate = useNavigate();
 
@@ -31,21 +31,17 @@ export default function Login({ authService }) {
     return <InfoBar type="success" text="Successfully logged in!" />;
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    setSubmitting(true);
-  };
-
-  const OnLogin = () => {
-    return authService.login(
+  const [data, reqState, error, isRequesting, setIsRequesting] =
+    authService.login(
       JSON.stringify({
         username: username,
         password: password,
-      }),
-      onError,
-      onSuccess,
-      <Loading />
+      })
     );
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    setIsRequesting(true);
   };
 
   return (
@@ -84,7 +80,9 @@ export default function Login({ authService }) {
           }
           label="Remember me"
         />
-        {submitting ? <OnLogin /> : <></>}
+        {reqState === RequestState.fetching ? <Loading /> : <></>}
+        {reqState === RequestState.success ? onSuccess(data) : <></>}
+        {reqState === RequestState.error ? onError(error) : <></>}
       </UserForm>
     </>
   );

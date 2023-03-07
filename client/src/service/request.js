@@ -3,7 +3,7 @@ import useFetch from "../hooks/useFetch";
 import { RequestState } from "../hooks/useFetch";
 
 export default function Request(url, options, onError, onSuccess, onLoading) {
-  const [data, requestState, error] = useFetch(url, options);
+  const [data, requestState, error] = useFetch(url, options, true);
 
   switch (requestState) {
     case RequestState.fetching:
