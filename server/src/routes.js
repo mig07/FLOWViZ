@@ -1,5 +1,5 @@
 const { checkSchema } = require("express-validator");
-const { workflowStep } = require("./models/airflow/workflow/workflow");
+const { workflow } = require("./models/airflow/workflow/workflow");
 const ToolContract = require("./models/mongodb/tool/ToolContract");
 
 module.exports = (
@@ -55,7 +55,7 @@ module.exports = (
   // POSTs
   app.post(
     "/workflow",
-    checkSchema(workflowStep),
+    checkSchema(workflow),
     passport.authenticate("jwt", { session: false }),
     workflowMiddleware,
     workflowController.postWorkflow
