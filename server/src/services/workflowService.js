@@ -3,6 +3,8 @@ const mapTaskToSimpleHttpOperator = require("../mappers/mapTaskToSimpleHttpOpera
 const ApiException = require("../exceptions/apiException");
 const getOne = require("./serviceUtils");
 
+const TASK_PREFIX = "task_";
+
 module.exports = (WorkflowDb, Airflow, ToolDb) => {
   /**
    * Returns a list of workflows from the data source
@@ -178,9 +180,11 @@ module.exports = (WorkflowDb, Airflow, ToolDb) => {
   async function postWorkflow(username, workflow) {
     const name = workflow.name;
     const description = workflow.description;
-    const executionOrder = getExecutionOrder(workflow);
+    const mappedWorkflow = getWorkflowWithPrefixedTaskNames(workflow);
+
+    const executionOrder = getExecutionOrder(mappedWorkflow);
     const airflowRequest = await convertToAirflowWorkflow(
-      workflow,
+      mappedWorkflow,
       executionOrder
     );
 
@@ -203,6 +207,29 @@ module.exports = (WorkflowDb, Airflow, ToolDb) => {
       .catch((err) => {
         throw err;
       });
+  }
+
+  /**
+   * Map function that prefixes tasks' names to avoid collision with Python
+   * reserved keywords.
+   * @param {The raw workflow configuration} workflow
+   * @returns Workflow with its tasks' names prefixed
+   */
+  function getWorkflowWithPrefixedTaskNames(workflow) {
+    const mappedWorkflow = { ...workflow };
+
+    const mappedTasks = mappedWorkflow.tasks.map((task) => {
+      return {
+        id: TASK_PREFIX + task.id,
+        tool: task.tool,
+        action: task.action,
+        children: task.children.map((child) => TASK_PREFIX + child),
+      };
+    });
+
+    mappedWorkflow.tasks = mappedTasks;
+
+    return mappedWorkflow;
   }
 
   async function convertToAirflowWorkflow(workflow, executionOrder) {
@@ -286,6 +313,7 @@ function getExecutionOrder(workflow) {
     );
   }
 
+  // Returns the only task id if the workflow is just composed by one task
   if (tasks.length == 1) {
     return tasks[0].id;
   }
