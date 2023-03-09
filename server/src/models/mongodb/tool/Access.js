@@ -22,13 +22,17 @@ const LibraryAccess = new Schema(
     dockerImage: { type: String, maxlength: 60 },
     dockerContainer: { type: String, maxlength: 60 },
     dockerVolumes: [DockerVolume],
-    dockerAutoRemove: { type: Boolean, default: true },
+    dockerAutoRemove: {
+      type: String,
+      default: "never",
+      enum: ["never", "success", "force"],
+    },
     dockerNetworkMode: {
       type: String,
-      enum: ["bridge", "None"],
+      enum: ["bridge", "None", "container", "host"],
       default: "bridge",
     },
-    dockerApiVersion: { type: String, enum: ["auto"], default: "auto" },
+    dockerApiVersion: { type: String, default: "auto" },
   },
   { _id: false }
 );
