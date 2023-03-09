@@ -7,8 +7,7 @@ import {
 } from "@material-ui/core";
 import { Grid } from "@mui/material";
 import * as React from "react";
-import { useState } from "react";
-import ChipContainer from "../../../common/chipContainer";
+import { useEffect, useState } from "react";
 import ToolInfo from "../info/toolInfo";
 import VariableContainer from "../io/variable";
 import CommandPreview from "./library/commandPreview";
@@ -53,6 +52,26 @@ export default function ToolSetupDialog({
   // The library configuration state
   const [inputCommands, setInputCommands] = useState([cleanCommand]);
 
+  const getCmdAttribute = (str) => (str && str !== "" ? ` ${str}` : "");
+
+  const getCommandPreview = () =>
+    inputCommands
+      .map((cmd) => {
+        return `${getInvocationFromCmd(tool.library, cmd.groupName, cmd.name)}${
+          reservedValues.includes(cmd.value) ? "" : getCmdAttribute(cmd.value)
+        }${getCmdAttribute(cmd.io)}`;
+      })
+      .toString()
+      .replaceAll(",", " ")
+      .replaceAll("  ", " ")
+      .trim();
+
+  const [isPreviewEditable, setIsPreviewEditable] = useState(false);
+  const [commandPreview, setCommandPreview] = useState("");
+
+  const onEditButtonPress = (event) =>
+    setIsPreviewEditable((value) => (!value ? true : false));
+
   const onAddElement = (collection, keyValuePair, setter) => {
     const key = keyValuePair.key;
     const hasChip = collection.find((elem) => elem === key);
@@ -92,19 +111,15 @@ export default function ToolSetupDialog({
     setInputCommands(cmds);
   };
 
-  //TODO
-  const getCmdAttribute = (str) => (str && str !== "" ? ` ${str}` : "");
+  const onCommandPreviewUpdate = (event) => {
+    if (!isPreviewEditable) return;
+    setCommandPreview(event.target.value);
+  };
 
-  const cmdPreview = inputCommands
-    .map((cmd) => {
-      return `${getInvocationFromCmd(tool.library, cmd.groupName, cmd.name)}${
-        reservedValues.includes(cmd.value) ? "" : getCmdAttribute(cmd.value)
-      }${getCmdAttribute(cmd.io)}`;
-    })
-    .toString()
-    .replaceAll(",", " ")
-    .replaceAll("  ", " ")
-    .trim();
+  useEffect(() => {
+    if (isPreviewEditable) return;
+    return setCommandPreview(getCommandPreview());
+  }, [onAddElement, onRemoveElement, onUpdateCommand]);
 
   const onCancel = (event) => {
     setInputCommands([cleanCommand]);
@@ -116,7 +131,7 @@ export default function ToolSetupDialog({
     onSetupDialogClose();
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (open) {
       const { current: descriptionElement } = descriptionElementRef;
       if (descriptionElement !== null) {
@@ -180,7 +195,12 @@ export default function ToolSetupDialog({
               </Grid>
             </ToolSetupRow>
             <ToolSetupRow title="Setup">
-              <CommandPreview cmdPreview={cmdPreview} />
+              <CommandPreview
+                cmdPreview={commandPreview}
+                onCommandEdit={onCommandPreviewUpdate}
+                isEditable={isPreviewEditable}
+                onEditButtonPress={onEditButtonPress}
+              />
               {inputCommands.map((cmd, i) => (
                 <ToolSetupLibraryCommand
                   key={i}
@@ -207,7 +227,7 @@ export default function ToolSetupDialog({
                 inputs: inputs,
                 outputs: outputs,
                 setup: inputCommands,
-                action: cmdPreview,
+                action: commandPreview,
               })
             }
           >
