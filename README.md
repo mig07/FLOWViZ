@@ -1,9 +1,9 @@
 <h4 align="center">
  This repository is no longer maintained. 
 </h4>
-<h5 align="center">
+<h4 align="center">
  Further development of this project is available at: <a href="https://github.com/DIVA-IPL-Project/FLOWViZ">DIVA-IPL-Project/FLOWViZ</a>
-</h5>
+</h4>
 
 # FLOWViZ
 
